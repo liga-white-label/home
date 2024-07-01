@@ -1,4 +1,4 @@
-import { Grid, Typography } from "@mui/material";
+import { Grid } from "@mui/material";
 import React, { FC } from "react";
 import { Inferencia } from "./Match";
 import { InferenciaByTeam } from "./InferenciaByTeam";

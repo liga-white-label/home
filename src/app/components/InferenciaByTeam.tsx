@@ -1,5 +1,4 @@
 import { SportsSoccer, Rectangle } from "@mui/icons-material";
-import { Typography } from "@mui/material";
 import { FC } from "react";
 import { Inferencia } from "./Match";
 
@@ -15,7 +14,7 @@ export const InferenciaByTeam: FC<InferenciaByTeamProps> = ({ inferencia }) => {
       ) : (
         <Rectangle className="h-4 w-4 rotate-90" color="error" />
       )}
-      <Typography>{inferencia.player_name}</Typography>
+      <p>{inferencia.player_name}</p>
     </div>
   );
 };

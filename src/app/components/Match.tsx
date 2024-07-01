@@ -42,7 +42,7 @@ const Match: React.FC<MatchProps> = ({
       <Grid
         container
         xs={12}
-        className="flex items-center border-y-2 border-black"
+        className="flex items-center border-t-2 border-black"
       >
         <Grid container xs={12} className="border-black border-b-2">
           <Grid
@@ -50,10 +50,8 @@ const Match: React.FC<MatchProps> = ({
             xs={2}
             className="items-center justify-center flex flex-col bg-gray-300 border-black border-r-2"
           >
-            <Typography className="font-bold text-center">{time}</Typography>
-            <Typography className="font-bold text-center" fontSize={14}>
-              {cancha}
-            </Typography>
+            <p className="font-bold text-center">{time}</p>
+            <p className="font-bold text-center text-sm">{cancha}</p>
           </Grid>
           <Grid
             container
@@ -70,18 +68,16 @@ const Match: React.FC<MatchProps> = ({
                   width={40}
                   height={40}
                 />
-                <Typography className="text-center font-bold" fontSize={14}>
-                  {team1}
-                </Typography>
+                <p className="text-center font-bold text-sm">{team1}</p>
               </div>
               <div className="min-w-8 flex items-center justify-center border-black border-l-2 h-full bg-gray-200">
-                <Typography>{score1 || "-"}</Typography>
+                <p>{score1 || "-"}</p>
               </div>
             </Grid>
 
             <Grid item xs={6} className="flex justify-start items-start ">
               <div className="min-w-8 flex items-center justify-center border-black border-r-2 h-full bg-gray-200">
-                <Typography>{score2 || "-"}</Typography>
+                <p>{score2 || "-"}</p>
               </div>
               <div className="flex flex-col w-full items-center justify-center py-2 overflow-hidden text-ellipsis">
                 <Image
@@ -90,9 +86,7 @@ const Match: React.FC<MatchProps> = ({
                   width={40}
                   height={40}
                 />
-                <Typography className="text-center font-bold" fontSize={14}>
-                  {team2}
-                </Typography>
+                <p className="text-center font-bold text-sm">{team2}</p>
               </div>
               <div className="cursor-pointer flex items-center justify-center px-1 border-black border-l-2 h-full min-w-8">
                 <AddBox color={fem ? "error" : "info"} />
