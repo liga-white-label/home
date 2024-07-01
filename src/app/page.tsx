@@ -1,25 +1,12 @@
-import { Container, Grid } from "@mui/material";
+import { Container } from "@mui/material";
 import Section from "./components/Section";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import { FechaSelector } from "./components/FechaSelector";
 
 export default function Home() {
-  // return <HomeV2 />;
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-4 md:p-24">
       <Container className="w-full flex flex-col items-center justify-center gap-5">
-        <div className="flex justify-between w-1/2 items-center bg-white rounded-lg">
-          <Grid item xs={1}>
-            <ChevronLeftIcon className="h-10 w-10 cursor-pointer" />
-          </Grid>
-          <Grid item xs={8}>
-            <div className="flex justify-center  text-center">Fecha actual</div>
-          </Grid>
-          <Grid item xs={1}>
-            <ChevronRightIcon className="h-10 w-10 cursor-pointer" />
-          </Grid>
-        </div>
-
+        <FechaSelector />
         <div className="flex flex-col justify-center items-center gap-5 w-full">
           <h2 className="text-center font-bold text-xl p-2 bg-gray-100 rounded-lg">
             Sábado, 29 de Junio de 2024
