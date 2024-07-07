@@ -1,6 +1,6 @@
-import { Quicksand } from "next/font/google";
+import { Roboto } from "next/font/google";
 
-export const quicksand = Quicksand({
+export const roboto = {
   subsets: ["latin"],
-  variable: "--font-quicksand",
-});
+  weight: "400",
+};

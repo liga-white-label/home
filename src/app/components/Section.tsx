@@ -8,10 +8,12 @@ interface SectionProps {
 
 const Section: React.FC<SectionProps> = ({ title, matches }) => {
   return (
-    <div className="mb-8 rounded-lg shadow-lg w-full border-2 border-black bg-gray-200">
-      <h2 className="text-center font-bold text-xl mb-4">{title}</h2>
+    <div className="mb-8 w-full border-black bg-gray-200">
+      {title !== "" && (
+        <h2 className="text-center font-bold text-xl my-4">{title}</h2>
+      )}
       {matches.map((match, index) => (
-        <Match key={index} {...match} />
+        <Match key={index} last={matches.length - 1 === index} {...match} />
       ))}
     </div>
   );

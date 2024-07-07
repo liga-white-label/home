@@ -41,7 +41,11 @@ export const CustomDrawer = () => {
           "Categoria E",
         ].map((text, index) => (
           <ListItem key={index} disablePadding>
-            <Link href={"/categoria"} onClick={handleClose} className="w-full">
+            <Link
+              href={`/categoria-${text.split(" ")[1].toLowerCase()}`}
+              onClick={handleClose}
+              className="w-full"
+            >
               <ListItemButton>
                 <ListItemIcon>
                   <div className="h-10 w-10 rounded-full bg-blue-200 items-center justify-center flex">
