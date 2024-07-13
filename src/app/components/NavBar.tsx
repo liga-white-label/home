@@ -1,33 +1,29 @@
 "use client";
-import { Menu } from "@mui/icons-material";
-import { useSidebar } from "../context/SideBarContext";
 import Image from "next/image";
+import { LinkNavigator } from "./LinkNavigator";
+import { Icon } from "@mui/material";
+import { Menu } from "@mui/icons-material";
 
 export const NavBar = () => {
-  const { switchSidebar, sidebarOpen } = useSidebar();
-
   return (
     <div
-      className={`h-20 bg-[#a60000] w-full z-50 flex items-center justify-center ${
-        sidebarOpen ? "shadow-none" : "shadow-2xl"
-      }`}
+      className={`h-20 bg-[#a60000] w-full z-50 flex items-center justify-center`}
     >
-      <div
-        className="self-center"
-        style={{ position: "absolute", left: 20, zIndex: 99 }}
-      >
-        <Menu
-          className="h-8 w-8 cursor-pointer"
-          style={{ color: "white" }}
-          onClick={switchSidebar}
+      <div style={{ position: "absolute", left: 20, zIndex: 99 }}>
+        <Image
+          src={"/assets/liga_cubb_logo_v2.png"}
+          alt={"LIGA CUBB 2024"}
+          width={200}
+          height={100}
         />
       </div>
-      <Image
-        src={"/assets/ligacubblogo.png"}
-        alt={"LIGA CUBB 2024"}
-        width={400}
-        height={40}
-      />
+      <LinkNavigator />
+      <div
+        style={{ position: "absolute", right: 20, zIndex: 99 }}
+        className="lg:hidden flex"
+      >
+        <Menu className="text-white h-10 w-10" />
+      </div>
     </div>
   );
 };

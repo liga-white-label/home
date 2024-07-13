@@ -62,7 +62,7 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
             matches={partidosPorDia.matches}
           />
         </div>
-        <div>
+        <div className="max-w-full">
           <Tabs
             value={selectedTable}
             onChange={handleChangeTable}

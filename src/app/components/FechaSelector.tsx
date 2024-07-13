@@ -45,8 +45,8 @@ export const FechaSelector: FC<FechaSelectorProps> = ({
           />
         )}
       </div>
-      {!hideFechas && (
-        <div className="flex lg:w-1/2 w-full justify-between gap-2">
+      {/* {!hideFechas && (
+        <div className="flex lg:w-1/2 max-w-full justify-between gap-2">
           {fechas.map((f, i) => (
             <div
               key={i}
@@ -61,7 +61,7 @@ export const FechaSelector: FC<FechaSelectorProps> = ({
             </div>
           ))}
         </div>
-      )}
+      )} */}
     </div>
   );
 };

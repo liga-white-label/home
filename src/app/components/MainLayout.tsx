@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "../globals.css";
 import { CustomDrawer } from "./CustomDrawer";
 import { NavBar } from "./NavBar";
-import { roboto } from "../utils/fonts";
 
 export const metadata: Metadata = {
   title: "LIGA CUBB 2024",
@@ -16,7 +15,7 @@ export const MainLayout = ({
   return (
     <html lang="en">
       <body className={"font-sans"}>
-        <div className="flex flex-col">
+        <div className="flex flex-col min-w-full">
           <NavBar />
           {children}
         </div>
