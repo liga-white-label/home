@@ -44,7 +44,7 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
       >
         <div className="flex flex-col justify-between max-w-full">
           <p className="text-white text-4xl px-10">{title}</p>
-          <div className="flex gap-2 px-0 md:px-10 max-w-full overflow-hidden overflow-x-scroll">
+          <div className="flex gap-2 px-0 md:px-10 max-w-full overflow-hidden">
             <div
               onClick={() => handleChangeTab(TabsEnum.POSICIONES)}
               className={`p-2 md:p-4 rounded-t-lg  cursor-pointer ${
@@ -78,7 +78,7 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
           </div>
         </div>
       </div>
-      <div className="overflow-hidden overflow-x-scroll p-2 md:p-10">
+      <div className="overflow-hidden overflow-x-hidden p-2 md:p-10">
         {selectedTab === TabsEnum.POSICIONES && <PosicionesPage />}
       </div>
     </main>
@@ -93,6 +93,7 @@ const data = [
   {
     pos: 1,
     equipo: "SIN CONTRATO",
+    escudo: "https://ligacubb.com/imagenes/sincontrato.png",
     pts: 17,
     pj: 8,
     pg: 5,
@@ -101,11 +102,12 @@ const data = [
     gf: 16,
     gc: 7,
     dg: +9,
-    nextMatch: "/assets/ultracuevafc.png",
+    nextMatch: "https://ligacubb.com/imagenes/liverfull.png",
   },
   {
     pos: 2,
     equipo: "RITMO Y SUSTANCIA",
+    escudo: "https://ligacubb.com/imagenes/ritmoysustancia.png",
     pts: 17,
     pj: 8,
     pg: 5,
@@ -114,11 +116,12 @@ const data = [
     gf: 13,
     gc: 6,
     dg: +7,
-    nextMatch: "/assets/ultracuevafc.png",
+    nextMatch: "https://ligacubb.com/imagenes/supergedientos.png",
   },
   {
     pos: 3,
     equipo: "FUERTE AL MEDIO",
+    escudo: "https://ligacubb.com/imagenes/fuertealmedio.png",
     pts: 14,
     pj: 9,
     pg: 3,
@@ -127,11 +130,12 @@ const data = [
     gf: 13,
     gc: 7,
     dg: +6,
-    nextMatch: "/assets/ultracuevafc.png",
+    nextMatch: "https://ligacubb.com/imagenes/mandiyusrevenge.png",
   },
   {
     pos: 4,
     equipo: "SUPERGEDIENTOS",
+    escudo: "https://ligacubb.com/imagenes/supergedientos.png",
     pts: 14,
     pj: 8,
     pg: 4,
@@ -140,11 +144,12 @@ const data = [
     gf: 15,
     gc: 12,
     dg: +3,
-    nextMatch: "/assets/ultracuevafc.png",
+    nextMatch: "https://ligacubb.com/imagenes/ritmoysustancia.png",
   },
   {
     pos: 5,
     equipo: "ANTIDEPORTIVO CACACCIOLI",
+    escudo: "https://ligacubb.com/imagenes/antideportivocacacioli.png",
     pts: 13,
     pj: 8,
     pg: 3,
@@ -153,11 +158,12 @@ const data = [
     gf: 13,
     gc: 10,
     dg: +3,
-    nextMatch: "/assets/ultracuevafc.png",
+    nextMatch: "https://ligacubb.com/imagenes/cualquierfrutayoverdura.png",
   },
   {
     pos: 6,
     equipo: "LIVERFULL",
+    escudo: "https://ligacubb.com/imagenes/liverfull.png",
     pts: 13,
     pj: 8,
     pg: 3,
@@ -166,11 +172,12 @@ const data = [
     gf: 14,
     gc: 12,
     dg: +2,
-    nextMatch: "/assets/ultracuevafc.png",
+    nextMatch: "https://ligacubb.com/imagenes/sincontrato.png",
   },
   {
     pos: 7,
     equipo: "REPO P.A.",
+    escudo: "https://ligacubb.com/imagenes/repopa.png",
     pts: 12,
     pj: 9,
     pg: 3,
@@ -179,11 +186,12 @@ const data = [
     gf: 11,
     gc: 11,
     dg: +0,
-    nextMatch: "/assets/ultracuevafc.png",
+    nextMatch: "https://ligacubb.com/imagenes/bafangulo.png",
   },
   {
     pos: 8,
     equipo: "BAFANGULO",
+    escudo: "https://ligacubb.com/imagenes/bafangulo.png",
     pts: 12,
     pj: 9,
     pg: 3,
@@ -192,11 +200,12 @@ const data = [
     gf: 7,
     gc: 11,
     dg: -4,
-    nextMatch: "/assets/ultracuevafc.png",
+    nextMatch: "https://ligacubb.com/imagenes/repopa.png",
   },
   {
     pos: 9,
     equipo: "THE BIRDS",
+    escudo: "https://ligacubb.com/imagenes/thebirds.png",
     pts: 11,
     pj: 9,
     pg: 3,
@@ -205,11 +214,12 @@ const data = [
     gf: 10,
     gc: 11,
     dg: -1,
-    nextMatch: "/assets/ultracuevafc.png",
+    nextMatch: "https://ligacubb.com/imagenes/labigorniafc.png",
   },
   {
     pos: 10,
     equipo: "ULTRA CUEVA FC",
+    escudo: "https://ligacubb.com/imagenes/ultracuevafc.png",
     pts: 10,
     pj: 8,
     pg: 3,
@@ -218,11 +228,12 @@ const data = [
     gf: 10,
     gc: 7,
     dg: +3,
-    nextMatch: "/assets/ultracuevafc.png",
+    nextMatch: "https://ligacubb.com/imagenes/mandiyusrevenge.png",
   },
   {
     pos: 11,
     equipo: "LA BIGORNIA FC",
+    escudo: "https://ligacubb.com/imagenes/labigorniafc.png",
     pts: 10,
     pj: 9,
     pg: 2,
@@ -231,11 +242,12 @@ const data = [
     gf: 13,
     gc: 14,
     dg: -1,
-    nextMatch: "/assets/ultracuevafc.png",
+    nextMatch: "https://ligacubb.com/imagenes/thebirds.png",
   },
   {
     pos: 12,
     equipo: "FONDO BLANCO",
+    escudo: "https://ligacubb.com/imagenes/fondoblanco.png",
     pts: 10,
     pj: 9,
     pg: 3,
@@ -244,11 +256,12 @@ const data = [
     gf: 9,
     gc: 14,
     dg: -5,
-    nextMatch: "/assets/ultracuevafc.png",
+    nextMatch: "https://ligacubb.com/imagenes/cualquierfrutayoverdura.png",
   },
   {
     pos: 13,
     equipo: "MANDIYU'S REVENGE",
+    escudo: "https://ligacubb.com/imagenes/mandiyusrevenge.png",
     pts: 9,
     pj: 8,
     pg: 2,
@@ -257,11 +270,12 @@ const data = [
     gf: 10,
     gc: 11,
     dg: -1,
-    nextMatch: "/assets/ultracuevafc.png",
+    nextMatch: "https://ligacubb.com/imagenes/fuertealmedio.png",
   },
   {
     pos: 14,
     equipo: "CUALQUIER FRUTA Y/O VERDURA",
+    escudo: "https://ligacubb.com/imagenes/cualquierfrutayoverdura.png",
     pts: 8,
     pj: 8,
     pg: 2,
@@ -270,11 +284,12 @@ const data = [
     gf: 9,
     gc: 10,
     dg: -1,
-    nextMatch: "/assets/ultracuevafc.png",
+    nextMatch: "https://ligacubb.com/imagenes/antideportivocacacioli.png",
   },
   {
     pos: 15,
     equipo: "INQUI FC",
+    escudo: "https://ligacubb.com/imagenes/inquifc.png",
     pts: 6,
     pj: 8,
     pg: 1,
@@ -283,11 +298,12 @@ const data = [
     gf: 6,
     gc: 15,
     dg: -9,
-    nextMatch: "/assets/ultracuevafc.png",
+    nextMatch: "https://ligacubb.com/imagenes/fernetbache.png",
   },
   {
     pos: 16,
     equipo: "FERNETBACHE",
+    escudo: "https://ligacubb.com/imagenes/fernetbache.png",
     pts: 4,
     pj: 8,
     pg: 1,
@@ -296,7 +312,7 @@ const data = [
     gf: 7,
     gc: 18,
     dg: -11,
-    nextMatch: "/assets/ultracuevafc.png",
+    nextMatch: "https://ligacubb.com/imagenes/inquifc.png",
   },
 ];
 

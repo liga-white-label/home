@@ -4,8 +4,10 @@ import { LinkNavigator } from "./LinkNavigator";
 import { Icon } from "@mui/material";
 import { Menu } from "@mui/icons-material";
 import Link from "next/link";
+import { useSidebar } from "../context/SideBarContext";
 
 export const NavBar = () => {
+  const { switchSidebar } = useSidebar();
   return (
     <div
       className={`h-20 bg-[#a60000] w-full z-50 flex items-center justify-center`}
@@ -19,7 +21,7 @@ export const NavBar = () => {
         />
       </Link>
       <LinkNavigator />
-      <div className="lg:hidden flex absolute right-5">
+      <div className="lg:hidden flex absolute right-5" onClick={switchSidebar}>
         <Menu className="text-white h-10 w-10" />
       </div>
     </div>

@@ -1,11 +1,13 @@
 import Image from "next/image";
 import { FC } from "react";
 import { abbreviateTeamName } from "../utils/stringUtils";
+import { NextTeamInfo } from "./NextTeamInfo";
 
 interface TablaPosicionesProps {
   data: {
     pos: number;
     equipo: string;
+    escudo: string;
     pts: number;
     pj: number;
     pg: number;
@@ -57,7 +59,7 @@ export const TablaPosiciones: FC<TablaPosicionesProps> = ({ data }) => {
               </td>
               <td className="px-2 md:px-4 items-center gap-4 md:flex hidden">
                 <Image
-                  src={"/assets/ultracuevafc.png"}
+                  src={team.escudo}
                   alt={team.equipo}
                   height={20}
                   width={30}
@@ -67,7 +69,7 @@ export const TablaPosiciones: FC<TablaPosicionesProps> = ({ data }) => {
               <td className="px-1 md:px-4  md:hidden">
                 <div className="flex items-center gap-4">
                   <Image
-                    src={"/assets/ultracuevafc.png"}
+                    src={team.escudo}
                     alt={team.equipo}
                     height={20}
                     width={30}
@@ -92,11 +94,8 @@ export const TablaPosiciones: FC<TablaPosicionesProps> = ({ data }) => {
                 {team.pts}
               </td>
               <td className="justify-center px-2 md:px-4 py-2  text-center font-bold md:flex hidden">
-                <Image
-                  src={team.nextMatch}
-                  alt={team.nextMatch}
-                  height={20}
-                  width={30}
+                <NextTeamInfo
+                  data={{ escudo: team.escudo, nextTeam: team.nextMatch }}
                 />
               </td>
             </tr>

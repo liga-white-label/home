@@ -1,29 +1,100 @@
 "use client";
+import { Menu, MenuItem, Popover } from "@mui/material";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 export const LinkNavigator = () => {
   const path = usePathname();
 
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
+
   return (
     <div className="gap-10 text-lg text-white underline-offset-8 hidden lg:flex">
       <Link href={"/"}>
-        <p
+        <button
           className={`transition-opacity	hover:underline ${
             path === "/" ? "underline" : ""
           } hover:cursor-pointer`}
         >
           Inicio
-        </p>
+        </button>
       </Link>
       <div className="relative">
-        <p
+        <button
+          id="basic-button"
+          aria-controls={open ? "basic-menu" : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? "true" : undefined}
+          onClick={handleClick}
           className={`hover:underline ${
             path.includes("categoria") ? "underline" : ""
           } hover:cursor-pointer`}
         >
           Categorias
-        </p>
+        </button>
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          MenuListProps={{
+            className: "bg-[#A60000] text-white",
+            "aria-labelledby": "basic-button",
+          }}
+        >
+          <MenuItem onClick={handleClose}>
+            <Link href={"/categoria-a"}>
+              <p className="text-lg">Categoria A - Masculina</p>
+            </Link>
+          </MenuItem>
+          <MenuItem onClick={handleClose}>
+            <Link href={"/categoria-a-fem"}>
+              <p className="text-lg">Categoria A - Femenina</p>
+            </Link>
+          </MenuItem>
+          <MenuItem onClick={handleClose}>
+            <Link href={"/categoria-b"}>
+              <p className="text-lg">Categoria B - Masculina</p>
+            </Link>
+          </MenuItem>
+          <MenuItem onClick={handleClose}>
+            <Link href={"/categoria-b-fem"}>
+              <p className="text-lg">Categoria B - Femenina</p>
+            </Link>
+          </MenuItem>
+          <MenuItem onClick={handleClose}>
+            <Link href={"/categoria-c"}>
+              <p className="text-lg">Categoria C - Masculina</p>
+            </Link>
+          </MenuItem>
+          <MenuItem onClick={handleClose}>
+            <Link href={"/categoria-c-fem"}>
+              <p className="text-lg">Categoria C - Femenina</p>
+            </Link>
+          </MenuItem>
+          <MenuItem onClick={handleClose}>
+            <Link href={"/categoria-d"}>
+              <p className="text-lg">Categoria D - Masculina</p>
+            </Link>
+          </MenuItem>
+          <MenuItem onClick={handleClose}>
+            <Link href={"/categoria-e"}>
+              <p className="text-lg">Categoria E - Masculina</p>
+            </Link>
+          </MenuItem>
+        </Menu>
       </div>
       <p
         className={`hover:underline ${
