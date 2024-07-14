@@ -2,7 +2,7 @@ import { ArrowDropDown } from "@mui/icons-material";
 
 export const WelcomeGifContainer = () => {
   return (
-    <div className="flex flex-col items-center h-[95svh] bg-[#a60000]">
+    <div className="flex flex-col items-center h-[95svh] bg-[#220a0a]">
       {/* <img
         className="max-w-full h-[85svh] flex object-cover"
         draggable="false"
