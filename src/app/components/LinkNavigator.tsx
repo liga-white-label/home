@@ -1,5 +1,5 @@
 "use client";
-import { Menu, MenuItem, Popover } from "@mui/material";
+import { Divider, Menu, MenuItem, Popover } from "@mui/material";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -54,34 +54,31 @@ export const LinkNavigator = () => {
             "aria-labelledby": "basic-button",
           }}
         >
+          <Divider
+            className="text-white"
+            sx={{
+              "&::before, &::after": {
+                borderColor: "white",
+              },
+            }}
+          >
+            Masculino
+          </Divider>
           <MenuItem onClick={handleClose}>
             <Link href={"/categoria-a"}>
               <p className="text-lg">Categoria A - Masculina</p>
             </Link>
           </MenuItem>
-          <MenuItem onClick={handleClose}>
-            <Link href={"/categoria-a-fem"}>
-              <p className="text-lg">Categoria A - Femenina</p>
-            </Link>
-          </MenuItem>
+
           <MenuItem onClick={handleClose}>
             <Link href={"/categoria-b"}>
               <p className="text-lg">Categoria B - Masculina</p>
             </Link>
           </MenuItem>
-          <MenuItem onClick={handleClose}>
-            <Link href={"/categoria-b-fem"}>
-              <p className="text-lg">Categoria B - Femenina</p>
-            </Link>
-          </MenuItem>
+
           <MenuItem onClick={handleClose}>
             <Link href={"/categoria-c"}>
               <p className="text-lg">Categoria C - Masculina</p>
-            </Link>
-          </MenuItem>
-          <MenuItem onClick={handleClose}>
-            <Link href={"/categoria-c-fem"}>
-              <p className="text-lg">Categoria C - Femenina</p>
             </Link>
           </MenuItem>
           <MenuItem onClick={handleClose}>
@@ -92,6 +89,31 @@ export const LinkNavigator = () => {
           <MenuItem onClick={handleClose}>
             <Link href={"/categoria-e"}>
               <p className="text-lg">Categoria E - Masculina</p>
+            </Link>
+          </MenuItem>
+          <Divider
+            className="text-white"
+            sx={{
+              "&::before, &::after": {
+                borderColor: "white",
+              },
+            }}
+          >
+            Femenino
+          </Divider>
+          <MenuItem onClick={handleClose}>
+            <Link href={"/categoria-a-fem"}>
+              <p className="text-lg">Categoria A - Femenina</p>
+            </Link>
+          </MenuItem>
+          <MenuItem onClick={handleClose}>
+            <Link href={"/categoria-b-fem"}>
+              <p className="text-lg">Categoria B - Femenina</p>
+            </Link>
+          </MenuItem>
+          <MenuItem onClick={handleClose}>
+            <Link href={"/categoria-c-fem"}>
+              <p className="text-lg">Categoria C - Femenina</p>
             </Link>
           </MenuItem>
         </Menu>

@@ -1,18 +1,17 @@
 "use client";
-import { Container, Grid, Tab } from "@mui/material";
-import Tabs from "@mui/material/Tabs";
 
-import { FechaSelector } from "../components/FechaSelector";
-import { MatchProps } from "../components/Match";
 import { FC, useState } from "react";
-import Section from "../components/Section";
 import { TablaPosiciones } from "./TablaPosiciones";
+import { Match } from "../models/Match";
+import { FixturePage } from "./FixturePage";
+import { EstadisticasPage } from "./EstadisticasPage";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 interface CategoriaPageBaseProps {
   title: string;
   dias: string[];
   selectedDia: number;
-  partidosPorDia: { title: string; matches: MatchProps[] };
+  partidosPorDia: { title: string; matches: Match[] };
   handleDia: (dia: number) => void;
 }
 export enum TabsEnum {
@@ -21,13 +20,7 @@ export enum TabsEnum {
   ESTADISTICAS = 2,
 }
 
-export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
-  title,
-  dias,
-  selectedDia,
-  partidosPorDia,
-  handleDia,
-}) => {
+export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({ title }) => {
   const [selectedTab, setSelectedTab] = useState<TabsEnum>(TabsEnum.POSICIONES);
 
   const handleChangeTab = (newValue: TabsEnum) => {
@@ -78,15 +71,18 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
           </div>
         </div>
       </div>
-      <div className="overflow-hidden overflow-x-hidden p-2 md:p-10">
-        {selectedTab === TabsEnum.POSICIONES && <PosicionesPage />}
+      <div className="h-full w-full overflow-hidden overflow-x-hidden p-4 md:p-10">
+        {selectedTab === TabsEnum.POSICIONES && <TablaPosiciones data={data} />}
+        {selectedTab === TabsEnum.FIXTURE && <FixturePage matches={matches} />}
+        {selectedTab === TabsEnum.ESTADISTICAS && (
+          <EstadisticasPage
+            goleadores={goleadoresData}
+            amarillas={amarillasData}
+          />
+        )}
       </div>
     </main>
   );
-};
-
-const PosicionesPage = () => {
-  return <TablaPosiciones data={data} />;
 };
 
 const data = [
@@ -316,49 +312,467 @@ const data = [
   },
 ];
 
-{
-  /* <Container className="w-full flex flex-col items-center justify-center gap-5">
-        <div className="w-full bg-white rounded-md py-2">
-          <h2 className="text-center  font-bold text-2xl">{title}</h2>
-        </div>
-        <FechaSelector />
-        <div className="w-full">
-          <Tabs
-            value={selectedDia}
-            onChange={handleChangeDia}
-            variant="fullWidth"
-            className="w-full bg-white"
-          >
-            {dias.map((d) => (
-              <Tab label={d} />
-            ))}
-          </Tabs>
+const matches: Match[] = [
+  {
+    team1: {
+      name: "SUPERGEDIENTOS",
+      logoUrl: "https://ligacubb.com/imagenes/supergedientos.png",
+      gender: "male",
+      category_id: 1,
+    },
+    team2: {
+      name: "RITMO Y SUSTANCIA",
+      logoUrl: "https://ligacubb.com/imagenes/ritmoysustancia.png",
+      gender: "male",
+      category_id: 1,
+    },
+    time: "14:00",
+    score1: 0,
+    score2: 5,
+    details: [
+      { type: "gol", player_name: "Martin Emiliano Aguero", team: "team2" },
+      { type: "gol", player_name: "Martin Emiliano Aguero", team: "team2" },
+      { type: "gol", player_name: "Martin Emiliano Aguero", team: "team2" },
+      { type: "gol", player_name: "Luciano Keegan", team: "team2" },
+      { type: "gol", player_name: "Facundo Ruiz", team: "team2" },
+    ],
+    cancha: "SINTETICO 4",
+  },
+  {
+    team1: {
+      name: "THE BIRDS",
+      logoUrl: "https://ligacubb.com/imagenes/thebirds.png",
+      gender: "male",
+      category_id: 1,
+    },
+    team2: {
+      name: "LA BIGORNA FC",
+      logoUrl: "https://ligacubb.com/imagenes/labigorniafc.png",
+      gender: "male",
+      category_id: 1,
+    },
+    time: "15:15",
+    score1: 1,
+    score2: 1,
+    details: [],
+    cancha: "CANCHA 9",
+  },
+  {
+    team1: {
+      name: "REPO PA",
+      logoUrl: "https://ligacubb.com/imagenes/repopa.png",
+      gender: "male",
+      category_id: 1,
+    },
+    team2: {
+      name: "BAFANGULO",
+      logoUrl: "https://ligacubb.com/imagenes/bafangulo.png",
+      gender: "male",
+      category_id: 1,
+    },
+    time: "16:30",
+    score1: 1,
+    score2: 1,
+    details: [{ type: "gol", player_name: "Gian Farina", team: "team1" }],
+    cancha: "SINTETICO 4",
+  },
+  {
+    team1: {
+      name: "FUERTE AL MEDIO",
+      logoUrl: "https://ligacubb.com/imagenes/fuertealmedio.png",
+      gender: "male",
+      category_id: 1,
+    },
+    team2: {
+      name: "MANDIYU'S REVENGE",
+      logoUrl: "https://ligacubb.com/imagenes/mandiyusrevenge.png",
+      gender: "male",
+      category_id: 1,
+    },
+    time: "16:30",
+    score1: 0,
+    score2: 5,
+    details: [],
+    cancha: "CANCHA 9",
+  },
+  {
+    team1: {
+      name: "LIVERFULL",
+      logoUrl: "https://ligacubb.com/imagenes/liverfull.png",
+      gender: "male",
+      category_id: 1,
+    },
+    team2: {
+      name: "SIN CONTRATO",
+      logoUrl: "https://ligacubb.com/imagenes/sincontrato.png",
+      gender: "male",
+      category_id: 1,
+    },
+    time: "14:00",
+    score1: 0,
+    score2: 4,
+    details: [],
+    cancha: "CANCHA 9",
+  },
+  {
+    team1: {
+      name: "ULTRACUEVA FC",
+      logoUrl: "https://ligacubb.com/imagenes/ultracuevafc.png",
+      gender: "male",
+      category_id: 1,
+    },
+    team2: {
+      name: "FONDO BLANCO",
+      logoUrl: "https://ligacubb.com/imagenes/fondoblanco.png",
+      gender: "male",
+      category_id: 1,
+    },
+    time: "15:15",
+    score1: 1,
+    score2: 1,
+    details: [],
+    cancha: "SINTETICO 4",
+  },
+  {
+    team1: {
+      name: "INQUI FC",
+      logoUrl: "https://ligacubb.com/imagenes/inquifc.png",
+      gender: "male",
+      category_id: 1,
+    },
+    team2: {
+      name: "FERNETBACHE",
+      logoUrl: "https://ligacubb.com/imagenes/fernetbache.png",
+      gender: "male",
+      category_id: 1,
+    },
+    time: "16:30",
+    score1: 0,
+    score2: 0,
+    details: [],
+    cancha: "SINTETICO 4",
+  },
+  {
+    team1: {
+      name: "CUALQUIER FRUTA Y/O VERDURA",
+      logoUrl: "https://ligacubb.com/imagenes/cualquierfrutayoverdura.png",
+      gender: "male",
+      category_id: 1,
+    },
+    team2: {
+      name: "ANTIDEPORTIVO CACACIOLI",
+      logoUrl: "https://ligacubb.com/imagenes/antideportivocacacioli.png",
+      gender: "male",
+      category_id: 1,
+    },
+    time: "16:30",
+    score1: 1,
+    score2: 3,
+    details: [
+      { type: "gol", player_name: "Franco Escobar", team: "team2" },
+      { type: "gol", player_name: "Federico Higonet", team: "team2" },
+      { type: "gol", player_name: "Federico Higonet", team: "team2" },
+    ],
+    cancha: "CANCHA 9",
+  },
+];
 
-          <Section
-            title={partidosPorDia.title}
-            matches={partidosPorDia.matches}
-          />
-        </div>
-        <div className="max-w-full">
-          <Tabs
-            value={selectedTable}
-            onChange={handleChangeTable}
-            variant="fullWidth"
-            className="w-full bg-white"
-          >
-            <Tab label={"Posiciones"} />
-            <Tab label={"Goleadores"} />
-            <Tab label={"Tarjetas"} />
-          </Tabs>
-          {selectedTable === TablesEnum.POSICIONES && (
-            <TablaPosiciones data={data} />
-          )}
-          {selectedTable === TablesEnum.GOLEADORES && (
-            <TablaPosiciones data={data} />
-          )}
-          {selectedTable === TablesEnum.TARJETAS && (
-            <TablaPosiciones data={data} />
-          )}
-        </div>
-      </Container> */
-}
+const goleadoresData = [
+  {
+    pos: 1,
+    jugador: "GRASSI ANGELO EMILIO",
+    equipo: "LA BIGORNIA F.C.",
+    escudo: "https://ligacubb.com/imagenes/labigorniafc.png",
+    goles: 8,
+  },
+  {
+    pos: 2,
+    jugador: "DI FIORI GUERRA FABRICIO BALTAZAR",
+    equipo: "ULTRA CUEVA F.C.",
+    escudo: "https://ligacubb.com/imagenes/ultracuevafc.png",
+    goles: 6,
+  },
+  {
+    pos: 3,
+    jugador: "AGUERO MARTIN EMILIANO",
+    equipo: "RITMO Y SUSTANCIA",
+    escudo: "https://ligacubb.com/imagenes/ritmoysustancia.png",
+    goles: 5,
+  },
+  {
+    pos: 4,
+    jugador: "FRANCHI TOMAS",
+    equipo: "REPO P.A",
+    escudo: "https://ligacubb.com/imagenes/repopa.png",
+    goles: 5,
+  },
+  {
+    pos: 5,
+    jugador: "TIRABASSO FRANCO AGUSTN",
+    equipo: "SUPERGEDIENTOS",
+    escudo: "https://ligacubb.com/imagenes/supergedientos.png",
+    goles: 5,
+  },
+  {
+    pos: 6,
+    jugador: "BARRIOS VALENTIN",
+    equipo: "LIVERFULL",
+    escudo: "https://ligacubb.com/imagenes/liverfull.png",
+    goles: 4,
+  },
+  {
+    pos: 7,
+    jugador: "ESCOBAR FRANCO",
+    equipo: "ANTIDEPORTIVO CACACCIOLI",
+    escudo: "https://ligacubb.com/imagenes/antideportivocacacioli.png",
+    goles: 4,
+  },
+  {
+    pos: 8,
+    jugador: "KEIL TOBIAS",
+    equipo: "THE BIRDS",
+    escudo: "https://ligacubb.com/imagenes/thebirds.png",
+    goles: 4,
+  },
+  {
+    pos: 9,
+    jugador: "MATE MANUEL",
+    equipo: "FUERTE AL MEDIO",
+    escudo: "https://ligacubb.com/imagenes/fuertealmedio.png",
+    goles: 4,
+  },
+  {
+    pos: 10,
+    jugador: "ROQUE NICOLAS",
+    equipo: "FERNETBACHE",
+    escudo: "https://ligacubb.com/imagenes/fernetbache.png",
+    goles: 4,
+  },
+  {
+    pos: 11,
+    jugador: "ALENCASTRE CORDI JOAQUIN",
+    equipo: "SIN CONTRATO",
+    escudo: "https://ligacubb.com/imagenes/sincontrato.png",
+    goles: 3,
+  },
+  {
+    pos: 12,
+    jugador: "ARAUJO GONZALO MANUEL",
+    equipo: "ANTIDEPORTIVO CACACCIOLI",
+    escudo: "https://ligacubb.com/imagenes/antideportivocacacioli.png",
+    goles: 3,
+  },
+  {
+    pos: 13,
+    jugador: "CICCONE RENZO",
+    equipo: "INQUI F.C.",
+    escudo: "https://ligacubb.com/imagenes/ritmoysustancia.png",
+    goles: 3,
+  },
+  {
+    pos: 14,
+    jugador: "FISCHER GERONIMO WALTER",
+    equipo: "SIN CONTRATO",
+    escudo: "https://ligacubb.com/imagenes/sincontrato.png",
+    goles: 3,
+  },
+  {
+    pos: 15,
+    jugador: "FUNES SACHA",
+    equipo: "MANDIYU'S REVENGE",
+    escudo: "https://ligacubb.com/imagenes/mandiyusrevenge.png",
+    goles: 3,
+  },
+  {
+    pos: 16,
+    jugador: "HERNANDEZ JUAN IGNACIO",
+    equipo: "ANTIDEPORTIVO CACACCIOLI",
+    escudo: "https://ligacubb.com/imagenes/antideportivocacacioli.png",
+    goles: 3,
+  },
+  {
+    pos: 17,
+    jugador: "ITURRIOZ IGNACIO",
+    equipo: "THE BIRDS",
+    escudo: "https://ligacubb.com/imagenes/thebirds.png",
+    goles: 3,
+  },
+  {
+    pos: 18,
+    jugador: "MIGUEL SANTIAGO",
+    equipo: "SIN CONTRATO",
+    escudo: "https://ligacubb.com/imagenes/sincontrato.png",
+    goles: 3,
+  },
+  {
+    pos: 19,
+    jugador: "PIERRESTEGUI MANUEL",
+    equipo: "FONDO BLANCO",
+    escudo: "https://ligacubb.com/imagenes/fondoblanco.png",
+    goles: 3,
+  },
+  {
+    pos: 20,
+    jugador: "POCHON MARTIN",
+    equipo: "SIN CONTRATO",
+    escudo: "https://ligacubb.com/imagenes/sincontrato.png",
+    goles: 3,
+  },
+  {
+    pos: 21,
+    jugador: "STANGEN IAN",
+    equipo: "MANDIYU'S REVENGE",
+    escudo: "https://ligacubb.com/imagenes/mandiyusrevenge.png",
+    goles: 3,
+  },
+];
+
+const amarillasData = [
+  {
+    pos: 1,
+    jugador: "AGUERO MARTIN EMILIANO",
+    equipo: "RITMO Y SUSTANCIA",
+    escudo: "https://ligacubb.com/imagenes/ritmoysustancia.png",
+    tarjetas: 4,
+  },
+  {
+    pos: 2,
+    jugador: "MAS MANUEL",
+    equipo: "LIVERFULL",
+    escudo: "https://ligacubb.com/imagenes/liverfull.png",
+    tarjetas: 4,
+  },
+  {
+    pos: 3,
+    jugador: "TIRABASSO FRANCO AGUSTN",
+    equipo: "SUPERGEDIENTOS",
+    escudo: "https://ligacubb.com/imagenes/supergedientos.png",
+    tarjetas: 4,
+  },
+  {
+    pos: 4,
+    jugador: "TOVAR JUAN BAUTISTA",
+    equipo: "CUALQUIER FRUTA Y/O VERDURA",
+    escudo: "https://ligacubb.com/imagenes/cualquierfrutayoverdura.png",
+    tarjetas: 4,
+  },
+  {
+    pos: 5,
+    jugador: "BRAÑAS JERONIMO",
+    equipo: "MANDIYU'S REVENGE",
+    escudo: "https://ligacubb.com/imagenes/mandiyusrevenge.png",
+    tarjetas: 3,
+  },
+  {
+    pos: 6,
+    jugador: "ESCOBAR FRANCO",
+    equipo: "ANTIDEPORTIVO CACACCIOLI",
+    escudo: "https://ligacubb.com/imagenes/antideportivocacacioli.png",
+    tarjetas: 3,
+  },
+  {
+    pos: 7,
+    jugador: "FARINA GIANFRANCO",
+    equipo: "REPO P.A",
+    escudo: "https://ligacubb.com/imagenes/repopa.png",
+    tarjetas: 3,
+  },
+  {
+    pos: 8,
+    jugador: "GONZALEZ NICOLAS",
+    equipo: "ANTIDEPORTIVO CACACCIOLI",
+    escudo: "https://ligacubb.com/imagenes/antideportivocacacioli.png",
+    tarjetas: 3,
+  },
+  {
+    pos: 9,
+    jugador: "GRASSI ANGELO EMILIO",
+    equipo: "LA BIGORNIA F.C.",
+    escudo: "https://ligacubb.com/imagenes/labigorniafc.png",
+    tarjetas: 3,
+  },
+  {
+    pos: 10,
+    jugador: "HOLZMAN JULIAN",
+    equipo: "FERNETBACHE",
+    escudo: "https://ligacubb.com/imagenes/fernetbache.png",
+    tarjetas: 3,
+  },
+  {
+    pos: 11,
+    jugador: "LANTALILLA IVAN RODRIGO",
+    equipo: "BAFANGULO",
+    escudo: "https://ligacubb.com/imagenes/bafangulo.png",
+    tarjetas: 3,
+  },
+  {
+    pos: 12,
+    jugador: "MASCIOLI BERNARDO",
+    equipo: "BAFANGULO",
+    escudo: "https://ligacubb.com/imagenes/bafangulo.png",
+    tarjetas: 3,
+  },
+  {
+    pos: 13,
+    jugador: "MEYER LUIS MATIAS",
+    equipo: "FONDO BLANCO",
+    escudo: "https://ligacubb.com/imagenes/fondoblanco.png",
+    tarjetas: 3,
+  },
+  {
+    pos: 14,
+    jugador: "MONDINO JUAN CRUZ",
+    equipo: "LIVERFULL",
+    escudo: "https://ligacubb.com/imagenes/liverfull.png",
+    tarjetas: 3,
+  },
+  {
+    pos: 15,
+    jugador: "RIVAS FACUNDO",
+    equipo: "ANTIDEPORTIVO CACACCIOLI",
+    escudo: "https://ligacubb.com/imagenes/antideportivocacacioli.png",
+    tarjetas: 3,
+  },
+  {
+    pos: 16,
+    jugador: "RUESGA LEOPOLDO",
+    equipo: "RITMO Y SUSTANCIA",
+    escudo: "https://ligacubb.com/imagenes/ritmoysustancia.png",
+    tarjetas: 3,
+  },
+  {
+    pos: 17,
+    jugador: "SALAZAR MARTIN",
+    equipo: "THE BIRDS",
+    escudo: "https://ligacubb.com/imagenes/thebirds.png",
+    tarjetas: 3,
+  },
+  {
+    pos: 18,
+    jugador: "SCHWAB MAX",
+    equipo: "INQUI F.C.",
+    escudo: "https://ligacubb.com/imagenes/inquifc.png",
+    tarjetas: 3,
+  },
+  {
+    pos: 19,
+    jugador: "STORNI BERNABE",
+    equipo: "MANDIYU'S REVENGE",
+    escudo: "https://ligacubb.com/imagenes/mandiyusrevenge.png",
+    tarjetas: 3,
+  },
+  {
+    pos: 20,
+    jugador: "TEJERINA SANTIAGO ANDRES",
+    equipo: "SIN CONTRATO",
+    escudo: "https://ligacubb.com/imagenes/sincontrato.png",
+    tarjetas: 3,
+  },
+  {
+    pos: 21,
+    jugador: "VARRETTO IGNACIO",
+    equipo: "LA BIGORNIA F.C.",
+    escudo: "https://ligacubb.com/imagenes/labigorniafc.png",
+    tarjetas: 3,
+  },
+];
