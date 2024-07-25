@@ -6,8 +6,12 @@ import { abbreviateTeamName } from "../utils/stringUtils";
 
 interface PartidosPorDiaProps {
   matches: Match[];
+  handleClickSeeMatch: (match: Match) => void;
 }
-export const PartidosPorDia: React.FC<PartidosPorDiaProps> = ({ matches }) => {
+export const PartidosPorDia: React.FC<PartidosPorDiaProps> = ({
+  matches,
+  handleClickSeeMatch,
+}) => {
   return (
     <table className="w-full bg-white">
       <tbody>
@@ -63,7 +67,10 @@ export const PartidosPorDia: React.FC<PartidosPorDiaProps> = ({ matches }) => {
             </td>
 
             <td className="flex items-center justify-end w-full gap-5 px-2 md:px-4 py-2 max-[320px]:hidden">
-              <button className="flex gap-2 items-center">
+              <button
+                className="flex gap-2 items-center"
+                onClick={() => handleClickSeeMatch(match)}
+              >
                 <VisibilityIcon />
                 <p className="max-[500px]:hidden flex">Ver</p>
               </button>

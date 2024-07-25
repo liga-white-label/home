@@ -1,4 +1,4 @@
-import { Inferencia } from "../components/Match";
+import { Incidencia } from "../components/Match";
 import { Team } from "./Team";
 
 export interface Match {
@@ -7,6 +7,8 @@ export interface Match {
   time: string;
   score1?: number;
   score2?: number;
-  details?: Inferencia[];
+  details?: Incidencia[];
   cancha: string;
+  planillero: Team;
+  linea: Team;
 }

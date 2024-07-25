@@ -1,20 +1,24 @@
 import { SportsSoccer, Rectangle } from "@mui/icons-material";
 import { FC } from "react";
-import { Inferencia } from "./Match";
+import { Incidencia } from "./Match";
 
-interface InferenciaByTeamProps {
-  inferencia: Inferencia;
+interface IncidenciaByTeamProps {
+  incidencia: Incidencia;
 }
 
-export const InferenciaByTeam: FC<InferenciaByTeamProps> = ({ inferencia }) => {
+export const IncidenciaByTeam: FC<IncidenciaByTeamProps> = ({ incidencia }) => {
   return (
-    <div className="flex gap-2 items-center ">
-      {inferencia.type === "gol" ? (
-        <SportsSoccer className="h-4 w-4" />
+    <div
+      className={`flex gap-2 items-center ${
+        incidencia.team === "team1" ? "flex-row-reverse" : "flex-row"
+      }`}
+    >
+      {incidencia.type === "gol" ? (
+        <SportsSoccer className="h-10 w-10" />
       ) : (
-        <Rectangle className="h-4 w-4 rotate-90" color="error" />
+        <Rectangle className="h-10 w-10 rotate-90" color="error" />
       )}
-      <p>{inferencia.player_name}</p>
+      <p className="text-lg">{incidencia.player_name}</p>
     </div>
   );
 };

@@ -1,10 +1,10 @@
 import { AddBox, Bookmark, Rectangle, SportsSoccer } from "@mui/icons-material";
 import { Grid, Typography } from "@mui/material";
 import React, { FC } from "react";
-import { InferenciasContainer } from "./InferenciasContainer";
 import Image from "next/image";
+import { IncidenciasContainer } from "./InferenciasContainer";
 
-export interface Inferencia {
+export interface Incidencia {
   type: "expulsion" | "gol";
   player_name: string;
   team: "team1" | "team2";
@@ -16,12 +16,12 @@ export interface MatchProps {
   team2: string;
   score1?: number;
   score2?: number;
-  details?: Inferencia[];
+  details?: Incidencia[];
   fem?: boolean;
   cancha?: string;
 }
 
-const inferencias_mock: Inferencia[] = [
+const Incidencias_mock: Incidencia[] = [
   { type: "gol", player_name: "Joaquin Franciscutti", team: "team1" },
   { type: "expulsion", player_name: "Edinson Cavani", team: "team2" },
   { type: "gol", player_name: "Joaquin Franciscutti", team: "team1" },
@@ -95,7 +95,7 @@ const Match: React.FC<MatchProps & { last: boolean }> = ({
             </Grid>
           </Grid>
         </Grid>
-        {false && <InferenciasContainer inferencias={inferencias_mock} />}
+        {false && <IncidenciasContainer Incidencias={Incidencias_mock} />}
       </Grid>
     </div>
   );

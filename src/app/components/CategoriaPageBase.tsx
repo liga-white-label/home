@@ -333,10 +333,24 @@ const matches: Match[] = [
       { type: "gol", player_name: "Martin Emiliano Aguero", team: "team2" },
       { type: "gol", player_name: "Martin Emiliano Aguero", team: "team2" },
       { type: "gol", player_name: "Martin Emiliano Aguero", team: "team2" },
-      { type: "gol", player_name: "Luciano Keegan", team: "team2" },
-      { type: "gol", player_name: "Facundo Ruiz", team: "team2" },
+      { type: "gol", player_name: "Tomás Acosta", team: "team2" },
+      { type: "gol", player_name: "Tomás Acosta", team: "team2" },
+      { type: "expulsion", player_name: "Martin Palermo", team: "team1" },
+      { type: "expulsion", player_name: "Roman Riquelme", team: "team1" },
     ],
     cancha: "SINTETICO 4",
+    planillero: {
+      name: "THE BIRDS",
+      logoUrl: "https://ligacubb.com/imagenes/thebirds.png",
+      gender: "male",
+      category_id: 1,
+    },
+    linea: {
+      name: "LA BIGORNA FC",
+      logoUrl: "https://ligacubb.com/imagenes/labigorniafc.png",
+      gender: "male",
+      category_id: 1,
+    },
   },
   {
     team1: {
@@ -356,6 +370,18 @@ const matches: Match[] = [
     score2: 1,
     details: [],
     cancha: "CANCHA 9",
+    planillero: {
+      name: "REPO PA",
+      logoUrl: "https://ligacubb.com/imagenes/repopa.png",
+      gender: "male",
+      category_id: 1,
+    },
+    linea: {
+      name: "BAFANGULO",
+      logoUrl: "https://ligacubb.com/imagenes/bafangulo.png",
+      gender: "male",
+      category_id: 1,
+    },
   },
   {
     team1: {
@@ -375,6 +401,18 @@ const matches: Match[] = [
     score2: 1,
     details: [{ type: "gol", player_name: "Gian Farina", team: "team1" }],
     cancha: "SINTETICO 4",
+    planillero: {
+      name: "FUERTE AL MEDIO",
+      logoUrl: "https://ligacubb.com/imagenes/fuertealmedio.png",
+      gender: "male",
+      category_id: 1,
+    },
+    linea: {
+      name: "MANDIYU'S REVENGE",
+      logoUrl: "https://ligacubb.com/imagenes/mandiyusrevenge.png",
+      gender: "male",
+      category_id: 1,
+    },
   },
   {
     team1: {
@@ -394,6 +432,18 @@ const matches: Match[] = [
     score2: 5,
     details: [],
     cancha: "CANCHA 9",
+    planillero: {
+      name: "LIVERFULL",
+      logoUrl: "https://ligacubb.com/imagenes/liverfull.png",
+      gender: "male",
+      category_id: 1,
+    },
+    linea: {
+      name: "SIN CONTRATO",
+      logoUrl: "https://ligacubb.com/imagenes/sincontrato.png",
+      gender: "male",
+      category_id: 1,
+    },
   },
   {
     team1: {
@@ -413,6 +463,18 @@ const matches: Match[] = [
     score2: 4,
     details: [],
     cancha: "CANCHA 9",
+    planillero: {
+      name: "ULTRACUEVA FC",
+      logoUrl: "https://ligacubb.com/imagenes/ultracuevafc.png",
+      gender: "male",
+      category_id: 1,
+    },
+    linea: {
+      name: "FONDO BLANCO",
+      logoUrl: "https://ligacubb.com/imagenes/fondoblanco.png",
+      gender: "male",
+      category_id: 1,
+    },
   },
   {
     team1: {
@@ -432,6 +494,18 @@ const matches: Match[] = [
     score2: 1,
     details: [],
     cancha: "SINTETICO 4",
+    planillero: {
+      name: "INQUI FC",
+      logoUrl: "https://ligacubb.com/imagenes/inquifc.png",
+      gender: "male",
+      category_id: 1,
+    },
+    linea: {
+      name: "FERNETBACHE",
+      logoUrl: "https://ligacubb.com/imagenes/fernetbache.png",
+      gender: "male",
+      category_id: 1,
+    },
   },
   {
     team1: {
@@ -451,6 +525,18 @@ const matches: Match[] = [
     score2: 0,
     details: [],
     cancha: "SINTETICO 4",
+    planillero: {
+      name: "CUALQUIER FRUTA Y/O VERDURA",
+      logoUrl: "https://ligacubb.com/imagenes/cualquierfrutayoverdura.png",
+      gender: "male",
+      category_id: 1,
+    },
+    linea: {
+      name: "ANTIDEPORTIVO CACACIOLI",
+      logoUrl: "https://ligacubb.com/imagenes/antideportivocacacioli.png",
+      gender: "male",
+      category_id: 1,
+    },
   },
   {
     team1: {
@@ -474,6 +560,18 @@ const matches: Match[] = [
       { type: "gol", player_name: "Federico Higonet", team: "team2" },
     ],
     cancha: "CANCHA 9",
+    planillero: {
+      name: "SUPERGEDIENTOS",
+      logoUrl: "https://ligacubb.com/imagenes/supergedientos.png",
+      gender: "male",
+      category_id: 1,
+    },
+    linea: {
+      name: "RITMO Y SUSTANCIA",
+      logoUrl: "https://ligacubb.com/imagenes/ritmoysustancia.png",
+      gender: "male",
+      category_id: 1,
+    },
   },
 ];
 
