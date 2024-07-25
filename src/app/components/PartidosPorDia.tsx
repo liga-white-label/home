@@ -17,11 +17,11 @@ export const PartidosPorDia: React.FC<PartidosPorDiaProps> = ({
       <tbody>
         {matches.map((match, index) => (
           <tr
-            className={`flex flex-row items-center
+            className={`flex flex-row items-center gap-10
             ${index % 2 === 0 ? "bg-gray-200" : ""}`}
           >
-            <td className="flex items-center justify-end gap-5 px-2 md:px-4 py-2  sm:w-56 md:w-72 ">
-              <p className="max-[600px]:hidden flex line-clamp-1 text-ellipsis whitespace-nowrap  w-56">
+            <td className="flex items-center justify-end gap-5 px-2 md:px-4 py-2  ">
+              <p className="max-[600px]:hidden flex text-ellipsis">
                 {match.team1.name}
               </p>
               <p className="max-[600px]:flex hidden">
@@ -46,21 +46,20 @@ export const PartidosPorDia: React.FC<PartidosPorDiaProps> = ({
                 </div>
               )}
             </td>
-            <td className="flex items-center justify-start gap-5 px-2 md:px-4 py-2 sm:w-56 md:w-72 w-full ">
+            <td className="flex items-center justify-start gap-5 px-2 md:px-4 py-2  w-full ">
               <Image
                 src={match.team2.logoUrl}
                 height={20}
                 width={30}
                 alt={match.team2.name}
               />
-              <p className="max-[600px]:hidden flex line-clamp-1 text-ellipsis whitespace-nowrap  w-72">
+              <p className="max-[600px]:hidden flex text-ellipsis ">
                 {match.team2.name}
               </p>
               <p className="max-[600px]:flex hidden">
                 {abbreviateTeamName(match.team2.name)}
               </p>
             </td>
-
             <td className="flex items-center justify-start w-full gap-5 px-2 md:px-4 py-2 max-[768px]:hidden">
               <StadiumOutlinedIcon />
               <p>{match.cancha}</p>

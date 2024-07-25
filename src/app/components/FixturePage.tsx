@@ -22,6 +22,7 @@ import { abbreviateTeamName } from "../utils/stringUtils";
 import { AccessTime, CalendarMonth, Close, X } from "@mui/icons-material";
 import { useWidth } from "../utils/useResponsive";
 import { IncidenciaByTeam } from "./InferenciaByTeam";
+import { PartidosPorDiaV2 } from "./PartidosPorDiaV2";
 
 interface FixturePageProps {
   matches: Match[];
@@ -69,12 +70,12 @@ export const FixturePage: React.FC<FixturePageProps> = ({ matches }) => {
         </FormControl>
         <div className="max-w-full overflow-x-hidden flex flex-col gap-5 justify-center">
           <p className="font-bold max-sm:text-center">Sabado 13 de Julio</p>
-          <PartidosPorDia
+          <PartidosPorDiaV2
             matches={matches.filter((_, index) => index < 4)}
             handleClickSeeMatch={handleClickSeeMatch}
           />
           <p className="font-bold max-sm:text-center">Domingo 14 de Julio</p>
-          <PartidosPorDia
+          <PartidosPorDiaV2
             matches={matches.filter((_, index) => index >= 4)}
             handleClickSeeMatch={handleClickSeeMatch}
           />
