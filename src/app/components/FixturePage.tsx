@@ -1,5 +1,4 @@
 "use client";
-import { PartidosPorDia } from "./PartidosPorDia";
 import {
   Box,
   Dialog,
@@ -7,11 +6,9 @@ import {
   DialogTitle,
   Divider,
   FormControl,
-  Grid,
   MenuItem,
   Select,
   SelectChangeEvent,
-  Stack,
   Typography,
 } from "@mui/material";
 
@@ -19,7 +16,7 @@ import { useState } from "react";
 import { Match } from "../models/Match";
 import Image from "next/image";
 import { abbreviateTeamName } from "../utils/stringUtils";
-import { AccessTime, CalendarMonth, Close, X } from "@mui/icons-material";
+import { AccessTime, CalendarMonth, Close } from "@mui/icons-material";
 import { useWidth } from "../utils/useResponsive";
 import { IncidenciaByTeam } from "./InferenciaByTeam";
 import { PartidosPorDiaV2 } from "./PartidosPorDiaV2";

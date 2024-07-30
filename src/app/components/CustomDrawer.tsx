@@ -96,7 +96,9 @@ export const CustomDrawer = () => {
                 (text, index) => (
                   <ListItem key={index} disablePadding>
                     <Link
-                      href={"/categoria"}
+                      href={`/categoria-${text
+                        .split(" ")[1]
+                        .toLowerCase()}-fem`}
                       onClick={handleClose}
                       className="w-full"
                     >

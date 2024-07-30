@@ -7,7 +7,7 @@ import "../carousel/embla.css";
 import Link from "next/link";
 
 type PropType = {
-  slides: { title: string; asset: string }[];
+  slides: { title: string; asset: string; link: string }[];
   options?: EmblaOptionsType;
 };
 
@@ -28,7 +28,7 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
           {slides.map((item, index) => {
             return (
               <Link
-                href="/categoria-a"
+                href={item.link}
                 className="embla__slide h-svh cursor-pointer transform transition-transform duration-300 hover:scale-105 bg-center"
                 key={index}
                 style={{

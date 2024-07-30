@@ -1,141 +1,49 @@
 "use client";
-import { Footer } from "./components/Footer";
-import { MatchProps } from "./components/Match";
 import { WelcomeGifContainer } from "./components/WelcomeGifContainer";
 import EmblaCarousel from "./components/carousel/EmblaCarousel";
 
-const partidos_sabado: { title: string; matches: MatchProps[] }[] = [
-  {
-    title: "CATEGORIA A - MASCULINO",
-    matches: [
-      {
-        cancha: "Cancha 9",
-        time: "15:15",
-        team1: "ULTRACUEVA FC",
-        team2: "LA BIGORNIA",
-      },
-      {
-        time: "16:30",
-        cancha: "Sintetico 3",
-        team1: "SUPERGEDIENTOS",
-        team2: "FUERTE AL MEDIO",
-      },
-      {
-        time: "16:30",
-        cancha: "Cancha 9",
-        team1: "THE BIRDS",
-        team2: "FERNETBACHE",
-      },
-    ],
-  },
-  {
-    title: "CATEGORIA B - MASCULINO",
-    matches: [
-      {
-        cancha: "Sintetico 3",
-        time: "14:00",
-        team1: "MEDIA PINTA FC",
-        team2: "EQVIPO POTA",
-      },
-      {
-        time: "14:00",
-        cancha: "Cancha 11",
-        team1: "AVES RAPACES FC",
-        team2: "MORATORIA",
-      },
-      {
-        time: "15:15",
-        cancha: "Sintetico 3",
-        team1: "LAS MULAS",
-        team2: "ALTOS CAÑOS",
-      },
-      {
-        cancha: "Cancha 11",
-        time: "15:15",
-        team1: "TOBAS HUAINAS CLUB",
-        team2: "MARADONIANOS",
-      },
-      {
-        time: "16:30",
-        cancha: "Sintetico 1",
-        team1: "ALL BLACKS",
-        team2: "REAL DEPORTIVO COLOMBIA Y ALEM",
-      },
-      {
-        time: "16:30",
-        cancha: "Sintetico 4",
-        team1: "DEPORTIVO CHANFLE",
-        team2: "WINECHESTER",
-      },
-    ],
-  },
-];
-
-const partidos_domingo: { title: string; matches: MatchProps[] }[] = [
-  {
-    title: "CATEGORIA A - MASCULINO",
-    matches: [
-      {
-        cancha: "Cancha 9",
-        time: "12:45",
-        team1: "LIVERFULL",
-        team2: "BAFANGULO",
-      },
-      {
-        cancha: "Sintetico 4",
-        time: "15:15",
-        team1: "INQUI FC",
-        team2: "MANDIYU'S REVENGE",
-      },
-      {
-        time: "15:15",
-        cancha: "Cancha 9",
-        team1: "FONDO BLANCO",
-        team2: "ANTIDEPORTIVO CACACIOLI",
-      },
-      {
-        time: "16:30",
-        cancha: "Sintetico 4",
-        team1: "CUALQUIER FRUTA Y/O VERDURA",
-        team2: "SIN CONTRATO",
-      },
-      {
-        time: "16:30",
-        cancha: "Cancha 9",
-        team1: "REPO PA",
-        team2: "RITMO Y SUSTANCIA",
-      },
-    ],
-  },
-  {
-    title: "CATEGORIA B - MASCULINO",
-    matches: [
-      {
-        cancha: "Cancha 10",
-        time: "14:00",
-        team1: "CSKA BIA",
-        team2: "HUERGINA FC",
-      },
-      {
-        time: "15:15",
-        cancha: "Cancha 10",
-        team1: "ATRA-K-LAOS",
-        team2: "FALSO MADRID",
-      },
-    ],
-  },
-];
-
 export default function Home() {
   const SLIDES = [
-    { title: "Categoria A - Masculina", asset: "/assets/cat_a_mas.jpg" },
-    { title: "Categoria A - Femenina", asset: "/assets/cat_a_fem.jpg" },
-    { title: "Categoria B - Masculina", asset: "/assets/cat_b_mas.jpg" },
-    { title: "Categoria B - Femenina", asset: "/assets/cat_b_fem.jpg" },
-    { title: "Categoria C - Masculina", asset: "/assets/cat_c_mas.jpg" },
-    { title: "Categoria C - Femenina", asset: "/assets/cat_c_fem.jpg" },
-    { title: "Categoria D - Masculina", asset: "/assets/cat_d_mas.jpg" },
-    { title: "Categoria E - Masculina", asset: "/assets/cat_e_mas.jpg" },
+    {
+      title: "Categoria A - Masculina",
+      asset: "/assets/cat_a_mas.jpg",
+      link: "/categoria-a",
+    },
+    {
+      title: "Categoria A - Femenina",
+      asset: "/assets/cat_a_fem.jpg",
+      link: "/categoria-a-fem",
+    },
+    {
+      title: "Categoria B - Masculina",
+      asset: "/assets/cat_b_mas.jpg",
+      link: "/categoria-b",
+    },
+    {
+      title: "Categoria B - Femenina",
+      asset: "/assets/cat_b_fem.jpg",
+      link: "/categoria-b-fem",
+    },
+    {
+      title: "Categoria C - Masculina",
+      asset: "/assets/cat_c_mas.jpg",
+      link: "/categoria-c",
+    },
+    {
+      title: "Categoria C - Femenina",
+      asset: "/assets/cat_c_fem.jpg",
+      link: "/categoria-c-fem",
+    },
+    {
+      title: "Categoria D - Masculina",
+      asset: "/assets/cat_d_mas.jpg",
+      link: "/categoria-d",
+    },
+    {
+      title: "Categoria E - Masculina",
+      asset: "/assets/cat_e_mas.jpg",
+      link: "/categoria-e",
+    },
   ];
   return (
     <>
