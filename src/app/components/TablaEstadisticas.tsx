@@ -18,6 +18,16 @@ export const TablaEstadisticas: FC<TablaEstadisticasProps> = ({
   data,
   tipo,
 }) => {
+  if (data.length === 0) {
+    return (
+      <div className="max-w-full overflow-x-hidden flex justify-center">
+        <p>{`No hay información acerca de ${
+          tipo === "amarillas" ? "las amarillas" : "los goleadores/as"
+        }`}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-full overflow-x-hidden flex justify-center">
       <table className="w-full bg-white">
