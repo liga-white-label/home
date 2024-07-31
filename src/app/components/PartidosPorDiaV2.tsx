@@ -74,7 +74,7 @@ export const PartidosPorDiaV2: React.FC<PartidosPorDiaProps> = ({
                   display="flex"
                   alignItems="center"
                   justifyContent="center"
-                  sx={{ width: "fit-content", px: 1 }}
+                  sx={{ minWidth: 100, width: "fit-content", px: 1 }}
                 >
                   {match.score1 !== undefined || match.score2 !== undefined ? (
                     <Box bgcolor="#A60000" px={2} py={1} borderRadius="4px">
