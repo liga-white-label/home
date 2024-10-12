@@ -18,9 +18,25 @@ interface TablaPosicionesProps {
     dg: number;
     nextMatch: string;
   }[];
+  ignoreLines?: boolean;
 }
 
-export const TablaPosiciones: FC<TablaPosicionesProps> = ({ data }) => {
+export const TablaPosiciones: FC<TablaPosicionesProps> = ({
+  data,
+  ignoreLines,
+}) => {
+  const calculatedPositions = data
+    .sort((a, b) => {
+      if (a.pts !== b.pts) return b.pts - a.pts;
+      if (a.dg !== b.dg) return b.dg - a.dg;
+      if (a.gf !== b.gf) return b.gf - a.gf;
+      return a.equipo.localeCompare(b.equipo);
+    })
+    .map((team, index) => ({
+      ...team,
+      pos: index + 1,
+    }));
+
   return (
     <div className="max-w-full overflow-x-hidden">
       <table className="w-full bg-white">
@@ -46,7 +62,7 @@ export const TablaPosiciones: FC<TablaPosicionesProps> = ({ data }) => {
           </tr>
         </thead>
         <tbody>
-          {data.map((team, index) => (
+          {calculatedPositions.map((team, index) => (
             <tr
               key={index}
               className={`max-w-full 
@@ -61,18 +77,20 @@ export const TablaPosiciones: FC<TablaPosicionesProps> = ({ data }) => {
                 <Image
                   src={team.escudo}
                   alt={team.equipo}
-                  height={20}
-                  width={30}
+                  width={40} // Adjusted width
+                  height={40} // Adjusted height
+                  className="object-contain h-10 w-10"
                 />
                 {team.equipo}
               </td>
-              <td className="px-1 md:px-4  md:hidden">
+              <td className="px-1 md:px-4 md:hidden">
                 <div className="flex items-center gap-4">
                   <Image
                     src={team.escudo}
                     alt={team.equipo}
-                    height={20}
-                    width={30}
+                    width={40} // Adjusted width
+                    height={40} // Adjusted height
+                    className="object-contain h-10 w-10"
                   />
                   <p className="max-[340px]:hidden">
                     {abbreviateTeamName(team.equipo)}

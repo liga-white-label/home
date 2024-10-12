@@ -1,4 +1,3 @@
-import { Match } from "../models/Match";
 import Image from "next/image";
 import StadiumOutlinedIcon from "@mui/icons-material/StadiumOutlined";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -9,14 +8,18 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableContainer,
   TableRow,
   Typography,
 } from "@mui/material";
+import { Team } from "../models/Team";
 
+export interface RegularMatch {
+  equipoLocal: Team;
+  equipoVisitante: Team;
+}
 interface PartidosPorDiaProps {
-  matches: Match[];
-  handleClickSeeMatch: (match: Match) => void;
+  matches: RegularMatch[];
+  handleClickSeeMatch: (match: RegularMatch) => void;
 }
 export const PartidosPorDiaV2: React.FC<PartidosPorDiaProps> = ({
   matches,
@@ -53,20 +56,24 @@ export const PartidosPorDiaV2: React.FC<PartidosPorDiaProps> = ({
                     noWrap
                     sx={{ display: { xs: "none", sm: "block" } }}
                   >
-                    {match.team1.name}
+                    {match.equipoLocal.name}
                   </Typography>
                   <Typography
                     variant="body2"
                     noWrap
                     sx={{ display: { xs: "block", sm: "none" } }}
                   >
-                    {abbreviateTeamName(match.team1.name)}
+                    {abbreviateTeamName(match.equipoLocal.name || "")}
                   </Typography>
                   <Image
-                    src={match.team1.logoUrl}
+                    src={
+                      match.equipoLocal.logoUrl.includes("https://")
+                        ? match.equipoLocal.logoUrl
+                        : "https://" + match.equipoLocal.logoUrl
+                    }
                     height={20}
                     width={30}
-                    alt={match.team1.name}
+                    alt={match.equipoLocal.name}
                   />
                 </Box>
 
@@ -76,14 +83,15 @@ export const PartidosPorDiaV2: React.FC<PartidosPorDiaProps> = ({
                   justifyContent="center"
                   sx={{ minWidth: 100, width: "fit-content", px: 1 }}
                 >
-                  {match.score1 !== undefined || match.score2 !== undefined ? (
+                  {match?.score1 !== undefined ||
+                  match?.score2 !== undefined ? (
                     <Box bgcolor="#A60000" px={2} py={1} borderRadius="4px">
                       <Typography
                         variant="body2"
                         color="white"
                         fontWeight="bold"
                         textAlign="center"
-                      >{`${match.score1} - ${match.score2}`}</Typography>
+                      >{`${match?.score1} - ${match?.score2}`}</Typography>
                     </Box>
                   ) : (
                     <Box
@@ -99,7 +107,7 @@ export const PartidosPorDiaV2: React.FC<PartidosPorDiaProps> = ({
                         fontWeight="bold"
                         textAlign="center"
                       >
-                        {match.time}
+                        {match?.time}
                       </Typography>
                     </Box>
                   )}
@@ -117,24 +125,28 @@ export const PartidosPorDiaV2: React.FC<PartidosPorDiaProps> = ({
                   }}
                 >
                   <Image
-                    src={match.team2.logoUrl}
+                    src={
+                      match.equipoVisitante.logoUrl.includes("https://")
+                        ? match.equipoVisitante.logoUrl
+                        : "https://" + match.equipoVisitante.logoUrl
+                    }
                     height={20}
                     width={30}
-                    alt={match.team2.name}
+                    alt={match.equipoVisitante.name}
                   />
                   <Typography
                     variant="body1"
                     noWrap
                     sx={{ display: { xs: "none", sm: "block" } }}
                   >
-                    {match.team2.name}
+                    {match.equipoVisitante.name}
                   </Typography>
                   <Typography
                     variant="body2"
                     noWrap
                     sx={{ display: { xs: "block", sm: "none" } }}
                   >
-                    {abbreviateTeamName(match.team2.name)}
+                    {abbreviateTeamName(match.equipoVisitante.name || "")}
                   </Typography>
                 </Box>
 

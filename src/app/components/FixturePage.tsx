@@ -19,19 +19,26 @@ import { abbreviateTeamName } from "../utils/stringUtils";
 import { AccessTime, CalendarMonth, Close } from "@mui/icons-material";
 import { useWidth } from "../utils/useResponsive";
 import { IncidenciaByTeam } from "./InferenciaByTeam";
-import { PartidosPorDiaV2 } from "./PartidosPorDiaV2";
+import { PartidosPorDiaV2, RegularMatch } from "./PartidosPorDiaV2";
+import { useOneFaseQuery } from "@/repositories/CategoriaRepository";
 
 interface FixturePageProps {
-  matches: Match[];
+  faseId: string;
 }
 
-export const FixturePage: React.FC<FixturePageProps> = ({ matches }) => {
-  const [selectedFecha, setSelectedFecha] = useState<string>("1");
-  const [currentMatch, setCurrentMatch] = useState<Match | null>(null);
+export const FixturePage: React.FC<FixturePageProps> = ({ faseId }) => {
+  const [selectedFecha, setSelectedFecha] = useState<number>(1);
+  const {
+    data: matchesFechaActual,
+    isLoading,
+    isError,
+  } = useOneFaseQuery(faseId, selectedFecha);
+
+  const [currentMatch, setCurrentMatch] = useState<RegularMatch | null>(null);
   const [openMatchModal, setOpenMatchModal] = useState<boolean>(false);
   const viewport = useWidth();
 
-  const handleClickSeeMatch = (match: Match) => {
+  const handleClickSeeMatch = (match: RegularMatch) => {
     setCurrentMatch(match);
     setOpenMatchModal(true);
   };
@@ -42,7 +49,7 @@ export const FixturePage: React.FC<FixturePageProps> = ({ matches }) => {
   };
 
   const handleChange = (event: SelectChangeEvent) => {
-    setSelectedFecha(event.target.value as string);
+    setSelectedFecha(Number(event.target.value));
   };
 
   return (
@@ -56,7 +63,7 @@ export const FixturePage: React.FC<FixturePageProps> = ({ matches }) => {
             Fecha
           </Typography>
           <Select
-            value={selectedFecha}
+            value={selectedFecha.toString()}
             onChange={handleChange}
             className="w-56 max-sm:w-full"
           >
@@ -65,20 +72,20 @@ export const FixturePage: React.FC<FixturePageProps> = ({ matches }) => {
             ))}
           </Select>
         </FormControl>
-        <div className="max-w-full overflow-x-hidden flex flex-col gap-5 justify-center">
-          <p className="font-bold max-sm:text-center">Sabado 13 de Julio</p>
-          <PartidosPorDiaV2
-            matches={matches.filter((_, index) => index < 4)}
-            handleClickSeeMatch={handleClickSeeMatch}
-          />
-          <p className="font-bold max-sm:text-center">Domingo 14 de Julio</p>
-          <PartidosPorDiaV2
+        {/* <div className="max-w-full overflow-x-hidden flex flex-col gap-5 justify-center">
+          <p className="font-bold max-sm:text-center">Sabado 13 de Julio</p> */}
+        <PartidosPorDiaV2
+          matches={matchesFechaActual || []}
+          handleClickSeeMatch={handleClickSeeMatch}
+        />
+        {/* <p className="font-bold max-sm:text-center">Domingo 14 de Julio</p> */}
+        {/* <PartidosPorDiaV2
             matches={matches.filter((_, index) => index >= 4)}
             handleClickSeeMatch={handleClickSeeMatch}
-          />
-        </div>
+          /> */}
+        {/* </div> */}
       </div>
-      <Dialog open={openMatchModal} onClose={handleCloseModal} maxWidth="lg">
+      {/* <Dialog open={openMatchModal} onClose={handleCloseModal} maxWidth="lg">
         {!!currentMatch && (
           <>
             <DialogTitle className="flex justify-between items-center text-white bg-[#A60000]">
@@ -92,36 +99,36 @@ export const FixturePage: React.FC<FixturePageProps> = ({ matches }) => {
               </Box>
               <Box className="flex gap-2 items-center">
                 <AccessTime />
-                <p>{currentMatch.time}</p>
+                <p>{currentMatch?.time}</p>
               </Box>
             </DialogTitle>
             <DialogContent>
               <Box className="flex items-center justify-between mt-5">
                 <Box className="flex items-center gap-5 h-20 pr-10">
                   <p className="max-[600px]:hidden flex line-clamp-1 text-ellipsis whitespace-nowrap font-extrabold">
-                    {currentMatch.team1.name}
+                    {currentMatch.equipoLocal.name}
                   </p>
                   <p className="max-[600px]:flex hidden font-extrabold">
-                    {abbreviateTeamName(currentMatch.team1.name)}
+                    {abbreviateTeamName(currentMatch.equipoLocal.name)}
                   </p>
                   <Image
-                    src={currentMatch.team1.logoUrl}
+                    src={currentMatch.equipoLocal.logoUrl}
                     height={80}
                     width={80}
-                    alt={currentMatch.team1.name}
+                    alt={currentMatch.equipoLocal.name}
                   />
                 </Box>
 
                 <Box>
-                  {currentMatch.score1 !== undefined ||
-                  currentMatch.score2 !== undefined ? (
+                  {currentMatch?.score1 !== undefined ||
+                  currentMatch?.score2 !== undefined ? (
                     <div className="w-24 bg-[#A60000] px-2 py-1 rounded-md items-center flex justify-center">
                       <p className="text-white font-bold text-2xl">{`${currentMatch.score1} - ${currentMatch.score2}`}</p>
                     </div>
                   ) : (
                     <div className="w-24 bg-gray-500 px-2 py-1 rounded-md items-center flex justify-center">
                       <p className="text-white font-bold">
-                        {currentMatch.time}
+                        {currentMatch?.time}
                       </p>
                     </div>
                   )}
@@ -129,16 +136,16 @@ export const FixturePage: React.FC<FixturePageProps> = ({ matches }) => {
 
                 <Box className="flex items-center gap-5 h-20 pl-10">
                   <Image
-                    src={currentMatch.team2.logoUrl}
+                    src={currentMatch.equipoVisitante.logoUrl}
                     height={80}
                     width={80}
-                    alt={currentMatch.team2.name}
+                    alt={currentMatch.equipoVisitante.name}
                   />
                   <p className="max-[600px]:hidden flex line-clamp-1 text-ellipsis whitespace-nowrap font-extrabold">
-                    {currentMatch.team2.name}
+                    {currentMatch.equipoVisitante.name}
                   </p>
                   <p className="max-[600px]:flex hidden font-extrabold">
-                    {abbreviateTeamName(currentMatch.team2.name)}
+                    {abbreviateTeamName(currentMatch.equipoVisitante.name)}
                   </p>
                 </Box>
               </Box>
@@ -212,7 +219,7 @@ export const FixturePage: React.FC<FixturePageProps> = ({ matches }) => {
             </DialogTitle>
           </>
         )}
-      </Dialog>
+      </Dialog> */}
     </>
   );
 };

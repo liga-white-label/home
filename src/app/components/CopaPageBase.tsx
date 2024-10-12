@@ -9,47 +9,31 @@ import { EquipoTablaPosicion } from "../models/Team";
 import { PlayerStatistic } from "../models/PlayerStatistic";
 import { TablaDePosicionesWrapper } from "./TablasDePosicionesWrapper";
 import PlayoffsPage from "./playoffs/PlayoffsPage";
-import {
-  CategoriaRepository,
-  useAllFasesByCategory,
-} from "@/repositories/CategoriaRepository";
+import { useAllFasesByCategory } from "@/repositories/CategoriaRepository";
+import { useAllFasesByCampeonato } from "@/repositories/CampeonatoRepository";
+import { FaseGruposWrapper } from "./FaseGruposWrapper";
 
-interface CategoriaPageBaseProps {
+interface CopaPageBaseProps {
   id: string;
   title: string;
-  tabla?: EquipoTablaPosicion[];
-  tablaZonas?: EquipoTablaPosicion[][];
-  matches: Match[];
-  goleadores: PlayerStatistic[];
-  amarillas: PlayerStatistic[];
-  tieneZonas?: boolean;
 }
 export enum TabsEnum {
-  POSICIONES = 0,
+  GRUPOS = 0,
   FIXTURE = 1,
   PLAYOFFS = 2,
   ESTADISTICAS = 3,
 }
 
-export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
-  id,
-  title,
-  tabla,
-  tablaZonas,
-  matches,
-  goleadores,
-  amarillas,
-}) => {
+export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const tabParam = searchParams.get("tab");
-  const initialTab = tabParam ? parseInt(tabParam, 10) : TabsEnum.POSICIONES;
+  const initialTab = tabParam ? parseInt(tabParam, 10) : TabsEnum.GRUPOS;
   const [selectedTab, setSelectedTab] = useState<TabsEnum>(initialTab);
 
-  const { data: fases, isLoading, isError } = useAllFasesByCategory(id);
+  const { data: fases } = useAllFasesByCampeonato(id);
 
-  const faseRegular =
-    fases?.phases.find((f: any) => f.type === "general") || null;
+  const faseGrupos = fases?.phases.find((f: any) => f.type === "group") || null;
 
   const fasePlayoff =
     fases?.phases.find((f: any) => f.type === "playoff") || null;
@@ -77,14 +61,14 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
           <p className="text-white text-4xl px-10">{title}</p>
           <div className="flex gap-2 px-0 md:px-10 max-w-full overflow-hidden">
             <div
-              onClick={() => handleChangeTab(TabsEnum.POSICIONES)}
+              onClick={() => handleChangeTab(TabsEnum.GRUPOS)}
               className={`p-2 md:p-4 rounded-t-lg  cursor-pointer ${
-                selectedTab === TabsEnum.POSICIONES
+                selectedTab === TabsEnum.GRUPOS
                   ? "font-bold bg-white"
                   : "bg-slate-300 hover:font-bold hover:bg-slate-400"
               }`}
             >
-              Posiciones
+              Fase de Grupos
             </div>
             <div
               onClick={() => handleChangeTab(TabsEnum.FIXTURE)}
@@ -120,17 +104,17 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
         </div>
       </div>
       <div className="h-full w-full min-h-lvh overflow-hidden overflow-x-hidden p-4 md:p-10">
-        {selectedTab === TabsEnum.POSICIONES && (
-          <TablaDePosicionesWrapper faseId={faseRegular?.id || ""} />
+        {selectedTab === TabsEnum.GRUPOS && (
+          <FaseGruposWrapper faseId={faseGrupos?.id || ""} />
         )}
-        {selectedTab === TabsEnum.FIXTURE && (
+        {/* {selectedTab === TabsEnum.FIXTURE && (
           <FixturePage faseId={faseRegular?.id || ""} />
-        )}
+        )} */}
         {selectedTab === TabsEnum.PLAYOFFS && (
           <PlayoffsPage faseId={fasePlayoff?.id || ""} />
         )}
         {selectedTab === TabsEnum.ESTADISTICAS && (
-          <EstadisticasPage goleadores={goleadores} amarillas={amarillas} />
+          <EstadisticasPage goleadores={[]} amarillas={[]} />
         )}
       </div>
     </main>

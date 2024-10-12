@@ -1,6 +1,7 @@
 "use client";
 import { MainLayout } from "./components/MainLayout";
 import { SidebarProvider } from "./context/SideBarContext";
+import ReactQueryProvider from "./utils/providers/ReactQueryProvider";
 
 export default function RootLayout({
   children,
@@ -8,8 +9,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <SidebarProvider>
-      <MainLayout>{children}</MainLayout>
-    </SidebarProvider>
+    <ReactQueryProvider>
+      <SidebarProvider>
+        <MainLayout>{children}</MainLayout>
+      </SidebarProvider>
+    </ReactQueryProvider>
   );
 }

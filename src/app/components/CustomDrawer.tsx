@@ -13,9 +13,20 @@ import {
 } from "@mui/material";
 import { useSidebar } from "../context/SideBarContext";
 import Link from "next/link";
+import {
+  useAllCampeonatosQuery,
+  useCampeonatoQuery,
+} from "@/repositories/CampeonatoRepository";
 
 export const CustomDrawer = () => {
   const { sidebarOpen, handleClose } = useSidebar();
+  const {
+    data: campeonatoActual,
+    isLoading,
+    isError,
+  } = useCampeonatoQuery("66c7945cfbabb65891cfbdf1");
+
+  const { data: allCampeonatos } = useAllCampeonatosQuery();
 
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation">
@@ -58,28 +69,26 @@ export const CustomDrawer = () => {
               Masculino
             </Divider>
             <List>
-              {[
-                "Categoria A",
-                "Categoria B",
-                "Categoria C",
-                "Categoria D",
-                "Categoria E",
-              ].map((text, index) => (
-                <ListItem key={index} disablePadding>
-                  <Link
-                    href={`/categoria-${text.split(" ")[1].toLowerCase()}`}
-                    onClick={handleClose}
-                    className="w-full"
-                  >
-                    <ListItemButton>
-                      <ListItemText
-                        className="flex items-center justify-center text-white "
-                        primary={<p className="text-xl">{text}</p>}
-                      />
-                    </ListItemButton>
-                  </Link>
-                </ListItem>
-              ))}
+              {campeonatoActual?.categories
+                ?.filter((c) => c.gender === "male")
+                .map((cat, index) => (
+                  <ListItem key={index} disablePadding>
+                    <Link
+                      href={`/campeonatos/${campeonatoActual.id}/categorias/${cat.id}`}
+                      onClick={handleClose}
+                      className="w-full"
+                    >
+                      <ListItemButton>
+                        <ListItemText
+                          className="flex items-center justify-center text-white "
+                          primary={
+                            <p className="text-xl">Categoria {cat.name}</p>
+                          }
+                        />
+                      </ListItemButton>
+                    </Link>
+                  </ListItem>
+                ))}
             </List>
             <Divider
               className="text-white"
@@ -92,26 +101,26 @@ export const CustomDrawer = () => {
               Femenino
             </Divider>
             <List>
-              {["Categoria A", "Categoria B", "Categoria C"].map(
-                (text, index) => (
+              {campeonatoActual?.categories
+                ?.filter((c) => c.gender === "female")
+                .map((cat, index) => (
                   <ListItem key={index} disablePadding>
                     <Link
-                      href={`/categoria-${text
-                        .split(" ")[1]
-                        .toLowerCase()}-fem`}
+                      href={`/campeonatos/${campeonatoActual.id}/categorias/${cat.id}`}
                       onClick={handleClose}
                       className="w-full"
                     >
                       <ListItemButton>
                         <ListItemText
                           className="flex items-center justify-center text-white "
-                          primary={<p className="text-xl">{text}</p>}
+                          primary={
+                            <p className="text-xl">Categoria {cat.name}</p>
+                          }
                         />
                       </ListItemButton>
                     </Link>
                   </ListItem>
-                )
-              )}
+                ))}
             </List>
           </AccordionDetails>
         </Accordion>
@@ -127,14 +136,45 @@ export const CustomDrawer = () => {
         </Link>
       </ListItem>
       <ListItem disablePadding>
-        <Link href={"/"} onClick={handleClose} className="w-full">
-          <ListItemButton>
-            <ListItemText
-              className="flex items-center justify-center text-white "
-              primary={<p className="text-xl">Copas</p>}
-            />
-          </ListItemButton>
-        </Link>
+        <Accordion className="bg-[#A60000] w-full shadow-none">
+          <AccordionSummary
+            className="m-0"
+            aria-controls="copas-content"
+            sx={{
+              ".MuiAccordionSummary-content": { margin: 0 },
+            }}
+            id="copas-header"
+          >
+            <ListItemButton>
+              <ListItemText
+                className="flex items-center justify-center text-white "
+                primary={<p className="text-xl">Copas</p>}
+              />
+            </ListItemButton>
+          </AccordionSummary>
+          <AccordionDetails>
+            <List>
+              {allCampeonatos
+                ?.filter((c) => c.type === "cup")
+                .map((c, index) => (
+                  <ListItem key={index} disablePadding>
+                    <Link
+                      href={`/campeonatos/${c.id}`}
+                      onClick={handleClose}
+                      className="w-full"
+                    >
+                      <ListItemButton>
+                        <ListItemText
+                          className="flex items-center justify-center text-white "
+                          primary={<p className="text-xl">{c.name}</p>}
+                        />
+                      </ListItemButton>
+                    </Link>
+                  </ListItem>
+                ))}
+            </List>
+          </AccordionDetails>
+        </Accordion>
       </ListItem>
     </Box>
   );
