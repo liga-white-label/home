@@ -1,6 +1,7 @@
 "use client";
 
 import { CopaPageBase } from "@/app/components/CopaPageBase";
+import LoadingScreen from "@/app/components/loading/Loading";
 import { useCampeonatoQuery } from "@/repositories/CampeonatoRepository";
 import { useParams } from "next/navigation";
 
@@ -14,7 +15,7 @@ export default function Home() {
   } = useCampeonatoQuery(idCampeonato.toString());
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <LoadingScreen />;
   }
 
   if (isError) {

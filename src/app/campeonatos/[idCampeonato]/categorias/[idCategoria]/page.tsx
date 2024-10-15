@@ -1,6 +1,7 @@
 "use client";
 
 import { CategoriaPageBase } from "@/app/components/CategoriaPageBase";
+import LoadingScreen from "@/app/components/loading/Loading";
 import { useCampeonatoQuery } from "@/repositories/CampeonatoRepository";
 import { useParams } from "next/navigation";
 
@@ -18,7 +19,7 @@ export default function Home() {
   );
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <LoadingScreen />;
   }
 
   if (isError) {

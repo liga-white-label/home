@@ -10,10 +10,10 @@ import { useState } from "react";
 
 export const LinkNavigator = () => {
   const path = usePathname();
-  const { data: campeonatoActual } = useCampeonatoQuery(
-    "66c7945cfbabb65891cfbdf1"
-  );
-  const { data: allCampeonatos } = useAllCampeonatosQuery();
+  const { data: campeonatoActual, isLoading: isLoadingCampeonatoActual } =
+    useCampeonatoQuery("66c7945cfbabb65891cfbdf1");
+  const { data: allCampeonatos, isLoading: isLoadingAllCampeonatos } =
+    useAllCampeonatosQuery();
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [anchorElCopa, setAnchorElCopa] = useState<HTMLButtonElement | null>(
@@ -70,59 +70,70 @@ export const LinkNavigator = () => {
             "aria-labelledby": "basic-button",
           }}
         >
-          <Divider
-            className="text-white"
-            sx={{
-              "&::before, &::after": {
-                borderColor: "white",
-              },
-            }}
-          >
-            Masculino
-          </Divider>
-          {campeonatoActual?.categories
-            ?.filter((c) => c.gender === "male")
-            .map((cat) => (
-              <MenuItem onClick={handleClose}>
-                <Link
-                  href={`/campeonatos/${campeonatoActual.id}/categorias/${cat.id}`}
-                >
-                  <p className="text-lg">Categoria {cat.name} - Masculina</p>
-                </Link>
-              </MenuItem>
-            ))}
-          {campeonatoActual?.categories?.filter((c) => c.gender === "male")
-            .length === 0 && (
+          {isLoadingCampeonatoActual || isLoadingAllCampeonatos ? (
             <MenuItem onClick={handleClose}>
-              <p className="text-lg">No hay categorias masculinas</p>
+              <p className="text-lg">Cargando...</p>
             </MenuItem>
-          )}
-          <Divider
-            className="text-white"
-            sx={{
-              "&::before, &::after": {
-                borderColor: "white",
-              },
-            }}
-          >
-            Femenino
-          </Divider>
-          {campeonatoActual?.categories
-            ?.filter((c) => c.gender === "female")
-            .map((cat) => (
-              <MenuItem onClick={handleClose}>
-                <Link
-                  href={`/campeonatos/${campeonatoActual.id}/categorias/${cat.id}`}
-                >
-                  <p className="text-lg">Categoria {cat.name} - Femenina</p>
-                </Link>
-              </MenuItem>
-            ))}
-          {campeonatoActual?.categories?.filter((c) => c.gender === "female")
-            .length === 0 && (
-            <MenuItem onClick={handleClose}>
-              <p className="text-lg">No hay categorias femeninas</p>
-            </MenuItem>
+          ) : (
+            <>
+              <Divider
+                className="text-white"
+                sx={{
+                  "&::before, &::after": {
+                    borderColor: "white",
+                  },
+                }}
+              >
+                Masculino
+              </Divider>
+              {campeonatoActual?.categories
+                ?.filter((c) => c.gender === "male")
+                .map((cat) => (
+                  <MenuItem onClick={handleClose}>
+                    <Link
+                      href={`/campeonatos/${campeonatoActual.id}/categorias/${cat.id}`}
+                    >
+                      <p className="text-lg">
+                        Categoria {cat.name} - Masculina
+                      </p>
+                    </Link>
+                  </MenuItem>
+                ))}
+              {campeonatoActual?.categories?.filter((c) => c.gender === "male")
+                .length === 0 && (
+                <MenuItem onClick={handleClose}>
+                  <p className="text-lg">No hay categorias masculinas</p>
+                </MenuItem>
+              )}
+              <Divider
+                className="text-white"
+                sx={{
+                  "&::before, &::after": {
+                    borderColor: "white",
+                  },
+                }}
+              >
+                Femenino
+              </Divider>
+              {campeonatoActual?.categories
+                ?.filter((c) => c.gender === "female")
+                .map((cat) => (
+                  <MenuItem onClick={handleClose}>
+                    <Link
+                      href={`/campeonatos/${campeonatoActual.id}/categorias/${cat.id}`}
+                    >
+                      <p className="text-lg">Categoria {cat.name} - Femenina</p>
+                    </Link>
+                  </MenuItem>
+                ))}
+              {campeonatoActual?.categories?.filter(
+                (c) => c.gender === "female"
+              ).length === 0 && (
+                <MenuItem onClick={handleClose}>
+                  <p className="text-lg">No hay categorias femeninas</p>
+                </MenuItem>
+              )}
+            </>
           )}
         </Menu>
       </div>
@@ -158,15 +169,21 @@ export const LinkNavigator = () => {
             "aria-labelledby": "basic-button",
           }}
         >
-          {allCampeonatos
-            ?.filter((c) => c.type === "cup")
-            .map((c) => (
-              <MenuItem onClick={handleClose}>
-                <Link href={`/campeonatos/${c.id}`}>
-                  <p className="text-lg">{c.name}</p>
-                </Link>
-              </MenuItem>
-            ))}
+          {isLoadingAllCampeonatos ? (
+            <MenuItem onClick={handleClose}>
+              <p className="text-lg">Cargando...</p>
+            </MenuItem>
+          ) : (
+            allCampeonatos
+              ?.filter((c) => c.type === "cup")
+              .map((c) => (
+                <MenuItem onClick={handleClose}>
+                  <Link href={`/campeonatos/${c.id}`}>
+                    <p className="text-lg">{c.name}</p>
+                  </Link>
+                </MenuItem>
+              ))
+          )}
         </Menu>
       </div>
     </div>

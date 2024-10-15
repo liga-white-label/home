@@ -3,6 +3,7 @@ import { useOneFaseCampeonatoQuery } from "@/repositories/CampeonatoRepository";
 import { Box, Typography } from "@mui/material";
 import { TablaPosiciones } from "./TablaPosiciones";
 import { getPositionsMapper } from "@/repositories/CategoriaRepository";
+import LoadingScreen from "./loading/Loading";
 
 interface FaseGruposWrapperProps {
   faseId: string;
@@ -10,7 +11,7 @@ interface FaseGruposWrapperProps {
 export const FaseGruposWrapper: FC<FaseGruposWrapperProps> = ({ faseId }) => {
   const { data, isLoading, isError } = useOneFaseCampeonatoQuery(faseId);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <LoadingScreen />;
   if (isError) return <div>Error...</div>;
 
   return data?.map((grupo, index) => (

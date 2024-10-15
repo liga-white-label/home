@@ -106,8 +106,9 @@ export const PartidosPorDiaV2: React.FC<PartidosPorDiaProps> = ({
                         color="white"
                         fontWeight="bold"
                         textAlign="center"
+                        fontSize={8}
                       >
-                        {match?.time}
+                        {match?.time || "A definir"}
                       </Typography>
                     </Box>
                   )}
@@ -157,7 +158,9 @@ export const PartidosPorDiaV2: React.FC<PartidosPorDiaProps> = ({
                   width="20%"
                 >
                   <StadiumOutlinedIcon />
-                  <Typography variant="body2">{match.cancha}</Typography>
+                  <Typography variant="body2">
+                    {match.cancha || "A definir"}
+                  </Typography>
                 </Box>
 
                 <Box

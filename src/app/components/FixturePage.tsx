@@ -1,10 +1,5 @@
 "use client";
 import {
-  Box,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Divider,
   FormControl,
   MenuItem,
   Select,
@@ -13,12 +8,7 @@ import {
 } from "@mui/material";
 
 import { useState } from "react";
-import { Match } from "../models/Match";
-import Image from "next/image";
-import { abbreviateTeamName } from "../utils/stringUtils";
-import { AccessTime, CalendarMonth, Close } from "@mui/icons-material";
 import { useWidth } from "../utils/useResponsive";
-import { IncidenciaByTeam } from "./InferenciaByTeam";
 import { PartidosPorDiaV2, RegularMatch } from "./PartidosPorDiaV2";
 import { useOneFaseQuery } from "@/repositories/CategoriaRepository";
 
@@ -72,18 +62,10 @@ export const FixturePage: React.FC<FixturePageProps> = ({ faseId }) => {
             ))}
           </Select>
         </FormControl>
-        {/* <div className="max-w-full overflow-x-hidden flex flex-col gap-5 justify-center">
-          <p className="font-bold max-sm:text-center">Sabado 13 de Julio</p> */}
         <PartidosPorDiaV2
           matches={matchesFechaActual || []}
           handleClickSeeMatch={handleClickSeeMatch}
         />
-        {/* <p className="font-bold max-sm:text-center">Domingo 14 de Julio</p> */}
-        {/* <PartidosPorDiaV2
-            matches={matches.filter((_, index) => index >= 4)}
-            handleClickSeeMatch={handleClickSeeMatch}
-          /> */}
-        {/* </div> */}
       </div>
       {/* <Dialog open={openMatchModal} onClose={handleCloseModal} maxWidth="lg">
         {!!currentMatch && (

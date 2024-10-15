@@ -3,6 +3,7 @@ import { Box } from "@mui/material";
 import { Round, MatchStatus, RoundMatch } from "./CuadroPlayoff";
 import { TeamBox, FinalTeamBox } from "./TeamBox";
 import { useOneFasePlayoffQuery } from "@/repositories/CategoriaRepository";
+import LoadingScreen from "../loading/Loading";
 
 interface CuadroPlayoffProps {
   faseId: string;
@@ -11,7 +12,7 @@ interface CuadroPlayoffProps {
 const CuadroPlayoffV2: React.FC<CuadroPlayoffProps> = ({ faseId }) => {
   const { data: fase, isLoading, isError } = useOneFasePlayoffQuery(faseId);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <LoadingScreen />;
   if (isError) return <div>Error...</div>;
 
   console.log(fase);

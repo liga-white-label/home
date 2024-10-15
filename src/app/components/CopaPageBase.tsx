@@ -12,6 +12,7 @@ import PlayoffsPage from "./playoffs/PlayoffsPage";
 import { useAllFasesByCategory } from "@/repositories/CategoriaRepository";
 import { useAllFasesByCampeonato } from "@/repositories/CampeonatoRepository";
 import { FaseGruposWrapper } from "./FaseGruposWrapper";
+import FixtureCopaPage from "./FixtureCopaPage";
 
 interface CopaPageBaseProps {
   id: string;
@@ -107,9 +108,9 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
         {selectedTab === TabsEnum.GRUPOS && (
           <FaseGruposWrapper faseId={faseGrupos?.id || ""} />
         )}
-        {/* {selectedTab === TabsEnum.FIXTURE && (
-          <FixturePage faseId={faseRegular?.id || ""} />
-        )} */}
+        {selectedTab === TabsEnum.FIXTURE && (
+          <FixtureCopaPage faseId={faseGrupos?.id || ""} />
+        )}
         {selectedTab === TabsEnum.PLAYOFFS && (
           <PlayoffsPage faseId={fasePlayoff?.id || ""} />
         )}
