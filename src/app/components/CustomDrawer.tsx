@@ -22,11 +22,12 @@ export const CustomDrawer = () => {
   const { sidebarOpen, handleClose } = useSidebar();
   const {
     data: campeonatoActual,
-    isLoading,
+    isLoading: isLoadingCampeonatoActual,
     isError,
   } = useCampeonatoQuery("66c7945cfbabb65891cfbdf1");
 
-  const { data: allCampeonatos } = useAllCampeonatosQuery();
+  const { data: allCampeonatos, isLoading: isLoadingAllCampeonatos } =
+    useAllCampeonatosQuery();
 
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation">
@@ -58,70 +59,76 @@ export const CustomDrawer = () => {
             </ListItemButton>
           </AccordionSummary>
           <AccordionDetails>
-            <Divider
-              className="text-white"
-              sx={{
-                "&::before, &::after": {
-                  borderColor: "white",
-                },
-              }}
-            >
-              Masculino
-            </Divider>
-            <List>
-              {campeonatoActual?.categories
-                ?.filter((c) => c.gender === "male")
-                .map((cat, index) => (
-                  <ListItem key={index} disablePadding>
-                    <Link
-                      href={`/campeonatos/${campeonatoActual.id}/categorias/${cat.id}`}
-                      onClick={handleClose}
-                      className="w-full"
-                    >
-                      <ListItemButton>
-                        <ListItemText
-                          className="flex items-center justify-center text-white "
-                          primary={
-                            <p className="text-xl">Categoria {cat.name}</p>
-                          }
-                        />
-                      </ListItemButton>
-                    </Link>
-                  </ListItem>
-                ))}
-            </List>
-            <Divider
-              className="text-white"
-              sx={{
-                "&::before, &::after": {
-                  borderColor: "white",
-                },
-              }}
-            >
-              Femenino
-            </Divider>
-            <List>
-              {campeonatoActual?.categories
-                ?.filter((c) => c.gender === "female")
-                .map((cat, index) => (
-                  <ListItem key={index} disablePadding>
-                    <Link
-                      href={`/campeonatos/${campeonatoActual.id}/categorias/${cat.id}`}
-                      onClick={handleClose}
-                      className="w-full"
-                    >
-                      <ListItemButton>
-                        <ListItemText
-                          className="flex items-center justify-center text-white "
-                          primary={
-                            <p className="text-xl">Categoria {cat.name}</p>
-                          }
-                        />
-                      </ListItemButton>
-                    </Link>
-                  </ListItem>
-                ))}
-            </List>
+            {isLoadingCampeonatoActual ? (
+              <p>Cargando...</p>
+            ) : (
+              <>
+                <Divider
+                  className="text-white"
+                  sx={{
+                    "&::before, &::after": {
+                      borderColor: "white",
+                    },
+                  }}
+                >
+                  Masculino
+                </Divider>
+                <List>
+                  {campeonatoActual?.categories
+                    ?.filter((c) => c.gender === "male")
+                    .map((cat, index) => (
+                      <ListItem key={index} disablePadding>
+                        <Link
+                          href={`/campeonatos/${campeonatoActual.id}/categorias/${cat.id}`}
+                          onClick={handleClose}
+                          className="w-full"
+                        >
+                          <ListItemButton>
+                            <ListItemText
+                              className="flex items-center justify-center text-white "
+                              primary={
+                                <p className="text-xl">Categoria {cat.name}</p>
+                              }
+                            />
+                          </ListItemButton>
+                        </Link>
+                      </ListItem>
+                    ))}
+                </List>
+                <Divider
+                  className="text-white"
+                  sx={{
+                    "&::before, &::after": {
+                      borderColor: "white",
+                    },
+                  }}
+                >
+                  Femenino
+                </Divider>
+                <List>
+                  {campeonatoActual?.categories
+                    ?.filter((c) => c.gender === "female")
+                    .map((cat, index) => (
+                      <ListItem key={index} disablePadding>
+                        <Link
+                          href={`/campeonatos/${campeonatoActual.id}/categorias/${cat.id}`}
+                          onClick={handleClose}
+                          className="w-full"
+                        >
+                          <ListItemButton>
+                            <ListItemText
+                              className="flex items-center justify-center text-white "
+                              primary={
+                                <p className="text-xl">Categoria {cat.name}</p>
+                              }
+                            />
+                          </ListItemButton>
+                        </Link>
+                      </ListItem>
+                    ))}
+                </List>
+              </>
+            )}
           </AccordionDetails>
         </Accordion>
       </ListItem>
@@ -153,26 +160,30 @@ export const CustomDrawer = () => {
             </ListItemButton>
           </AccordionSummary>
           <AccordionDetails>
-            <List>
-              {allCampeonatos
-                ?.filter((c) => c.type === "cup")
-                .map((c, index) => (
-                  <ListItem key={index} disablePadding>
-                    <Link
-                      href={`/campeonatos/${c.id}`}
-                      onClick={handleClose}
-                      className="w-full"
-                    >
-                      <ListItemButton>
-                        <ListItemText
-                          className="flex items-center justify-center text-white "
-                          primary={<p className="text-xl">{c.name}</p>}
-                        />
-                      </ListItemButton>
-                    </Link>
-                  </ListItem>
-                ))}
-            </List>
+            {isLoadingAllCampeonatos ? (
+              <p>Cargando...</p>
+            ) : (
+              <List>
+                {allCampeonatos
+                  ?.filter((c) => c.type === "cup")
+                  .map((c, index) => (
+                    <ListItem key={index} disablePadding>
+                      <Link
+                        href={`/campeonatos/${c.id}`}
+                        onClick={handleClose}
+                        className="w-full"
+                      >
+                        <ListItemButton>
+                          <ListItemText
+                            className="flex items-center justify-center text-white "
+                            primary={<p className="text-xl">{c.name}</p>}
+                          />
+                        </ListItemButton>
+                      </Link>
+                    </ListItem>
+                  ))}
+              </List>
+            )}
           </AccordionDetails>
         </Accordion>
       </ListItem>
