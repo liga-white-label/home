@@ -4,9 +4,9 @@ const dev = {
 };
 
 const _prod = {
-  backEnd: "https://660f3510356b87a55c50f6fc.mockapi.io/",
+  backEnd: "https://league-cubb.fly.dev/",
   production: true,
 };
 
-//export const environment = _prod;
-export const environment = dev;
+export const environment = _prod;
+//export const environment = dev;
