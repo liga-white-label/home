@@ -88,8 +88,8 @@ export const LinkNavigator = () => {
               </Divider>
               {campeonatoActual?.categories
                 ?.filter((c) => c.gender === "male")
-                .map((cat) => (
-                  <MenuItem onClick={handleClose}>
+                .map((cat, index) => (
+                  <MenuItem key={index} onClick={handleClose}>
                     <Link
                       href={`/campeonatos/${campeonatoActual.id}/categorias/${cat.id}`}
                     >
@@ -117,8 +117,8 @@ export const LinkNavigator = () => {
               </Divider>
               {campeonatoActual?.categories
                 ?.filter((c) => c.gender === "female")
-                .map((cat) => (
-                  <MenuItem onClick={handleClose}>
+                .map((cat, index) => (
+                  <MenuItem key={index} onClick={handleClose}>
                     <Link
                       href={`/campeonatos/${campeonatoActual.id}/categorias/${cat.id}`}
                     >
@@ -176,8 +176,8 @@ export const LinkNavigator = () => {
           ) : (
             allCampeonatos
               ?.filter((c) => c.type === "cup")
-              .map((c) => (
-                <MenuItem onClick={handleClose}>
+              .map((c, index) => (
+                <MenuItem key={index} onClick={handleClose}>
                   <Link href={`/campeonatos/${c.id}`}>
                     <p className="text-lg">{c.name}</p>
                   </Link>

@@ -83,7 +83,7 @@ export const PartidosPorDiaV2: React.FC<PartidosPorDiaProps> = ({
                   justifyContent="center"
                   sx={{ minWidth: 100, width: "fit-content", px: 1 }}
                 >
-                  {match?.score1 !== undefined ||
+                  {/* {match?.score1 !== undefined ||
                   match?.score2 !== undefined ? (
                     <Box bgcolor="#A60000" px={2} py={1} borderRadius="4px">
                       <Typography
@@ -93,25 +93,26 @@ export const PartidosPorDiaV2: React.FC<PartidosPorDiaProps> = ({
                         textAlign="center"
                       >{`${match?.score1} - ${match?.score2}`}</Typography>
                     </Box>
-                  ) : (
-                    <Box
-                      bgcolor="gray"
-                      px={2}
-                      py={1}
-                      borderRadius="4px"
-                      width="56px"
+                  ) : ( */}
+                  <Box
+                    bgcolor="gray"
+                    px={2}
+                    py={1}
+                    borderRadius="4px"
+                    width="56px"
+                  >
+                    <Typography
+                      variant="body2"
+                      color="white"
+                      fontWeight="bold"
+                      textAlign="center"
+                      fontSize={8}
                     >
-                      <Typography
-                        variant="body2"
-                        color="white"
-                        fontWeight="bold"
-                        textAlign="center"
-                        fontSize={8}
-                      >
-                        {match?.time || "A definir"}
-                      </Typography>
-                    </Box>
-                  )}
+                      {/* reemplazar por hora */}
+                      {"A definir"}
+                    </Typography>
+                  </Box>
+                  {/* )} */}
                 </Box>
 
                 <Box
@@ -159,7 +160,8 @@ export const PartidosPorDiaV2: React.FC<PartidosPorDiaProps> = ({
                 >
                   <StadiumOutlinedIcon />
                   <Typography variant="body2">
-                    {match.cancha || "A definir"}
+                    {/* Reemplazar por cancha */}
+                    {"A definir"}
                   </Typography>
                 </Box>
 

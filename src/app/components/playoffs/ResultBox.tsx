@@ -1,6 +1,7 @@
 import { Box, Typography, Divider } from "@mui/material";
 import { Team } from "./CuadroPlayoff";
 import { abbreviateTeamName } from "@/app/utils/stringUtils";
+import Image from "next/image";
 
 interface ResultBoxProps {
   team?: Team;
@@ -18,7 +19,7 @@ export const ResultBox: React.FC<ResultBoxProps> = ({
   resultVuelta,
 }) => (
   <Box className="flex gap-2 items-center">
-    <img
+    <Image
       src={
         !!team
           ? team?.logo
@@ -54,7 +55,7 @@ export const InvertedResultBox: React.FC<ResultBoxProps> = ({
   resultVuelta,
 }) => (
   <Box className="flex flex-row-reverse gap-2 items-center">
-    <img
+    <Image
       src={
         !!team
           ? team?.logo

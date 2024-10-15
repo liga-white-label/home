@@ -57,9 +57,14 @@ export const FixturePage: React.FC<FixturePageProps> = ({ faseId }) => {
             onChange={handleChange}
             className="w-56 max-sm:w-full"
           >
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map((item) => (
-              <MenuItem value={`${item}`}>{`Fecha ${item}`}</MenuItem>
-            ))}
+            {Array.from({ length: 15 }, (_, index) => index + 1).map(
+              (item, index) => (
+                <MenuItem
+                  key={index}
+                  value={`${item}`}
+                >{`Fecha ${item}`}</MenuItem>
+              )
+            )}
           </Select>
         </FormControl>
         <PartidosPorDiaV2

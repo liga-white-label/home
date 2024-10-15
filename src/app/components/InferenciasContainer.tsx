@@ -1,28 +1,32 @@
 import { Grid } from "@mui/material";
 import React, { FC } from "react";
 import { Incidencia } from "./Match";
-import { IncidenciaByTeam } from "./IncidenciaByTeam";
+import { IncidenciaByTeam } from "./InferenciaByTeam";
 
 interface IncidenciasContainerProps {
-  Incidencias: Incidencia[];
+  incidencias: Incidencia[];
 }
 export const IncidenciasContainer: FC<IncidenciasContainerProps> = ({
-  Incidencias,
+  incidencias,
 }) => {
   return (
     <Grid container xs={12}>
       <Grid item xs={2} className="border-black border-r-2"></Grid>
       <Grid container xs={10}>
         <Grid item xs={6} className="border-black border-r-2 p-2">
-          {Incidencias.filter((i) => i.team === "team1").map((i) => (
-            <IncidenciaByTeam Incidencia={i} />
-          ))}
+          {incidencias
+            .filter((i) => i.team === "team1")
+            .map((i, index) => (
+              <IncidenciaByTeam key={index} incidencia={i} />
+            ))}
         </Grid>
 
         <Grid item xs={6} className="p-2">
-          {Incidencias.filter((i) => i.team === "team2").map((i) => (
-            <IncidenciaByTeam Incidencia={i} />
-          ))}
+          {incidencias
+            .filter((i) => i.team === "team2")
+            .map((i, index) => (
+              <IncidenciaByTeam key={index} incidencia={i} />
+            ))}
         </Grid>
       </Grid>
     </Grid>

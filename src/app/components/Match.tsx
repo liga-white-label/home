@@ -95,7 +95,7 @@ const Match: React.FC<MatchProps & { last: boolean }> = ({
             </Grid>
           </Grid>
         </Grid>
-        {false && <IncidenciasContainer Incidencias={Incidencias_mock} />}
+        {false && <IncidenciasContainer incidencias={Incidencias_mock} />}
       </Grid>
     </div>
   );
