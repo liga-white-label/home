@@ -1,10 +1,5 @@
-import { Metadata } from "next";
 import { WelcomeGifContainer } from "./components/WelcomeGifContainer";
 import EmblaCarousel from "./components/carousel/EmblaCarousel";
-
-export const metadata: Metadata = {
-  title: "Liga CUBB",
-};
 
 export default function Home() {
   const SLIDES = [

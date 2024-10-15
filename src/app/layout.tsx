@@ -1,18 +1,14 @@
-"use client";
-import { MainLayout } from "./components/MainLayout";
-import { SidebarProvider } from "./context/SideBarContext";
-import ReactQueryProvider from "./utils/providers/ReactQueryProvider";
+import { Metadata } from "next";
+import RootLayoutWrapper from "./layoutWrapper";
+
+export const metadata: Metadata = {
+  title: "Liga CUBB",
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <ReactQueryProvider>
-      <SidebarProvider>
-        <MainLayout>{children}</MainLayout>
-      </SidebarProvider>
-    </ReactQueryProvider>
-  );
+  return <RootLayoutWrapper>{children}</RootLayoutWrapper>;
 }
