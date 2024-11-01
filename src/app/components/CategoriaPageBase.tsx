@@ -17,28 +17,18 @@ import {
 interface CategoriaPageBaseProps {
   id: string;
   title: string;
-  tabla?: EquipoTablaPosicion[];
-  tablaZonas?: EquipoTablaPosicion[][];
-  matches: Match[];
-  goleadores: PlayerStatistic[];
-  amarillas: PlayerStatistic[];
-  tieneZonas?: boolean;
 }
 export enum TabsEnum {
   POSICIONES = 0,
   FIXTURE = 1,
   PLAYOFFS = 2,
-  ESTADISTICAS = 3,
+  GRUPOS = 3,
+  ESTADISTICAS = 4,
 }
 
 export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
   id,
   title,
-  tabla,
-  tablaZonas,
-  matches,
-  goleadores,
-  amarillas,
 }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -46,13 +36,16 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
   const initialTab = tabParam ? parseInt(tabParam, 10) : TabsEnum.POSICIONES;
   const [selectedTab, setSelectedTab] = useState<TabsEnum>(initialTab);
 
-  const { data: fases, isLoading, isError } = useAllFasesByCategory(id);
+  const { data: fases } = useAllFasesByCategory(id);
 
   const faseRegular =
     fases?.phases.find((f: any) => f.type === "general") || null;
 
   const fasePlayoff =
     fases?.phases.find((f: any) => f.type === "playoff") || null;
+
+  const faseGrupos =
+    fases?.phases.find((f: any) => f.type === "groups") || null;
 
   useEffect(() => {
     if (tabParam) {
@@ -86,26 +79,42 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
             >
               Posiciones
             </div>
-            <div
-              onClick={() => handleChangeTab(TabsEnum.FIXTURE)}
-              className={` p-2 md:p-4 rounded-t-lg  cursor-pointer ${
-                selectedTab === TabsEnum.FIXTURE
-                  ? "font-bold bg-white"
-                  : "bg-slate-300 hover:font-bold hover:bg-slate-400"
-              }`}
-            >
-              Fixture
-            </div>
-            <div
-              onClick={() => handleChangeTab(TabsEnum.PLAYOFFS)}
-              className={` p-2 md:p-4 rounded-t-lg  cursor-pointer ${
-                selectedTab === TabsEnum.PLAYOFFS
-                  ? "font-bold bg-white"
-                  : "bg-slate-300 hover:font-bold hover:bg-slate-400"
-              }`}
-            >
-              Playoffs
-            </div>
+            {!!faseRegular && (
+              <div
+                onClick={() => handleChangeTab(TabsEnum.FIXTURE)}
+                className={` p-2 md:p-4 rounded-t-lg  cursor-pointer ${
+                  selectedTab === TabsEnum.FIXTURE
+                    ? "font-bold bg-white"
+                    : "bg-slate-300 hover:font-bold hover:bg-slate-400"
+                }`}
+              >
+                Fixture
+              </div>
+            )}
+            {!!fasePlayoff && (
+              <div
+                onClick={() => handleChangeTab(TabsEnum.PLAYOFFS)}
+                className={` p-2 md:p-4 rounded-t-lg  cursor-pointer ${
+                  selectedTab === TabsEnum.PLAYOFFS
+                    ? "font-bold bg-white"
+                    : "bg-slate-300 hover:font-bold hover:bg-slate-400"
+                }`}
+              >
+                Playoffs
+              </div>
+            )}
+            {!!faseGrupos && (
+              <div
+                onClick={() => handleChangeTab(TabsEnum.GRUPOS)}
+                className={` p-2 md:p-4 rounded-t-lg  cursor-pointer ${
+                  selectedTab === TabsEnum.GRUPOS
+                    ? "font-bold bg-white"
+                    : "bg-slate-300 hover:font-bold hover:bg-slate-400"
+                }`}
+              >
+                Fase de grupos
+              </div>
+            )}
             <div
               onClick={() => handleChangeTab(TabsEnum.ESTADISTICAS)}
               className={` p-2 md:p-4 rounded-t-lg  cursor-pointer ${
@@ -123,14 +132,17 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
         {selectedTab === TabsEnum.POSICIONES && (
           <TablaDePosicionesWrapper faseId={faseRegular?.id || ""} />
         )}
-        {selectedTab === TabsEnum.FIXTURE && (
+        {selectedTab === TabsEnum.FIXTURE && !!faseRegular && (
           <FixturePage faseId={faseRegular?.id || ""} />
         )}
-        {selectedTab === TabsEnum.PLAYOFFS && (
+        {selectedTab === TabsEnum.GRUPOS && !!faseGrupos && (
+          <FixturePage faseId={faseRegular?.id || ""} />
+        )}
+        {selectedTab === TabsEnum.PLAYOFFS && !!fasePlayoff && (
           <PlayoffsPage faseId={fasePlayoff?.id || ""} />
         )}
         {selectedTab === TabsEnum.ESTADISTICAS && (
-          <EstadisticasPage goleadores={goleadores} amarillas={amarillas} />
+          <EstadisticasPage categoryId={id} />
         )}
       </div>
     </main>

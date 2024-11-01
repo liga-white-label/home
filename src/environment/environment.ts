@@ -1,5 +1,5 @@
 const dev = {
-  backEnd: "https://league-458o.onrender.com/",
+  backEnd: "http://localhost:8080/",
   production: false,
 };
 

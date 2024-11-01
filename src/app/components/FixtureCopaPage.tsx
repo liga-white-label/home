@@ -3,10 +3,8 @@
 import { useOneFaseCampeonatoQuery } from "@/repositories/CampeonatoRepository";
 import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
-import React, { useState } from "react";
-import { TablaPosiciones } from "./TablaPosiciones";
+import React from "react";
 import { PartidosPorDiaV2, RegularMatch } from "./PartidosPorDiaV2";
-import { faseMapper } from "@/repositories/CategoriaRepository";
 import LoadingScreen from "./loading/Loading";
 
 interface FixtureCopaPageProps {
@@ -35,16 +33,18 @@ const FixtureCopaPage: React.FC<FixtureCopaPageProps> = ({ faseId }) => {
                 .sort((m1, m2) => (m1.dateNumber < m2.dateNumber ? -1 : 1))
                 .map((m) => ({
                   equipoLocal: {
+                    id: m.homeTeam.id,
                     name: m.homeTeam.name,
                     logoUrl: m.homeTeam.logo,
                     gender: m.homeTeam.gender,
-                    category_id: Number(m.homeTeam.categoryName),
+                    category_id: m.homeTeam.categoryName || "",
                   },
                   equipoVisitante: {
+                    id: m.awayTeam.id,
                     name: m.awayTeam.name,
                     logoUrl: m.awayTeam.logo,
                     gender: m.awayTeam.gender,
-                    category_id: Number(m.awayTeam.categoryName),
+                    category_id: m.awayTeam.categoryName || "",
                   },
                 })) || []
             }

@@ -38,52 +38,58 @@ export const PartidosPorDiaV2: React.FC<PartidosPorDiaProps> = ({
                 px: { sm: "5%", md: "10%" },
               }}
             >
-              <Box display="flex" alignItems="center">
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="flex-end"
-                  gap="10px"
-                  sx={{
-                    width: {
-                      sm: "30%",
-                      md: "35%",
-                    },
-                  }}
-                >
-                  <Typography
-                    variant="body1"
-                    noWrap
-                    sx={{ display: { xs: "none", sm: "block" } }}
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent={"space-between"}
+              >
+                <Box width={"100%"} className="flex ">
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="flex-end"
+                    gap="10px"
+                    sx={{
+                      width: {
+                        sm: "30%",
+                        md: "35%",
+                      },
+                    }}
                   >
-                    {match.equipoLocal.name}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    noWrap
-                    sx={{ display: { xs: "block", sm: "none" } }}
-                  >
-                    {abbreviateTeamName(match.equipoLocal.name || "")}
-                  </Typography>
-                  <Image
-                    src={
-                      match.equipoLocal.logoUrl.includes("https://")
-                        ? match.equipoLocal.logoUrl
-                        : "https://" + match.equipoLocal.logoUrl
-                    }
-                    height={20}
-                    width={30}
-                    alt={match.equipoLocal.name}
-                  />
-                </Box>
+                    <Typography
+                      variant="body1"
+                      noWrap
+                      sx={{ display: { xs: "none", sm: "block" } }}
+                    >
+                      {match.equipoLocal.name}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      noWrap
+                      width={"40px"}
+                      sx={{ display: { xs: "block", sm: "none" } }}
+                    >
+                      {abbreviateTeamName(match.equipoLocal.name || "")}
+                    </Typography>
+                    <Image
+                      src={
+                        match.equipoLocal.logoUrl.includes("https://")
+                          ? match.equipoLocal.logoUrl
+                          : "https://" + match.equipoLocal.logoUrl
+                      }
+                      height={20}
+                      width={30}
+                      alt={match.equipoLocal.name}
+                    />
+                  </Box>
 
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  sx={{ minWidth: 100, width: "fit-content", px: 1 }}
-                >
-                  {/* {match?.score1 !== undefined ||
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    sx={{ minWidth: 100, width: "fit-content", px: 1 }}
+                  >
+                    {/* {match?.score1 !== undefined ||
                   match?.score2 !== undefined ? (
                     <Box bgcolor="#A60000" px={2} py={1} borderRadius="4px">
                       <Typography
@@ -94,87 +100,93 @@ export const PartidosPorDiaV2: React.FC<PartidosPorDiaProps> = ({
                       >{`${match?.score1} - ${match?.score2}`}</Typography>
                     </Box>
                   ) : ( */}
+                    <Box
+                      bgcolor="gray"
+                      px={2}
+                      py={1}
+                      borderRadius="4px"
+                      width="56px"
+                    >
+                      <Typography
+                        variant="body2"
+                        color="white"
+                        fontWeight="bold"
+                        textAlign="center"
+                        fontSize={8}
+                      >
+                        {/* reemplazar por hora */}
+                        {"A definir"}
+                      </Typography>
+                    </Box>
+                    {/* )} */}
+                  </Box>
+
                   <Box
-                    bgcolor="gray"
-                    px={2}
-                    py={1}
-                    borderRadius="4px"
-                    width="56px"
+                    display="flex"
+                    alignItems="center"
+                    gap="10px"
+                    sx={{
+                      width: {
+                        sm: "30%",
+                        md: "35%",
+                      },
+                    }}
                   >
+                    <Image
+                      src={
+                        match.equipoVisitante.logoUrl.includes("https://")
+                          ? match.equipoVisitante.logoUrl
+                          : "https://" + match.equipoVisitante.logoUrl
+                      }
+                      height={20}
+                      width={30}
+                      alt={match.equipoVisitante.name}
+                    />
+                    <Typography
+                      variant="body1"
+                      noWrap
+                      sx={{ display: { xs: "none", sm: "block" } }}
+                    >
+                      {match.equipoVisitante.name}
+                    </Typography>
                     <Typography
                       variant="body2"
-                      color="white"
-                      fontWeight="bold"
-                      textAlign="center"
-                      fontSize={8}
+                      noWrap
+                      width={"40px"}
+                      sx={{ display: { xs: "block", sm: "none" } }}
                     >
-                      {/* reemplazar por hora */}
+                      {abbreviateTeamName(match.equipoVisitante.name || "")}
+                    </Typography>
+                  </Box>
+
+                  <Box
+                    display={{ xs: "none", md: "flex" }}
+                    alignItems="center"
+                    gap="10px"
+                    width="20%"
+                  >
+                    <StadiumOutlinedIcon />
+                    <Typography variant="body2">
+                      {/* Reemplazar por cancha */}
                       {"A definir"}
                     </Typography>
                   </Box>
-                  {/* )} */}
                 </Box>
 
                 <Box
-                  display="flex"
                   alignItems="center"
                   gap="10px"
                   sx={{
-                    width: {
-                      sm: "30%",
-                      md: "35%",
+                    cursor: "pointer",
+                    display: "flex",
+                    "&:hover": {
+                      backgroundColor: "#e0e0e0",
+                      borderRadius: "4px",
                     },
                   }}
+                  onClick={() => handleClickSeeMatch(match)}
                 >
-                  <Image
-                    src={
-                      match.equipoVisitante.logoUrl.includes("https://")
-                        ? match.equipoVisitante.logoUrl
-                        : "https://" + match.equipoVisitante.logoUrl
-                    }
-                    height={20}
-                    width={30}
-                    alt={match.equipoVisitante.name}
-                  />
-                  <Typography
-                    variant="body1"
-                    noWrap
-                    sx={{ display: { xs: "none", sm: "block" } }}
-                  >
-                    {match.equipoVisitante.name}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    noWrap
-                    sx={{ display: { xs: "block", sm: "none" } }}
-                  >
-                    {abbreviateTeamName(match.equipoVisitante.name || "")}
-                  </Typography>
-                </Box>
-
-                <Box
-                  display={{ xs: "none", md: "flex" }}
-                  alignItems="center"
-                  gap="10px"
-                  width="20%"
-                >
-                  <StadiumOutlinedIcon />
-                  <Typography variant="body2">
-                    {/* Reemplazar por cancha */}
-                    {"A definir"}
-                  </Typography>
-                </Box>
-
-                <Box
-                  alignItems="center"
-                  gap="10px"
-                  alignSelf={"flex-end"}
-                  sx={{ width: "object-fit" }}
-                  display={"flex"}
-                >
-                  <IconButton onClick={() => handleClickSeeMatch(match)}>
-                    <VisibilityIcon />
-                  </IconButton>
+                  <VisibilityIcon />
                   <Typography
                     variant="body2"
                     noWrap

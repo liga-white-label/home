@@ -5,9 +5,9 @@ import Image from "next/image";
 import { IncidenciasContainer } from "./InferenciasContainer";
 
 export interface Incidencia {
-  type: "expulsion" | "gol";
+  type: "amarilla" | "expulsion" | "gol";
   player_name: string;
-  team: "team1" | "team2";
+  team: "home" | "away";
 }
 
 export interface MatchProps {
@@ -22,9 +22,9 @@ export interface MatchProps {
 }
 
 const Incidencias_mock: Incidencia[] = [
-  { type: "gol", player_name: "Joaquin Franciscutti", team: "team1" },
-  { type: "expulsion", player_name: "Edinson Cavani", team: "team2" },
-  { type: "gol", player_name: "Joaquin Franciscutti", team: "team1" },
+  { type: "gol", player_name: "Joaquin Franciscutti", team: "home" },
+  { type: "expulsion", player_name: "Edinson Cavani", team: "away" },
+  { type: "gol", player_name: "Joaquin Franciscutti", team: "home" },
 ];
 
 const Match: React.FC<MatchProps & { last: boolean }> = ({

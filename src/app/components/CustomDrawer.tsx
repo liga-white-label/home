@@ -20,15 +20,15 @@ import {
 
 export const CustomDrawer = () => {
   const { sidebarOpen, handleClose } = useSidebar();
-  const {
-    data: campeonatoActual,
-    isLoading: isLoadingCampeonatoActual,
-    isError,
-  } = useCampeonatoQuery("66c7945cfbabb65891cfbdf1");
 
   const { data: allCampeonatos, isLoading: isLoadingAllCampeonatos } =
     useAllCampeonatosQuery();
 
+  const campeonatoActualVacio = allCampeonatos?.find((c) => c.current);
+
+  const { data: campeonatoActual } = useCampeonatoQuery(
+    campeonatoActualVacio?.id || ""
+  );
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation">
       <ListItem disablePadding>
@@ -59,7 +59,7 @@ export const CustomDrawer = () => {
             </ListItemButton>
           </AccordionSummary>
           <AccordionDetails>
-            {isLoadingCampeonatoActual ? (
+            {isLoadingAllCampeonatos ? (
               <p>Cargando...</p>
             ) : (
               <>
@@ -165,7 +165,7 @@ export const CustomDrawer = () => {
             ) : (
               <List>
                 {allCampeonatos
-                  ?.filter((c) => c.type === "cup")
+                  ?.filter((c) => c.type === "cup" && c.enabled)
                   .map((c, index) => (
                     <ListItem key={index} disablePadding>
                       <Link
@@ -175,7 +175,7 @@ export const CustomDrawer = () => {
                       >
                         <ListItemButton>
                           <ListItemText
-                            className="flex items-center justify-center text-white "
+                            className="flex items-center justify-center text-white text-center"
                             primary={<p className="text-xl">{c.name}</p>}
                           />
                         </ListItemButton>

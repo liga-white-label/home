@@ -34,6 +34,7 @@ export interface Team {
 
 export interface Round {
   matchesPlayoff: RoundMatch[];
+  roundNumber: number;
 }
 
 export enum MatchStatus {
@@ -97,7 +98,7 @@ export const partidoMapper = (x: any): Match => ({
 });
 
 export const playoffFaseMapper = (data: any): Round => {
-  const matchesPlayoff = data.matchesPlayoff.map((x: any) => ({
+  const matchesPlayoff: RoundMatch[] = data.matchesPlayoff.map((x: any) => ({
     id: x.id,
     awayMatch: partidoMapper(x.awayMatch),
     homeMatch: partidoMapper(x.homeMatch),
@@ -107,6 +108,7 @@ export const playoffFaseMapper = (data: any): Round => {
 
   return {
     matchesPlayoff: matchesPlayoff,
+    roundNumber: data.roundNumber,
   };
 };
 
@@ -158,26 +160,6 @@ export class CategoriaRepository {
     //const data = CATEGORIAS_MOCK.find((c) => c.id === id);
     return getCategoriaMapper(data);
   };
-
-  create = (category: ICreateCategoria) =>
-    httpClient.post("tournament/league/categories/createCategory", category);
-
-  edit = async (category: IEditCategoria) =>
-    httpClient.put("categorias/" + category.id, { name: category.name });
-
-  remove = async (id: string) => httpClient.delete("categorias/" + id);
-
-  saveFecha = async ({
-    fechas,
-    categoryId,
-  }: {
-    fechas: any[];
-    categoryId: string;
-  }) =>
-    await httpClient.post(`tournament/league/categories/create-phase-general`, {
-      categoryId: categoryId,
-      matches: fechas,
-    });
 
   allFases = async (categoryId: string) => {
     const { data } = await httpClient.get<any>(
@@ -246,44 +228,6 @@ export const useAllCategoriasQuery = () =>
 
 export const useCategoriaQuery = (id: string) =>
   useQuery({ queryKey: repo.keys.one(id), queryFn: () => repo.get(id) });
-
-export const useCreateCategoriaMutation = () => {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: repo.create,
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: repo.keys.all() });
-    },
-  });
-};
-export const useDeleteCategoriaMutation = () => {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: repo.remove,
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: repo.keys.all() });
-    },
-  });
-};
-export const useEditCategoriaMutation = () => {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: repo.edit,
-    onSuccess: (_, vars) => {
-      qc.invalidateQueries({ queryKey: repo.keys.one(vars.id) });
-    },
-  });
-};
-
-export const useSaveFaseMutation = () => {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: repo.saveFecha,
-    onSuccess: (_, vars) => {
-      qc.invalidateQueries({ queryKey: repo.keys.one(vars.categoryId) });
-    },
-  });
-};
 
 export const useAllFasesByCategory = (id: string) =>
   useQuery({ queryKey: repo.keys.fases(id), queryFn: () => repo.allFases(id) });

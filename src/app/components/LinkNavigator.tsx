@@ -10,10 +10,15 @@ import { useState } from "react";
 
 export const LinkNavigator = () => {
   const path = usePathname();
-  const { data: campeonatoActual, isLoading: isLoadingCampeonatoActual } =
-    useCampeonatoQuery("66c7945cfbabb65891cfbdf1");
+
   const { data: allCampeonatos, isLoading: isLoadingAllCampeonatos } =
     useAllCampeonatosQuery();
+
+  const campeonatoActualVacio = allCampeonatos?.find((c) => c.current);
+
+  const { data: campeonatoActual } = useCampeonatoQuery(
+    campeonatoActualVacio?.id || ""
+  );
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [anchorElCopa, setAnchorElCopa] = useState<HTMLButtonElement | null>(
@@ -70,7 +75,7 @@ export const LinkNavigator = () => {
             "aria-labelledby": "basic-button",
           }}
         >
-          {isLoadingCampeonatoActual || isLoadingAllCampeonatos ? (
+          {isLoadingAllCampeonatos ? (
             <MenuItem onClick={handleClose}>
               <p className="text-lg">Cargando...</p>
             </MenuItem>
@@ -175,7 +180,7 @@ export const LinkNavigator = () => {
             </MenuItem>
           ) : (
             allCampeonatos
-              ?.filter((c) => c.type === "cup")
+              ?.filter((c) => c.type === "cup" && c.enabled)
               .map((c, index) => (
                 <MenuItem key={index} onClick={handleClose}>
                   <Link href={`/campeonatos/${c.id}`}>

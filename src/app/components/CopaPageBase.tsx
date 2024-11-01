@@ -2,17 +2,11 @@
 
 import { FC, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Match } from "../models/Match";
-import { FixturePage } from "./FixturePage";
 import { EstadisticasPage } from "./EstadisticasPage";
-import { EquipoTablaPosicion } from "../models/Team";
-import { PlayerStatistic } from "../models/PlayerStatistic";
-import { TablaDePosicionesWrapper } from "./TablasDePosicionesWrapper";
-import PlayoffsPage from "./playoffs/PlayoffsPage";
-import { useAllFasesByCategory } from "@/repositories/CategoriaRepository";
 import { useAllFasesByCampeonato } from "@/repositories/CampeonatoRepository";
 import { FaseGruposWrapper } from "./FaseGruposWrapper";
 import FixtureCopaPage from "./FixtureCopaPage";
+import PlayoffsCopaPage from "./playoffs/PlayoffsCopaPage";
 
 interface CopaPageBaseProps {
   id: string;
@@ -112,7 +106,7 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
           <FixtureCopaPage faseId={faseGrupos?.id || ""} />
         )}
         {selectedTab === TabsEnum.PLAYOFFS && (
-          <PlayoffsPage faseId={fasePlayoff?.id || ""} />
+          <PlayoffsCopaPage faseId={fasePlayoff?.id || ""} />
         )}
         {selectedTab === TabsEnum.ESTADISTICAS && (
           <EstadisticasPage goleadores={[]} amarillas={[]} />

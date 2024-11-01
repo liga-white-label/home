@@ -10,14 +10,15 @@ import {
 } from "@mui/material";
 
 interface EstadisticasPageProps {
-  goleadores: any[];
-  amarillas: any[];
+  categoryId: string;
 }
 
 export const EstadisticasPage: React.FC<EstadisticasPageProps> = ({
-  goleadores,
-  amarillas,
+  categoryId,
 }) => {
+  const goleadores: any[] = [];
+  const amarillas: any[] = [];
+
   const [selectedOption, setSelectedOption] = useState<string>("0");
 
   const handleChange = (event: SelectChangeEvent) => {

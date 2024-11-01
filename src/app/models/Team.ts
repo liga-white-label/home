@@ -1,8 +1,9 @@
 export interface Team {
+  id: string;
   name: string;
   logoUrl: string;
   gender: string;
-  category_id: number;
+  category_id: string;
 }
 
 export interface EquipoTablaPosicion {

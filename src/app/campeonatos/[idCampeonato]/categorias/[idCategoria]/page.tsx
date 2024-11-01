@@ -31,9 +31,6 @@ export default function Home() {
       title={`Categoria ${categoria?.name} - ${
         categoria?.gender === "male" ? "Masculina" : "Femenina"
       }`}
-      matches={[]}
-      goleadores={[]}
-      amarillas={[]}
       id={idCategoria.toString()}
     />
   );
