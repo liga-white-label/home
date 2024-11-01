@@ -8,5 +8,5 @@ const _prod = {
   production: true,
 };
 
-//export const environment = _prod;
-export const environment = dev;
+export const environment = _prod;
+//export const environment = dev;
