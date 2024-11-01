@@ -10,11 +10,13 @@ import {
 } from "@mui/material";
 
 interface EstadisticasPageProps {
-  categoryId: string;
+  categoryId?: string;
+  campeonatoId?: string;
 }
 
 export const EstadisticasPage: React.FC<EstadisticasPageProps> = ({
-  categoryId,
+  categoryId = "",
+  campeonatoId = "",
 }) => {
   const goleadores: any[] = [];
   const amarillas: any[] = [];

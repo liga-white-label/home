@@ -109,7 +109,7 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
           <PlayoffsCopaPage faseId={fasePlayoff?.id || ""} />
         )}
         {selectedTab === TabsEnum.ESTADISTICAS && (
-          <EstadisticasPage goleadores={[]} amarillas={[]} />
+          <EstadisticasPage campeonatoId={id} />
         )}
       </div>
     </main>
