@@ -161,8 +161,8 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
         {
           <Box className="flex justify-center items-start gap-24 pt-2">
             <Box className=" w-full">
-              {incidenciasLocal.map((detail) => (
-                <IncidenciaByTeam incidencia={detail} />
+              {incidenciasLocal.map((detail, index) => (
+                <IncidenciaByTeam key={index} incidencia={detail} />
               ))}
             </Box>
             <Divider
@@ -175,8 +175,8 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
               }}
             />
             <Box className=" w-full">
-              {incidenciasVisitante.map((detail) => (
-                <IncidenciaByTeam incidencia={detail} />
+              {incidenciasVisitante.map((detail, index) => (
+                <IncidenciaByTeam key={index} incidencia={detail} />
               ))}
             </Box>
           </Box>

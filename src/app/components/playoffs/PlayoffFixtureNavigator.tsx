@@ -83,6 +83,7 @@ const PlayoffFixtureNavigator: React.FC<PlayoffFixtureNavigatorProps> = ({
       >
         {currentPhase?.matchesPlayoff.map((partido, index) => (
           <PlayoffRoundsFixture
+            key={index}
             partido={partido}
             index={index}
             idFase={faseId}

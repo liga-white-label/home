@@ -1,6 +1,5 @@
 import { WelcomeGifContainer } from "./components/WelcomeGifContainer";
 import EmblaCarousel from "./components/carousel/EmblaCarousel";
-import ImageSlider from "./components/carousel/ImageSlider";
 
 export default function Home() {
   const SLIDES = [
