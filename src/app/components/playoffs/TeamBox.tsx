@@ -1,6 +1,6 @@
-import { Box, Divider } from '@mui/material';
-import { Team } from './CuadroPlayoff';
-import { ResultBox, InvertedResultBox } from './ResultBox';
+import { Box, Divider } from "@mui/material";
+import { ResultBox, InvertedResultBox } from "./ResultBox";
+import { Team } from "@/app/models/Team";
 
 interface TeamBoxProps {
   homeTeam?: Team;
@@ -20,9 +20,17 @@ export const TeamBox: React.FC<TeamBoxProps> = ({
   resultAwayVuelta,
 }) => (
   <Box className="flex flex-col bg-[#24598f] text-white w-48 relative">
-    <ResultBox team={homeTeam} resultIda={resultHomeIda} resultVuelta={resultHomeVuelta} />
+    <ResultBox
+      team={homeTeam}
+      resultIda={resultHomeIda}
+      resultVuelta={resultHomeVuelta}
+    />
     <Divider className="bg-white" />
-    <ResultBox team={awayTeam} resultIda={resultAwayIda} resultVuelta={resultAwayVuelta} />
+    <ResultBox
+      team={awayTeam}
+      resultIda={resultAwayIda}
+      resultVuelta={resultAwayVuelta}
+    />
   </Box>
 );
 
@@ -58,10 +66,25 @@ export const FinalTeamBox: React.FC<{
   nameAway?: Team;
   resultAway?: number | null;
   penaltyResultAway?: number | null;
-}> = ({ nameHome, resultHome, penaltyResultHome, nameAway, resultAway, penaltyResultAway }) => (
+}> = ({
+  nameHome,
+  resultHome,
+  penaltyResultHome,
+  nameAway,
+  resultAway,
+  penaltyResultAway,
+}) => (
   <Box className="flex flex-col bg-[#24598f] text-white w-48 relative">
-    <ResultBox team={nameHome} resultIda={resultHome} resultPenales={penaltyResultHome} />
+    <ResultBox
+      team={nameHome}
+      resultIda={resultHome}
+      resultPenales={penaltyResultHome}
+    />
     <Divider className="bg-white" />
-    <ResultBox team={nameAway} resultIda={resultAway} resultPenales={penaltyResultAway} />
+    <ResultBox
+      team={nameAway}
+      resultIda={resultAway}
+      resultPenales={penaltyResultAway}
+    />
   </Box>
 );

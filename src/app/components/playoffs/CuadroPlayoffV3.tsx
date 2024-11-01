@@ -1,50 +1,8 @@
 import React from "react";
 import { Box } from "@mui/material";
 import { FinalTeamBox, TeamBox } from "./TeamBox";
-import { Moment } from "moment";
-
-export enum MatchStatus {
-  PENDING = "Upcoming",
-  PLAYED = "Played",
-  IN_PROGRESS = "Suspended",
-}
-
-export interface Match {
-  date: Moment;
-  dateNumber: number;
-  field: string;
-  linemenTeam: string;
-  scorer: string;
-  comments: string;
-  homeTeam: Team;
-  awayTeam: Team;
-  homeTeamGoals: number | null;
-  awayTeamGoals: number | null;
-  homeTeamPlayerGoals: any[];
-  awayTeamPlayerGoals: any[];
-  homeTeamYellowCards: any[];
-  awayTeamYellowCards: any[];
-  homeTeamRedCards: any[];
-  awayTeamRedCards: any[];
-  status: MatchStatus;
-}
-
-export interface Team {
-  id: string;
-  name: string;
-  gender: string;
-  logo: string;
-  categoryName: string | null;
-  leagueName: string | null;
-}
-
-export interface RoundMatch {
-  id: string;
-  awayMatch: Match;
-  homeMatch: Match;
-  teamWinner?: Team | null;
-  nextMatchId: string;
-}
+import { MatchStatus } from "@/app/models/Match";
+import { RoundMatch } from "@/repositories/CategoriaRepository";
 
 export interface Round {
   matchesPlayoff: RoundMatch[];

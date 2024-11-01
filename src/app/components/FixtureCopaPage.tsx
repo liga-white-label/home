@@ -35,15 +35,20 @@ const FixtureCopaPage: React.FC<FixtureCopaPageProps> = ({ faseId }) => {
                   equipoLocal: {
                     id: m.homeTeam.id,
                     name: m.homeTeam.name,
-                    logoUrl: m.homeTeam.logo,
+                    logo: m.homeTeam.logo,
                     gender: m.homeTeam.gender,
-                    category_id: m.homeTeam.categoryName || "",
+                    categoryName: m.homeTeam.categoryName || "",
+                    leagueName: m.homeTeam.leagueName || "",
+                    players: m.homeTeam.players || [],
                   },
                   equipoVisitante: {
                     id: m.awayTeam.id,
                     name: m.awayTeam.name,
-                    logoUrl: m.awayTeam.logo,
+                    categoryName: m.awayTeam.categoryName || "",
+                    leagueName: m.awayTeam.leagueName || "",
+                    players: m.awayTeam.players || [],
                     gender: m.awayTeam.gender,
+                    logo: m.awayTeam.logo,
                     category_id: m.awayTeam.categoryName || "",
                   },
                 })) || []

@@ -1,9 +1,17 @@
 export interface Team {
   id: string;
   name: string;
-  logoUrl: string;
   gender: string;
-  category_id: string;
+  logo: string;
+  categoryName: string | null;
+  leagueName: string | null;
+  players: {
+    gender: string;
+    name: string;
+    lastName: string;
+    membershipNumber: string;
+    id: string;
+  }[];
 }
 
 export interface EquipoTablaPosicion {

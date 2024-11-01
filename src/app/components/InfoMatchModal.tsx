@@ -8,10 +8,9 @@ import {
 } from "@mui/material";
 import React from "react";
 import { abbreviateTeamName } from "../utils/stringUtils";
-import { IncidenciaByTeam } from "./InferenciaByTeam";
-import { Match, MatchStatus } from "./playoffs/CuadroPlayoff";
+import { Incidencia, IncidenciaByTeam } from "./InferenciaByTeam";
 import Image from "next/image";
-import { Incidencia } from "./Match";
+import { Match, MatchStatus } from "../models/Match";
 
 interface InfoMatchModalProps {
   openMatchModal: boolean;
@@ -210,12 +209,12 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
             {match.linemenTeam ? (
               <Box className="flex gap-2 items-center justify-between">
                 <Image
-                  src={match.linemenTeam.logoUrl}
+                  src={match.linemenTeam}
                   height={40}
                   width={40}
-                  alt={match.linemenTeam.name}
+                  alt={match.linemenTeam}
                 />
-                <p>{match.linemenTeam.name}</p>
+                <p>{match.linemenTeam}</p>
               </Box>
             ) : (
               <p>A definir</p>

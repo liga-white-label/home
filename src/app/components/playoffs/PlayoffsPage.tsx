@@ -1,9 +1,12 @@
 import React from "react";
 import { Box } from "@mui/material";
-import { Round, MatchStatus, RoundMatch } from "./CuadroPlayoff";
 import { TeamBox, FinalTeamBox } from "./TeamBox";
-import { useOneFasePlayoffQuery } from "@/repositories/CategoriaRepository";
+import {
+  RoundMatch,
+  useOneFasePlayoffQuery,
+} from "@/repositories/CategoriaRepository";
 import LoadingScreen from "../loading/Loading";
+import { MatchStatus } from "@/app/models/Match";
 
 interface CuadroPlayoffProps {
   faseId: string;

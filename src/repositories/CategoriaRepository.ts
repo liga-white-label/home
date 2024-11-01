@@ -1,66 +1,14 @@
 import { Categoria } from "@/app/models/Categoria";
+import { Match } from "@/app/models/Match";
+import { Team } from "@/app/models/Team";
 import { GeneroEnum } from "@/app/utils/enums/GeneroEnum";
 import { httpClient } from "@/app/utils/httpClient";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Moment } from "moment";
 import moment from "moment";
-
-interface ICreateCategoria {
-  name: string;
-  gender: string;
-  leagueName: string;
-}
-
-interface IEditCategoria {
-  id: string;
-  name: string;
-}
-
-export interface Team {
-  id: string;
-  name: string;
-  gender: string;
-  logo: string;
-  categoryName: string | null;
-  leagueName: string | null;
-  players: {
-    gender: string;
-    name: string;
-    lastName: string;
-    membershipNumber: string;
-    id: string;
-  }[];
-}
 
 export interface Round {
   matchesPlayoff: RoundMatch[];
   roundNumber: number;
-}
-
-export enum MatchStatus {
-  PENDING = "Upcoming",
-  PLAYED = "Played",
-  IN_PROGRESS = "Suspended",
-}
-
-export interface Match {
-  date: Moment;
-  dateNumber: number;
-  field: string;
-  linemenTeam: string;
-  scorer: string;
-  comments: string;
-  homeTeam: Team;
-  awayTeam: Team;
-  homeTeamGoals: number | null;
-  awayTeamGoals: number | null;
-  homeTeamPlayerGoals: any[];
-  awayTeamPlayerGoals: any[];
-  homeTeamYellowCards: any[];
-  awayTeamYellowCards: any[];
-  homeTeamRedCards: any[];
-  awayTeamRedCards: any[];
-  status: MatchStatus;
 }
 
 export interface RoundMatch {
@@ -72,8 +20,6 @@ export interface RoundMatch {
 }
 
 export const getCategoriaMapper = (x: any): Categoria => x;
-
-export const createCategoriaMapper = (x: ICreateCategoria) => x;
 
 export const faseMapper = (data: any) => {
   return {

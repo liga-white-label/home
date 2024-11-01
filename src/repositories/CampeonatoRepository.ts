@@ -1,8 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Match, RoundMatch, Team } from "./CategoriaRepository";
 import moment from "moment";
 import { Campeonato } from "@/app/models/Campeonato";
 import { httpClient } from "@/app/utils/httpClient";
+import { Match } from "@/app/models/Match";
+import { Team } from "@/app/models/Team";
+import { RoundMatch } from "./CategoriaRepository";
 
 interface ICreateCampeonato {
   name: string;

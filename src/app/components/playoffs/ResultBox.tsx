@@ -1,7 +1,7 @@
 import { Box, Typography, Divider } from "@mui/material";
-import { Team } from "./CuadroPlayoff";
 import { abbreviateTeamName } from "@/app/utils/stringUtils";
 import Image from "next/image";
+import { Team } from "@/app/models/Team";
 
 interface ResultBoxProps {
   team?: Team;

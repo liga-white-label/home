@@ -73,9 +73,9 @@ export const PartidosPorDiaV2: React.FC<PartidosPorDiaProps> = ({
                     </Typography>
                     <Image
                       src={
-                        match.equipoLocal.logoUrl.includes("https://")
-                          ? match.equipoLocal.logoUrl
-                          : "https://" + match.equipoLocal.logoUrl
+                        match.equipoLocal.logo.includes("https://")
+                          ? match.equipoLocal.logo
+                          : "https://" + match.equipoLocal.logo
                       }
                       height={20}
                       width={30}
@@ -134,9 +134,9 @@ export const PartidosPorDiaV2: React.FC<PartidosPorDiaProps> = ({
                   >
                     <Image
                       src={
-                        match.equipoVisitante.logoUrl.includes("https://")
-                          ? match.equipoVisitante.logoUrl
-                          : "https://" + match.equipoVisitante.logoUrl
+                        match.equipoVisitante.logo.includes("https://")
+                          ? match.equipoVisitante.logo
+                          : "https://" + match.equipoVisitante.logo
                       }
                       height={20}
                       width={30}

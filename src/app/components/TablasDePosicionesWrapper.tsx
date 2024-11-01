@@ -15,19 +15,6 @@ export const TablaDePosicionesWrapper: FC<TablaDePosicionesWrapperProps> = ({
   if (isLoading) return <LoadingScreen />;
   if (isError) return <div>Error...</div>;
 
-  // if (!!dataZonas) {
-  //   return (
-  //     <div className="flex flex-col gap-4">
-  //       {dataZonas.map((zona, i) => (
-  //         <>
-  //           <p className="text-center">{`Zona ${i + 1}`}</p>
-  //           <TablaPosiciones data={zona} />
-  //         </>
-  //       ))}
-  //     </div>
-  //   );
-  // }
-
   if (!!data) {
     return <TablaPosiciones data={data} />;
   }

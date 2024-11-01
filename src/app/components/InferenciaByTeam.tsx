@@ -1,6 +1,11 @@
 import { SportsSoccer, Rectangle } from "@mui/icons-material";
 import { FC } from "react";
-import { Incidencia } from "./Match";
+
+export interface Incidencia {
+  type: "amarilla" | "expulsion" | "gol";
+  player_name: string;
+  team: "home" | "away";
+}
 
 interface IncidenciaByTeamProps {
   incidencia: Incidencia;
@@ -10,7 +15,7 @@ export const IncidenciaByTeam: FC<IncidenciaByTeamProps> = ({ incidencia }) => {
   return (
     <div
       className={`flex gap-2 items-center ${
-        incidencia.team === "team1" ? "flex-row-reverse" : "flex-row"
+        incidencia.team === "home" ? "flex-row-reverse" : "flex-row"
       }`}
     >
       {incidencia.type === "gol" ? (

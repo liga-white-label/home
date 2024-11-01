@@ -1,50 +1,8 @@
-import React from 'react';
-import { Box, Typography, Grid, Paper, Divider, Container } from '@mui/material';
-import {Moment} from 'moment';
-import { TeamBox, FinalTeamBox, InvertedTeamBox } from './TeamBox';
-
-export enum MatchStatus {
-  PENDING = 'Upcoming',
-  PLAYED = 'Played',
-  IN_PROGRESS = 'Suspended',
-}
-
-export interface Match {
-  date: Moment;
-  dateNumber: number;
-  field: string;
-  linemenTeam: string;
-  scorer: string;
-  comments: string;
-  homeTeam: Team;
-  awayTeam: Team;
-  homeTeamGoals: number | null;
-  awayTeamGoals: number | null;
-  homeTeamPlayerGoals: any[];
-  awayTeamPlayerGoals: any[];
-  homeTeamYellowCards: any[];
-  awayTeamYellowCards: any[];
-  homeTeamRedCards: any[];
-  awayTeamRedCards: any[];
-  status: MatchStatus;
-}
-
-export interface Team {
-  id: string;
-  name: string;
-  gender: string;
-  logo: string;
-  categoryName: string | null;
-  leagueName: string | null;
-}
-
-export interface RoundMatch {
-  id: string;
-  awayMatch: Match;
-  homeMatch: Match;
-  teamWinner?: Team | null;
-  nextMatchId: string;
-}
+import React from "react";
+import { Box } from "@mui/material";
+import { TeamBox, FinalTeamBox, InvertedTeamBox } from "./TeamBox";
+import { MatchStatus } from "@/app/models/Match";
+import { RoundMatch } from "@/repositories/CategoriaRepository";
 
 export interface Round {
   matchesPlayoff: RoundMatch[];
@@ -74,10 +32,14 @@ const CuadroPlayoff: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
             <Box
               key={`r16-left-${i}`}
               className="absolute"
-              style={{ top: `${i * 110 + 20}px`, left: '10px' }}
+              style={{ top: `${i * 110 + 20}px`, left: "10px" }}
             >
               <TeamBox
-                homeTeam={match.teamWinner ? match.teamWinner : match.homeMatch?.homeTeam}
+                homeTeam={
+                  match.teamWinner
+                    ? match.teamWinner
+                    : match.homeMatch?.homeTeam
+                }
                 awayTeam={match.homeMatch?.awayTeam}
                 resultHomeIda={
                   match.homeMatch?.status !== MatchStatus.PLAYED
@@ -108,10 +70,14 @@ const CuadroPlayoff: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
             <Box
               key={`qf-left-${i}`}
               className="absolute"
-              style={{ top: `${i * 220 + 75}px`, left: '240px' }}
+              style={{ top: `${i * 220 + 75}px`, left: "240px" }}
             >
               <TeamBox
-                homeTeam={match.teamWinner ? match.teamWinner : match.homeMatch?.homeTeam}
+                homeTeam={
+                  match.teamWinner
+                    ? match.teamWinner
+                    : match.homeMatch?.homeTeam
+                }
                 awayTeam={match.homeMatch?.awayTeam}
                 resultHomeIda={
                   match.homeMatch?.status !== MatchStatus.PLAYED
@@ -142,10 +108,14 @@ const CuadroPlayoff: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
             <Box
               key={`sf-left-${i}`}
               className="absolute"
-              style={{ top: `${i * 440 + 185}px`, left: '400px' }}
+              style={{ top: `${i * 440 + 185}px`, left: "400px" }}
             >
               <TeamBox
-                homeTeam={match.teamWinner ? match.teamWinner : match.homeMatch?.homeTeam}
+                homeTeam={
+                  match.teamWinner
+                    ? match.teamWinner
+                    : match.homeMatch?.homeTeam
+                }
                 awayTeam={match.homeMatch?.awayTeam}
                 resultHomeIda={
                   match.homeMatch?.status !== MatchStatus.PLAYED
@@ -172,7 +142,7 @@ const CuadroPlayoff: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
           ))}
 
           {/* Final */}
-          <Box className="absolute" style={{ top: '90px', left: '580px' }}>
+          <Box className="absolute" style={{ top: "90px", left: "580px" }}>
             <FinalTeamBox
               nameHome={teams.f.matchesPlayoff[0].homeMatch?.homeTeam}
               nameAway={teams.f.matchesPlayoff[0].homeMatch?.awayTeam}
@@ -186,10 +156,14 @@ const CuadroPlayoff: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
             <Box
               key={`sf-right-${i}`}
               className="absolute"
-              style={{ top: `${i * 440 + 185}px`, left: '760px' }}
+              style={{ top: `${i * 440 + 185}px`, left: "760px" }}
             >
               <InvertedTeamBox
-                homeTeam={match.teamWinner ? match.teamWinner : match.homeMatch?.homeTeam}
+                homeTeam={
+                  match.teamWinner
+                    ? match.teamWinner
+                    : match.homeMatch?.homeTeam
+                }
                 awayTeam={match.homeMatch?.awayTeam}
                 resultHomeIda={
                   match.homeMatch?.status !== MatchStatus.PLAYED
@@ -220,10 +194,14 @@ const CuadroPlayoff: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
             <Box
               key={`qf-right-${i}`}
               className="absolute"
-              style={{ top: `${i * 220 + 75}px`, left: '900px' }}
+              style={{ top: `${i * 220 + 75}px`, left: "900px" }}
             >
               <InvertedTeamBox
-                homeTeam={match.teamWinner ? match.teamWinner : match.homeMatch?.homeTeam}
+                homeTeam={
+                  match.teamWinner
+                    ? match.teamWinner
+                    : match.homeMatch?.homeTeam
+                }
                 awayTeam={match.homeMatch?.awayTeam}
                 resultHomeIda={
                   match.homeMatch?.status !== MatchStatus.PLAYED
@@ -254,10 +232,14 @@ const CuadroPlayoff: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
             <Box
               key={`r16-right-${i}`}
               className="absolute"
-              style={{ top: `${i * 110 + 20}px`, left: '1150px' }}
+              style={{ top: `${i * 110 + 20}px`, left: "1150px" }}
             >
               <InvertedTeamBox
-                homeTeam={!!match.teamWinner ? match.teamWinner : match.homeMatch?.homeTeam}
+                homeTeam={
+                  !!match.teamWinner
+                    ? match.teamWinner
+                    : match.homeMatch?.homeTeam
+                }
                 awayTeam={match.homeMatch?.awayTeam}
                 resultHomeIda={
                   match.homeMatch?.status !== MatchStatus.PLAYED

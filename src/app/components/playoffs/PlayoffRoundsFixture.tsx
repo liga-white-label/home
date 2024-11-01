@@ -5,8 +5,8 @@ import {
 } from "@/repositories/CampeonatoRepository";
 import { Grid, Box, Typography, Divider, Button } from "@mui/material";
 import { useRef, useState } from "react";
-import { RoundMatch } from "./CuadroPlayoff";
 import Image from "next/image";
+import { RoundMatch } from "@/repositories/CategoriaRepository";
 
 interface PlayoffRoundsFixtureProps {
   partido: RoundMatch;
