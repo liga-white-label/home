@@ -1,5 +1,6 @@
 import { WelcomeGifContainer } from "./components/WelcomeGifContainer";
 import EmblaCarousel from "./components/carousel/EmblaCarousel";
+import ImageSlider from "./components/carousel/ImageSlider";
 
 export default function Home() {
   const SLIDES = [
@@ -49,6 +50,7 @@ export default function Home() {
       <WelcomeGifContainer />
       <div className="bg-red-100 w-full">
         <EmblaCarousel slides={SLIDES} options={{ align: "start" }} />
+        {/* <ImageSlider images={SLIDES} /> */}
       </div>
     </>
   );

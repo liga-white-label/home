@@ -5,6 +5,7 @@ import { EmblaOptionsType, EmblaCarouselType } from "embla-carousel";
 import useEmblaCarousel from "embla-carousel-react";
 import "../carousel/embla.css";
 import Link from "next/link";
+import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 
 type PropType = {
   slides: { title: string; asset: string; link: string }[];
@@ -42,6 +43,20 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
             );
           })}
         </div>
+        <button
+          className="absolute left-0 top-1/2 transform h-10 rounded-xl hover:bg-[#1a222f] mx-1 mt-10 bg-[#111927] text-white p-2 group"
+          onClick={onPrevButtonClick}
+          disabled={prevBtnDisabled}
+        >
+          <ChevronLeft className="text-gray-400 group-hover:text-white" />
+        </button>
+        <button
+          className="absolute right-0 top-1/2 transform h-10 rounded-xl hover:bg-[#1a222f] mx-1 mt-10  bg-[#111927] text-white p-2 group"
+          onClick={onNextButtonClick}
+          disabled={nextBtnDisabled}
+        >
+          <ChevronRight className="text-gray-400 group-hover:text-white" />
+        </button>
       </div>
     </section>
   );
