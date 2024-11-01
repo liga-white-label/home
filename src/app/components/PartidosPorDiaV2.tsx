@@ -12,14 +12,15 @@ import {
   Typography,
 } from "@mui/material";
 import { Team } from "../models/Team";
+import { MatchStatus } from "../models/Match";
 
 export interface RegularMatch {
   equipoLocal: Team;
   equipoVisitante: Team;
 }
 interface PartidosPorDiaProps {
-  matches: RegularMatch[];
-  handleClickSeeMatch: (match: RegularMatch) => void;
+  matches: any[];
+  handleClickSeeMatch: (match: any) => void;
 }
 export const PartidosPorDiaV2: React.FC<PartidosPorDiaProps> = ({
   matches,
@@ -89,36 +90,35 @@ export const PartidosPorDiaV2: React.FC<PartidosPorDiaProps> = ({
                     justifyContent="center"
                     sx={{ minWidth: 100, width: "fit-content", px: 1 }}
                   >
-                    {/* {match?.score1 !== undefined ||
-                  match?.score2 !== undefined ? (
-                    <Box bgcolor="#A60000" px={2} py={1} borderRadius="4px">
-                      <Typography
-                        variant="body2"
-                        color="white"
-                        fontWeight="bold"
-                        textAlign="center"
-                      >{`${match?.score1} - ${match?.score2}`}</Typography>
-                    </Box>
-                  ) : ( */}
-                    <Box
-                      bgcolor="gray"
-                      px={2}
-                      py={1}
-                      borderRadius="4px"
-                      width="56px"
-                    >
-                      <Typography
-                        variant="body2"
-                        color="white"
-                        fontWeight="bold"
-                        textAlign="center"
-                        fontSize={8}
+                    {match.status === MatchStatus.PLAYED ? (
+                      <Box bgcolor="#A60000" px={2} py={1} borderRadius="4px">
+                        <Typography
+                          variant="body2"
+                          color="white"
+                          fontWeight="bold"
+                          textAlign="center"
+                        >{`${match?.golesLocal} - ${match?.golesVisitante}`}</Typography>
+                      </Box>
+                    ) : (
+                      <Box
+                        bgcolor="gray"
+                        px={2}
+                        py={1}
+                        borderRadius="4px"
+                        width="56px"
                       >
-                        {/* reemplazar por hora */}
-                        {"A definir"}
-                      </Typography>
-                    </Box>
-                    {/* )} */}
+                        <Typography
+                          variant="body2"
+                          color="white"
+                          fontWeight="bold"
+                          textAlign="center"
+                          fontSize={8}
+                        >
+                          {/* reemplazar por hora */}
+                          {"A definir"}
+                        </Typography>
+                      </Box>
+                    )}
                   </Box>
 
                   <Box
@@ -167,8 +167,7 @@ export const PartidosPorDiaV2: React.FC<PartidosPorDiaProps> = ({
                   >
                     <StadiumOutlinedIcon />
                     <Typography variant="body2">
-                      {/* Reemplazar por cancha */}
-                      {"A definir"}
+                      {!!match.cancha ? match.cancha : "A definir"}
                     </Typography>
                   </Box>
                 </Box>

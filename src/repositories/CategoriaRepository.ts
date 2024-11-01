@@ -26,15 +26,19 @@ export const faseMapper = (data: any) => {
     equipoLocal: {
       id: data.homeTeamId,
       name: data.homeTeamName,
-      logoUrl: data.homeTeamLogo,
+      logo: data.homeTeamLogo,
       gender: GeneroEnum.MASCULINO,
     },
     equipoVisitante: {
       id: data.awayTeamId,
       name: data.awayTeamName,
-      logoUrl: data.awayTeamLogo,
+      logo: data.awayTeamLogo,
       gender: GeneroEnum.MASCULINO,
     },
+    cancha: data.field,
+    status: data.status,
+    golesLocal: data.homeTeamGoals,
+    golesVisitante: data.awayTeamGoals,
   };
 };
 
@@ -94,6 +98,7 @@ export class CategoriaRepository {
     fases: (idCat: string) => ["fases", idCat],
     oneFase: (idFase: string, fecha?: number) => ["fases", idFase + fecha],
     partido: (idPartido: string) => [idPartido],
+    goleadores: (idFase: string) => ["goleadores", idFase],
   };
 
   getAll = async () => {
@@ -165,6 +170,13 @@ export class CategoriaRepository {
     );
     return data.map(getPositionsMapper);
   };
+
+  getGoleadores = async (faseId: string) => {
+    const { data } = await httpClient.get<any>(
+      `tournament/league/categories/phase-general/get-scorers?phaseId=${faseId}`
+    );
+    return data;
+  };
 }
 
 const repo = new CategoriaRepository();
@@ -221,4 +233,10 @@ export const usePositionsFaseRegular = (id: string) =>
   useQuery({
     queryKey: repo.keys.oneFase(id),
     queryFn: () => repo.getPositionsFaseRegular(id),
+  });
+
+export const useGoleadoresQuery = (id: string) =>
+  useQuery({
+    queryKey: repo.keys.goleadores(id),
+    queryFn: () => repo.getGoleadores(id),
   });

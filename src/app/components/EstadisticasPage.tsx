@@ -8,17 +8,20 @@ import {
   SelectChangeEvent,
   Typography,
 } from "@mui/material";
+import { useGoleadoresQuery } from "@/repositories/CategoriaRepository";
+import LoadingScreen from "./loading/Loading";
 
 interface EstadisticasPageProps {
-  categoryId?: string;
+  faseId?: string;
   campeonatoId?: string;
 }
 
 export const EstadisticasPage: React.FC<EstadisticasPageProps> = ({
-  categoryId = "",
+  faseId = "",
   campeonatoId = "",
 }) => {
-  const goleadores: any[] = [];
+  const { data: goleadores, isLoading: goleadoresLoading } =
+    useGoleadoresQuery(faseId);
   const amarillas: any[] = [];
 
   const [selectedOption, setSelectedOption] = useState<string>("0");
@@ -26,6 +29,10 @@ export const EstadisticasPage: React.FC<EstadisticasPageProps> = ({
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedOption(event.target.value as string);
   };
+
+  if (goleadoresLoading) {
+    return <LoadingScreen />;
+  }
   return (
     <div className="flex flex-col h-full w-full gap-5 ">
       <FormControl
@@ -46,7 +53,17 @@ export const EstadisticasPage: React.FC<EstadisticasPageProps> = ({
       </FormControl>
 
       <TablaEstadisticas
-        data={selectedOption === "0" ? goleadores : amarillas}
+        data={
+          selectedOption === "0"
+            ? goleadores.map((g: any, index: number) => ({
+                pos: index + 1,
+                jugador: g.playerName + " " + g.playerLastName,
+                equipo: g.teamName,
+                escudo: "",
+                goles: g.goals,
+              }))
+            : amarillas
+        }
         tipo={selectedOption === "0" ? "goleadores" : "amarillas"}
       />
     </div>

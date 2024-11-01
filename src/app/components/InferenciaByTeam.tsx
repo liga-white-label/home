@@ -1,4 +1,5 @@
 import { SportsSoccer, Rectangle } from "@mui/icons-material";
+import { useTheme } from "@mui/material";
 import { FC } from "react";
 
 export interface Incidencia {
@@ -12,6 +13,7 @@ interface IncidenciaByTeamProps {
 }
 
 export const IncidenciaByTeam: FC<IncidenciaByTeamProps> = ({ incidencia }) => {
+  const theme = useTheme();
   return (
     <div
       className={`flex gap-2 items-center ${
@@ -19,9 +21,14 @@ export const IncidenciaByTeam: FC<IncidenciaByTeamProps> = ({ incidencia }) => {
       }`}
     >
       {incidencia.type === "gol" ? (
-        <SportsSoccer className="h-10 w-10" />
+        <SportsSoccer className="h-5 w-5" />
       ) : (
-        <Rectangle className="h-10 w-10 rotate-90" color="error" />
+        <Rectangle
+          className="h-5 w-5 rotate-90"
+          sx={{
+            color: incidencia.type === "expulsion" ? "red" : "yellow",
+          }}
+        />
       )}
       <p className="text-lg">{incidencia.player_name}</p>
     </div>

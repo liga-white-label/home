@@ -26,11 +26,11 @@ export const TablaPosiciones: FC<TablaPosicionesProps> = ({
   ignoreLines,
 }) => {
   const calculatedPositions = data
-    .sort((a, b) => {
+    ?.sort((a, b) => {
       if (a.pts !== b.pts) return b.pts - a.pts;
       if (a.dg !== b.dg) return b.dg - a.dg;
       if (a.gf !== b.gf) return b.gf - a.gf;
-      return a.equipo.localeCompare(b.equipo);
+      return a.equipo?.localeCompare(b.equipo);
     })
     .map((team, index) => ({
       ...team,
@@ -93,7 +93,7 @@ export const TablaPosiciones: FC<TablaPosicionesProps> = ({
                     className="object-contain h-10 w-10"
                   />
                   <p className="max-[340px]:hidden">
-                    {abbreviateTeamName(team.equipo)}
+                    {abbreviateTeamName(team.equipo || "")}
                   </p>
                 </div>
               </td>

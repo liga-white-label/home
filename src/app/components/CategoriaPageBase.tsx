@@ -142,7 +142,7 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
           <PlayoffsPage faseId={fasePlayoff?.id || ""} />
         )}
         {selectedTab === TabsEnum.ESTADISTICAS && (
-          <EstadisticasPage categoryId={id} />
+          <EstadisticasPage faseId={faseRegular?.id} />
         )}
       </div>
     </main>

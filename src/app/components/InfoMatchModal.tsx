@@ -24,6 +24,7 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
   match,
 }) => {
   if (match === null) {
+    handleCloseModal();
     return <></>;
   }
 
@@ -80,7 +81,14 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
   ];
 
   return (
-    <Dialog open={openMatchModal} onClose={handleCloseModal} maxWidth="lg">
+    <Dialog
+      open={openMatchModal}
+      onClose={handleCloseModal}
+      maxWidth="lg"
+      PaperProps={{
+        sx: { width: { md: "50%", xs: "80%" }, maxWidth: "100%" },
+      }}
+    >
       <DialogTitle className="flex justify-between items-center text-white bg-[#A60000]">
         <p className="text-2xl">Detalles del Partido</p>
         <Close onClick={handleCloseModal} className="cursor-pointer" />
@@ -107,7 +115,7 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
               {match.homeTeam.name}
             </p>
             <p className="max-[600px]:flex hidden font-extrabold">
-              {abbreviateTeamName(match.homeTeam.name)}
+              {abbreviateTeamName(match.homeTeam.name || "")}
             </p>
             <Image
               src={match.homeTeam.logo}
@@ -145,7 +153,7 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
               {match.awayTeam.name}
             </p>
             <p className="max-[600px]:flex hidden font-extrabold">
-              {abbreviateTeamName(match.awayTeam.name)}
+              {abbreviateTeamName(match.awayTeam.name || "")}
             </p>
           </Box>
         </Box>
@@ -193,12 +201,12 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
             {match.scorer ? (
               <Box className="flex gap-2 items-center justify-between">
                 <Image
-                  src={match.scorer}
+                  src={match.scorer.logo}
                   height={40}
                   width={40}
-                  alt={match.scorer || ""}
+                  alt={match.scorer.name || ""}
                 />
-                <p>{match.scorer || ""}</p>
+                <p>{match.scorer.name || ""}</p>
               </Box>
             ) : (
               <p>A definir</p>
@@ -209,12 +217,12 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
             {match.linemenTeam ? (
               <Box className="flex gap-2 items-center justify-between">
                 <Image
-                  src={match.linemenTeam}
+                  src={match.linemenTeam.logo}
                   height={40}
                   width={40}
-                  alt={match.linemenTeam}
+                  alt={match.linemenTeam.name}
                 />
-                <p>{match.linemenTeam}</p>
+                <p>{match.linemenTeam.name}</p>
               </Box>
             ) : (
               <p>A definir</p>

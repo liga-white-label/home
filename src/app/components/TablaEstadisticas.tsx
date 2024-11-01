@@ -68,7 +68,7 @@ export const TablaEstadisticas: FC<TablaEstadisticasProps> = ({
                     width={30}
                   />
                   <p className="max-[340px]:hidden">
-                    {abbreviateTeamName(team.equipo)}
+                    {abbreviateTeamName(team.equipo || "")}
                   </p>
                 </div>
               </td>

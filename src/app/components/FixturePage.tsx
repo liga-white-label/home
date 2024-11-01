@@ -49,6 +49,7 @@ export const FixturePage: React.FC<FixturePageProps> = ({ faseId }) => {
   };
 
   const handleCloseModal = () => {
+    currentMatchSelected.current = undefined;
     setOpenMatchModal(false);
   };
 
