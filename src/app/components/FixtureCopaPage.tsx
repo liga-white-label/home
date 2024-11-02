@@ -1,18 +1,49 @@
 "use client";
 
-import { useOneFaseCampeonatoQuery } from "@/repositories/CampeonatoRepository";
+import {
+  useOneFaseCampeonatoQuery,
+  useOnePartidoCopaQuery,
+} from "@/repositories/CampeonatoRepository";
 import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
-import React from "react";
-import { PartidosPorDiaV2, RegularMatch } from "./PartidosPorDiaV2";
+import React, { useRef, useState } from "react";
+import { PartidosAgrupados } from "./fixture/PartidosAgrupados";
 import LoadingScreen from "./loading/Loading";
+import InfoMatchModal from "./InfoMatchModal";
+import { IndexMatch } from "../models/Match";
 
 interface FixtureCopaPageProps {
   faseId: string;
 }
 
 const FixtureCopaPage: React.FC<FixtureCopaPageProps> = ({ faseId }) => {
+  const currentMatchSelected = useRef<any | undefined>();
+
   const { data, isLoading, isError } = useOneFaseCampeonatoQuery(faseId);
+
+  const { data: match, isLoading: matchLoading } = useOnePartidoCopaQuery(
+    currentMatchSelected.current?.homeTeam,
+    currentMatchSelected.current?.awayTeam,
+    currentMatchSelected.current?.phaseId || "",
+    !!currentMatchSelected.current
+  );
+
+  const [openMatchModal, setOpenMatchModal] = useState<boolean>(false);
+
+  const handleClickSeeMatch = (match: IndexMatch) => {
+    currentMatchSelected.current = {
+      homeTeam: match.homeTeamId,
+      awayTeam: match.awayTeamId,
+      phaseId: faseId || "",
+    };
+
+    setOpenMatchModal(true);
+  };
+
+  const handleCloseModal = () => {
+    currentMatchSelected.current = undefined;
+    setOpenMatchModal(false);
+  };
 
   if (isLoading) return <LoadingScreen />;
   if (isError) return <div>Error...</div>;
@@ -27,259 +58,30 @@ const FixtureCopaPage: React.FC<FixtureCopaPageProps> = ({ faseId }) => {
           >{`Grupo ${grupo.name}`}</Typography>
         </Box>
         {
-          <PartidosPorDiaV2
+          <PartidosAgrupados
             matches={
-              grupo.matches
-                .sort((m1, m2) => (m1.dateNumber < m2.dateNumber ? -1 : 1))
-                .map((m) => ({
-                  equipoLocal: {
-                    id: m.homeTeam.id,
-                    name: m.homeTeam.name,
-                    logo: m.homeTeam.logo,
-                    gender: m.homeTeam.gender,
-                    categoryName: m.homeTeam.categoryName || "",
-                    leagueName: m.homeTeam.leagueName || "",
-                    players: m.homeTeam.players || [],
-                  },
-                  equipoVisitante: {
-                    id: m.awayTeam.id,
-                    name: m.awayTeam.name,
-                    categoryName: m.awayTeam.categoryName || "",
-                    leagueName: m.awayTeam.leagueName || "",
-                    players: m.awayTeam.players || [],
-                    gender: m.awayTeam.gender,
-                    logo: m.awayTeam.logo,
-                    category_id: m.awayTeam.categoryName || "",
-                  },
-                })) || []
+              grupo.matches.sort((m1, m2) =>
+                m1.dateNumber < m2.dateNumber ? -1 : 1
+              ) || []
             }
-            handleClickSeeMatch={function (match: RegularMatch): void {
-              throw new Error("Function not implemented.");
-            }}
+            handleClickSeeMatch={handleClickSeeMatch}
+            isLoadingMatch={matchLoading}
+            selectedMatch={
+              [
+                currentMatchSelected.current?.homeTeam,
+                currentMatchSelected.current?.awayTeam,
+              ].join("") || ""
+            }
           />
         }
       </Box>
+      <InfoMatchModal
+        match={match || null}
+        openMatchModal={openMatchModal}
+        handleCloseModal={handleCloseModal}
+      />
     </>
   ));
 };
 
 export default FixtureCopaPage;
-
-const caca = [
-  {
-    date: null,
-    dateNumber: 1,
-    field: null,
-    linemenTeam: null,
-    scorer: null,
-    status: "Upcoming",
-    comments: null,
-    phaseId: null,
-    homeTeam: {
-      id: "6709a6f7d2cb830c176f2289",
-      name: "central cordoba",
-      gender: null,
-      logo: "https://logodownload.org/wp-content/uploads/2016/11/argentina-national-football-team-logo-0-1.png",
-      categoryName: null,
-      leagueName: null,
-      players: [],
-    },
-    awayTeam: {
-      id: "6709a6e0d2cb830c176f2280",
-      name: "belgrano",
-      gender: null,
-      logo: "https://logodownload.org/wp-content/uploads/2016/11/argentina-national-football-team-logo-0-1.png",
-      categoryName: null,
-      leagueName: null,
-      players: [],
-    },
-    homeTeamGoals: 0,
-    awayTeamGoals: 0,
-    homeTeamPlayerGoals: [],
-    awayTeamPlayerGoals: [],
-    homeTeamYellowCards: [],
-    awayTeamYellowCards: [],
-    homeTeamRedCards: [],
-    awayTeamRedCards: [],
-  },
-  {
-    date: null,
-    dateNumber: 1,
-    field: null,
-    linemenTeam: null,
-    scorer: null,
-    status: "Upcoming",
-    comments: null,
-    phaseId: null,
-    homeTeam: {
-      id: "6709a6d1d2cb830c176f227d",
-      name: "aldosivi",
-      gender: null,
-      logo: "https://logodownload.org/wp-content/uploads/2016/11/argentina-national-football-team-logo-0-1.png",
-      categoryName: null,
-      leagueName: null,
-      players: [],
-    },
-    awayTeam: {
-      id: "6709a6ffd2cb830c176f228f",
-      name: "river",
-      gender: null,
-      logo: "https://logodownload.org/wp-content/uploads/2016/11/argentina-national-football-team-logo-0-1.png",
-      categoryName: null,
-      leagueName: null,
-      players: [],
-    },
-    homeTeamGoals: 0,
-    awayTeamGoals: 0,
-    homeTeamPlayerGoals: [],
-    awayTeamPlayerGoals: [],
-    homeTeamYellowCards: [],
-    awayTeamYellowCards: [],
-    homeTeamRedCards: [],
-    awayTeamRedCards: [],
-  },
-  {
-    date: null,
-    dateNumber: 2,
-    field: null,
-    linemenTeam: null,
-    scorer: null,
-    status: "Upcoming",
-    comments: null,
-    phaseId: null,
-    homeTeam: {
-      id: "6709a6f7d2cb830c176f2289",
-      name: "central cordoba",
-      gender: null,
-      logo: "https://logodownload.org/wp-content/uploads/2016/11/argentina-national-football-team-logo-0-1.png",
-      categoryName: null,
-      leagueName: null,
-      players: [],
-    },
-    awayTeam: {
-      id: "6709a6ffd2cb830c176f228f",
-      name: "river",
-      gender: null,
-      logo: "https://logodownload.org/wp-content/uploads/2016/11/argentina-national-football-team-logo-0-1.png",
-      categoryName: null,
-      leagueName: null,
-      players: [],
-    },
-    homeTeamGoals: 0,
-    awayTeamGoals: 0,
-    homeTeamPlayerGoals: [],
-    awayTeamPlayerGoals: [],
-    homeTeamYellowCards: [],
-    awayTeamYellowCards: [],
-    homeTeamRedCards: [],
-    awayTeamRedCards: [],
-  },
-  {
-    date: null,
-    dateNumber: 2,
-    field: null,
-    linemenTeam: null,
-    scorer: null,
-    status: "Upcoming",
-    comments: null,
-    phaseId: null,
-    homeTeam: {
-      id: "6709a6e0d2cb830c176f2280",
-      name: "belgrano",
-      gender: null,
-      logo: "https://logodownload.org/wp-content/uploads/2016/11/argentina-national-football-team-logo-0-1.png",
-      categoryName: null,
-      leagueName: null,
-      players: [],
-    },
-    awayTeam: {
-      id: "6709a6d1d2cb830c176f227d",
-      name: "aldosivi",
-      gender: null,
-      logo: "https://logodownload.org/wp-content/uploads/2016/11/argentina-national-football-team-logo-0-1.png",
-      categoryName: null,
-      leagueName: null,
-      players: [],
-    },
-    homeTeamGoals: 0,
-    awayTeamGoals: 0,
-    homeTeamPlayerGoals: [],
-    awayTeamPlayerGoals: [],
-    homeTeamYellowCards: [],
-    awayTeamYellowCards: [],
-    homeTeamRedCards: [],
-    awayTeamRedCards: [],
-  },
-  {
-    date: null,
-    dateNumber: 3,
-    field: null,
-    linemenTeam: null,
-    scorer: null,
-    status: "Upcoming",
-    comments: null,
-    phaseId: null,
-    homeTeam: {
-      id: "6709a6f7d2cb830c176f2289",
-      name: "central cordoba",
-      gender: null,
-      logo: "https://logodownload.org/wp-content/uploads/2016/11/argentina-national-football-team-logo-0-1.png",
-      categoryName: null,
-      leagueName: null,
-      players: [],
-    },
-    awayTeam: {
-      id: "6709a6d1d2cb830c176f227d",
-      name: "aldosivi",
-      gender: null,
-      logo: "https://logodownload.org/wp-content/uploads/2016/11/argentina-national-football-team-logo-0-1.png",
-      categoryName: null,
-      leagueName: null,
-      players: [],
-    },
-    homeTeamGoals: 0,
-    awayTeamGoals: 0,
-    homeTeamPlayerGoals: [],
-    awayTeamPlayerGoals: [],
-    homeTeamYellowCards: [],
-    awayTeamYellowCards: [],
-    homeTeamRedCards: [],
-    awayTeamRedCards: [],
-  },
-  {
-    date: null,
-    dateNumber: 3,
-    field: null,
-    linemenTeam: null,
-    scorer: null,
-    status: "Upcoming",
-    comments: null,
-    phaseId: null,
-    homeTeam: {
-      id: "6709a6ffd2cb830c176f228f",
-      name: "river",
-      gender: null,
-      logo: "https://logodownload.org/wp-content/uploads/2016/11/argentina-national-football-team-logo-0-1.png",
-      categoryName: null,
-      leagueName: null,
-      players: [],
-    },
-    awayTeam: {
-      id: "6709a6e0d2cb830c176f2280",
-      name: "belgrano",
-      gender: null,
-      logo: "https://logodownload.org/wp-content/uploads/2016/11/argentina-national-football-team-logo-0-1.png",
-      categoryName: null,
-      leagueName: null,
-      players: [],
-    },
-    homeTeamGoals: 0,
-    awayTeamGoals: 0,
-    homeTeamPlayerGoals: [],
-    awayTeamPlayerGoals: [],
-    homeTeamYellowCards: [],
-    awayTeamYellowCards: [],
-    homeTeamRedCards: [],
-    awayTeamRedCards: [],
-  },
-];

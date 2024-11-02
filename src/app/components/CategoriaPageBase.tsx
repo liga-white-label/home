@@ -77,32 +77,8 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
                   : "bg-slate-300 hover:font-bold hover:bg-slate-400"
               }`}
             >
-              Posiciones
+              <p className="line-clamp-1">Posiciones</p>
             </div>
-            {!!faseRegular && (
-              <div
-                onClick={() => handleChangeTab(TabsEnum.FIXTURE)}
-                className={` p-2 md:p-4 rounded-t-lg  cursor-pointer ${
-                  selectedTab === TabsEnum.FIXTURE
-                    ? "font-bold bg-white"
-                    : "bg-slate-300 hover:font-bold hover:bg-slate-400"
-                }`}
-              >
-                Fixture
-              </div>
-            )}
-            {!!fasePlayoff && (
-              <div
-                onClick={() => handleChangeTab(TabsEnum.PLAYOFFS)}
-                className={` p-2 md:p-4 rounded-t-lg  cursor-pointer ${
-                  selectedTab === TabsEnum.PLAYOFFS
-                    ? "font-bold bg-white"
-                    : "bg-slate-300 hover:font-bold hover:bg-slate-400"
-                }`}
-              >
-                Playoffs
-              </div>
-            )}
             {!!faseGrupos && (
               <div
                 onClick={() => handleChangeTab(TabsEnum.GRUPOS)}
@@ -115,6 +91,31 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
                 Fase de grupos
               </div>
             )}
+            {!!faseRegular && (
+              <div
+                onClick={() => handleChangeTab(TabsEnum.FIXTURE)}
+                className={` p-2 md:p-4 rounded-t-lg  cursor-pointer ${
+                  selectedTab === TabsEnum.FIXTURE
+                    ? "font-bold bg-white"
+                    : "bg-slate-300 hover:font-bold hover:bg-slate-400"
+                }`}
+              >
+                <p className="line-clamp-1">Fixture</p>
+              </div>
+            )}
+            {!!fasePlayoff && (
+              <div
+                onClick={() => handleChangeTab(TabsEnum.PLAYOFFS)}
+                className={` p-2 md:p-4 rounded-t-lg  cursor-pointer ${
+                  selectedTab === TabsEnum.PLAYOFFS
+                    ? "font-bold bg-white"
+                    : "bg-slate-300 hover:font-bold hover:bg-slate-400"
+                }`}
+              >
+                <p className="line-clamp-1">Playoffs</p>
+              </div>
+            )}
+
             <div
               onClick={() => handleChangeTab(TabsEnum.ESTADISTICAS)}
               className={` p-2 md:p-4 rounded-t-lg  cursor-pointer ${
@@ -123,7 +124,7 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
                   : "bg-slate-300 hover:font-bold hover:bg-slate-400"
               }`}
             >
-              Estadisticas
+              <p className="line-clamp-1">Estadísticas</p>
             </div>
           </div>
         </div>

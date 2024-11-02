@@ -8,13 +8,14 @@ import {
 } from "@mui/material";
 
 import { useRef, useState } from "react";
-import { PartidosPorDiaV2, RegularMatch } from "./PartidosPorDiaV2";
+import { PartidosAgrupados } from "./fixture/PartidosAgrupados";
 import {
   useOneFaseQuery,
   useOnePartidoQuery,
 } from "@/repositories/CategoriaRepository";
 import InfoMatchModal from "./InfoMatchModal";
 import LoadingScreen from "./loading/Loading";
+import { IndexMatch } from "../models/Match";
 
 interface FixturePageProps {
   faseId: string;
@@ -24,13 +25,12 @@ export const FixturePage: React.FC<FixturePageProps> = ({ faseId }) => {
   const [selectedFecha, setSelectedFecha] = useState<number>(1);
   const currentMatchSelected = useRef<any | undefined>();
 
-  const {
-    data: matchesFechaActual,
-    isLoading,
-    isError,
-  } = useOneFaseQuery(faseId, selectedFecha);
+  const { data: matchesFechaActual, isLoading } = useOneFaseQuery(
+    faseId,
+    selectedFecha
+  );
 
-  const { data: match } = useOnePartidoQuery(
+  const { data: match, isLoading: isLoadingMatch } = useOnePartidoQuery(
     currentMatchSelected.current?.homeTeam,
     currentMatchSelected.current?.awayTeam,
     currentMatchSelected.current?.phaseId || "",
@@ -38,10 +38,10 @@ export const FixturePage: React.FC<FixturePageProps> = ({ faseId }) => {
   );
   const [openMatchModal, setOpenMatchModal] = useState<boolean>(false);
 
-  const handleClickSeeMatch = (match: RegularMatch) => {
+  const handleClickSeeMatch = (match: IndexMatch) => {
     currentMatchSelected.current = {
-      homeTeam: match.equipoLocal.id,
-      awayTeam: match.equipoVisitante.id,
+      homeTeam: match.homeTeamId,
+      awayTeam: match.awayTeamId,
       phaseId: faseId || "",
     };
 
@@ -86,9 +86,16 @@ export const FixturePage: React.FC<FixturePageProps> = ({ faseId }) => {
             )}
           </Select>
         </FormControl>
-        <PartidosPorDiaV2
+        <PartidosAgrupados
           matches={matchesFechaActual || []}
           handleClickSeeMatch={handleClickSeeMatch}
+          isLoadingMatch={isLoadingMatch}
+          selectedMatch={
+            [
+              currentMatchSelected.current?.homeTeam,
+              currentMatchSelected.current?.awayTeam,
+            ].join("") || ""
+          }
         />
       </div>
       <InfoMatchModal

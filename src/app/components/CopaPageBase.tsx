@@ -55,36 +55,42 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
         <div className="flex flex-col justify-between max-w-full">
           <p className="text-white text-4xl px-10">{title}</p>
           <div className="flex gap-2 px-0 md:px-10 max-w-full overflow-hidden">
-            <div
-              onClick={() => handleChangeTab(TabsEnum.GRUPOS)}
-              className={`p-2 md:p-4 rounded-t-lg  cursor-pointer ${
-                selectedTab === TabsEnum.GRUPOS
-                  ? "font-bold bg-white"
-                  : "bg-slate-300 hover:font-bold hover:bg-slate-400"
-              }`}
-            >
-              Fase de Grupos
-            </div>
-            <div
-              onClick={() => handleChangeTab(TabsEnum.FIXTURE)}
-              className={` p-2 md:p-4 rounded-t-lg  cursor-pointer ${
-                selectedTab === TabsEnum.FIXTURE
-                  ? "font-bold bg-white"
-                  : "bg-slate-300 hover:font-bold hover:bg-slate-400"
-              }`}
-            >
-              Fixture
-            </div>
-            <div
-              onClick={() => handleChangeTab(TabsEnum.PLAYOFFS)}
-              className={` p-2 md:p-4 rounded-t-lg  cursor-pointer ${
-                selectedTab === TabsEnum.PLAYOFFS
-                  ? "font-bold bg-white"
-                  : "bg-slate-300 hover:font-bold hover:bg-slate-400"
-              }`}
-            >
-              Playoffs
-            </div>
+            {!!faseGrupos && (
+              <div
+                onClick={() => handleChangeTab(TabsEnum.GRUPOS)}
+                className={`p-2 md:p-4 rounded-t-lg  cursor-pointer ${
+                  selectedTab === TabsEnum.GRUPOS
+                    ? "font-bold bg-white"
+                    : "bg-slate-300 hover:font-bold hover:bg-slate-400"
+                }`}
+              >
+                <p className="line-clamp-1">Fase de Grupos</p>
+              </div>
+            )}
+            {!!faseGrupos && (
+              <div
+                onClick={() => handleChangeTab(TabsEnum.FIXTURE)}
+                className={` p-2 md:p-4 rounded-t-lg  cursor-pointer ${
+                  selectedTab === TabsEnum.FIXTURE
+                    ? "font-bold bg-white"
+                    : "bg-slate-300 hover:font-bold hover:bg-slate-400"
+                }`}
+              >
+                <p className="line-clamp-1">Fixture</p>
+              </div>
+            )}
+            {!!fasePlayoff && (
+              <div
+                onClick={() => handleChangeTab(TabsEnum.PLAYOFFS)}
+                className={` p-2 md:p-4 rounded-t-lg  cursor-pointer ${
+                  selectedTab === TabsEnum.PLAYOFFS
+                    ? "font-bold bg-white"
+                    : "bg-slate-300 hover:font-bold hover:bg-slate-400"
+                }`}
+              >
+                <p className="line-clamp-1">Playoffs</p>
+              </div>
+            )}
             <div
               onClick={() => handleChangeTab(TabsEnum.ESTADISTICAS)}
               className={` p-2 md:p-4 rounded-t-lg  cursor-pointer ${
@@ -93,7 +99,7 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
                   : "bg-slate-300 hover:font-bold hover:bg-slate-400"
               }`}
             >
-              Estadisticas
+              <p className="line-clamp-1">Estadísticas</p>
             </div>
           </div>
         </div>

@@ -16,7 +16,7 @@ interface TablaPosicionesProps {
     gf: number;
     gc: number;
     dg: number;
-    nextMatch: string;
+    nextMatch: { name: string; logo: string } | null;
   }[];
   ignoreLines?: boolean;
 }
@@ -113,7 +113,10 @@ export const TablaPosiciones: FC<TablaPosicionesProps> = ({
               </td>
               <td className="justify-center px-2 md:px-4 py-2  text-center font-bold md:flex hidden">
                 <NextTeamInfo
-                  data={{ escudo: team.escudo, nextTeam: team.nextMatch }}
+                  data={{
+                    escudo: team.escudo,
+                    nextTeam: team.nextMatch?.logo || null,
+                  }}
                 />
               </td>
             </tr>

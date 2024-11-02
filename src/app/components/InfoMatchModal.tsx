@@ -11,6 +11,7 @@ import { abbreviateTeamName } from "../utils/stringUtils";
 import { Incidencia, IncidenciaByTeam } from "./InferenciaByTeam";
 import Image from "next/image";
 import { Match, MatchStatus } from "../models/Match";
+import moment from "moment";
 
 interface InfoMatchModalProps {
   openMatchModal: boolean;
@@ -24,9 +25,11 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
   match,
 }) => {
   if (match === null) {
-    handleCloseModal();
     return <></>;
   }
+  moment.locale("es");
+
+  console.log(moment.locale());
 
   const golesLocal: Incidencia[] = match.homeTeamPlayerGoals.map(
     (goleador) => ({
@@ -96,13 +99,11 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
       <DialogTitle className="flex items-center justify-center gap-10 bg-slate-200">
         <Box className="flex gap-2 items-center">
           <CalendarMonth />
-          <p>
-            {match.date ? match.date.format("DDD dd MMM YYYY") : "A definir"}
-          </p>
+          <p>{match.date ? match.date.format("LLLL") : "A definir"}</p>
         </Box>
         <Box className="flex gap-2 items-center">
           <AccessTime />
-          <p>{match.date ? match.date.format("HH:mm") : "A definir"}</p>
+          <p>{match.date ? match.date.format("HH:mm ") : "A definir"}</p>
         </Box>
       </DialogTitle>
       <DialogContent>

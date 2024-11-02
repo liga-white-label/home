@@ -5,7 +5,7 @@ import { Popover } from "@mui/material";
 interface NextTeamInfoProps {
   data: {
     escudo: string;
-    nextTeam: string;
+    nextTeam: string | null;
   };
 }
 export const NextTeamInfo: FC<NextTeamInfoProps> = ({ data }) => {
@@ -20,6 +20,10 @@ export const NextTeamInfo: FC<NextTeamInfoProps> = ({ data }) => {
   };
 
   const open = Boolean(anchorEl);
+
+  if (data.nextTeam === null) {
+    return <> - </>;
+  }
 
   return (
     <>

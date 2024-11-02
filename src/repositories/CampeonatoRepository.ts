@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import moment from "moment";
 import { Campeonato } from "@/app/models/Campeonato";
 import { httpClient } from "@/app/utils/httpClient";
-import { Match } from "@/app/models/Match";
+import { IndexMatch, indexMatchMapper, Match } from "@/app/models/Match";
 import { Team } from "@/app/models/Team";
 import { RoundMatch } from "./CategoriaRepository";
 
@@ -26,12 +26,6 @@ interface RoundCup {
 export const partidoMapper = (x: any): Match => ({
   ...x,
   date: !!x?.date ? moment(x?.date) : null,
-  homeTeamPlayerGoals: x?.homeTeamPlayerGoals.map((p: any) => p.id) || [],
-  awayTeamPlayerGoals: x?.awayTeamPlayerGoals.map((p: any) => p.id) || [],
-  homeTeamYellowCards: x?.homeTeamYellowCards.map((p: any) => p.id) || [],
-  awayTeamYellowCards: x?.awayTeamYellowCards.map((p: any) => p.id) || [],
-  homeTeamRedCards: x?.homeTeamRedCards.map((p: any) => p.id) || [],
-  awayTeamRedCards: x?.awayTeamRedCards.map((p: any) => p.id) || [],
 });
 
 export const playoffFaseMapper = (data: any): RoundCup => {
@@ -58,8 +52,13 @@ const getTeamMapper = (x: any): Team => ({ ...x });
 
 const faseCopaMapper = (
   x: any
-): { matches: Match[]; name: string; teams: Team[]; positions: any[] } => ({
-  matches: x.matches,
+): {
+  matches: IndexMatch[];
+  name: string;
+  teams: Team[];
+  positions: any[];
+} => ({
+  matches: x.matches.map(indexMatchMapper),
   name: x.name,
   teams: x.teams.map(getTeamMapper),
   positions: x.positions,
@@ -76,7 +75,6 @@ export class CampeonatoRepository {
 
   getAll = async () => {
     const { data } = await httpClient.get<any[]>("tournament/all");
-    //return CAMPEONATOS_MOCK;
     return data.map(getCampeonatoMapper);
   };
 
@@ -84,7 +82,6 @@ export class CampeonatoRepository {
     const { data } = await httpClient.get<Campeonato>(
       `tournament?tournamentId=${id}`
     );
-    //const data = CAMPEONATOS_MOCK.find((c) => c.id === id);
     return data;
   };
 
@@ -114,7 +111,6 @@ export class CampeonatoRepository {
     const { data } = await httpClient.get<any>(
       `tournament/cup/phase-group/get-match?phaseId=${faseId}&homeTeamId=${homeTeamId}&awayTeamId=${awayTeamId}`
     );
-    //const data = partidoData;
     return partidoMapper(data);
   };
 

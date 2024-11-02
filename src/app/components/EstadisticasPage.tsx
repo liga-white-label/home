@@ -20,8 +20,9 @@ export const EstadisticasPage: React.FC<EstadisticasPageProps> = ({
   faseId = "",
   campeonatoId = "",
 }) => {
-  const { data: goleadores, isLoading: goleadoresLoading } =
+  const { data: goleadores = [], isLoading: goleadoresLoading } =
     useGoleadoresQuery(faseId);
+
   const amarillas: any[] = [];
 
   const [selectedOption, setSelectedOption] = useState<string>("0");
