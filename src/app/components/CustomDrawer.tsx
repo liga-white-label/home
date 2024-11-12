@@ -32,11 +32,11 @@ export const CustomDrawer = () => {
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation">
       <ListItem disablePadding>
-        <Link href={"/"} onClick={handleClose} className="w-full">
+        <Link href={"/"} onClick={handleClose} className="!w-full">
           <ListItemButton>
             <ListItemText
-              className="flex items-center justify-center text-white "
-              primary={<p className="text-xl">Inicio</p>}
+              className="!flex !items-center !justify-center !text-white "
+              primary={<p className="!text-xl">Inicio</p>}
             />
           </ListItemButton>
         </Link>
@@ -54,7 +54,7 @@ export const CustomDrawer = () => {
             <ListItemButton>
               <ListItemText
                 className="!flex !items-center !justify-center !text-white "
-                primary={<p className="text-xl">Categorias</p>}
+                primary={<p className="!text-xl">Categorias</p>}
               />
             </ListItemButton>
           </AccordionSummary>
@@ -81,7 +81,7 @@ export const CustomDrawer = () => {
                         <Link
                           href={`/campeonatos/${campeonatoActual.id}/categorias/${cat.id}`}
                           onClick={handleClose}
-                          className="w-full"
+                          className="!w-full"
                         >
                           <ListItemButton>
                             <ListItemText
@@ -113,7 +113,7 @@ export const CustomDrawer = () => {
                         <Link
                           href={`/campeonatos/${campeonatoActual.id}/categorias/${cat.id}`}
                           onClick={handleClose}
-                          className="w-full"
+                          className="!w-full"
                         >
                           <ListItemButton>
                             <ListItemText
@@ -143,9 +143,9 @@ export const CustomDrawer = () => {
         </Link>
       </ListItem>
       <ListItem disablePadding>
-        <Accordion className="bg-[#A60000] w-full shadow-none">
+        <Accordion className="!bg-[#A60000] !w-full !shadow-none">
           <AccordionSummary
-            className="m-0"
+            className="!m-0"
             aria-controls="copas-content"
             sx={{
               ".MuiAccordionSummary-content": { margin: 0 },
@@ -194,7 +194,7 @@ export const CustomDrawer = () => {
     <Drawer
       open={sidebarOpen}
       onClose={handleClose}
-      className="z-0"
+      className="!z-0"
       PaperProps={{ className: "!pt-24 !pl-2 !bg-[#A60000]" }}
       anchor="right"
     >
