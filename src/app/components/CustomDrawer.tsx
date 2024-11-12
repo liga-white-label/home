@@ -195,73 +195,10 @@ export const CustomDrawer = () => {
       open={sidebarOpen}
       onClose={handleClose}
       className="z-0"
-      PaperProps={{ className: "pt-24 pl-2 bg-[#A60000]" }}
+      PaperProps={{ className: "!pt-24 !pl-2 !bg-[#A60000]" }}
       anchor="right"
     >
       {DrawerList}
     </Drawer>
   );
 };
-
-/**
- * 
- * <Divider
-        className="text-white"
-        sx={{
-          "&::before, &::after": {
-            borderColor: "white",
-          },
-        }}
-      >
-        Masculino
-      </Divider>
-      <List>
-        {[
-          "Categoria A",
-          "Categoria B",
-          "Categoria C",
-          "Categoria D",
-          "Categoria E",
-        ].map((text, index) => (
-          <ListItem key={index} disablePadding>
-            <Link
-              href={`/categoria-${text.split(" ")[1].toLowerCase()}`}
-              onClick={handleClose}
-              className="w-full"
-            >
-              <ListItemButton>
-                <ListItemText
-                  className="flex items-center justify-center text-white "
-                  primary={<p className="text-xl">{text}</p>}
-                />
-              </ListItemButton>
-            </Link>
-          </ListItem>
-        ))}
-      </List>
-      <Divider
-        className="text-white"
-        sx={{
-          "&::before, &::after": {
-            borderColor: "white",
-          },
-        }}
-      >
-        Femenino
-      </Divider>
-      <List>
-        {["Categoria A", "Categoria B", "Categoria C"].map((text, index) => (
-          <ListItem key={index} disablePadding>
-            <Link href={"/categoria"} onClick={handleClose} className="w-full">
-              <ListItemButton>
-                <ListItemText
-                  className="flex items-center justify-center text-white "
-                  primary={<p className="text-xl">{text}</p>}
-                />
-              </ListItemButton>
-            </Link>
-          </ListItem>
-        ))}
-      </List>
-      
- */
