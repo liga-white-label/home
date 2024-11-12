@@ -48,7 +48,7 @@ const PlayoffFixtureNavigator: React.FC<PlayoffFixtureNavigatorProps> = ({
 
   return (
     <>
-      <Box className="flex w-full p-4 justify-between items-center">
+      <Box className="flex w-full p-4 justify-between items-center bg-[#A60000]">
         <IconButton
           disabled={
             selectedPhase === FASE_MINIMA ||
@@ -57,16 +57,16 @@ const PlayoffFixtureNavigator: React.FC<PlayoffFixtureNavigatorProps> = ({
           }
           onClick={() => setSelectedPhase((prev) => prev + prev)}
         >
-          <Iconify icon={"ion:caret-back"} />
+          <Iconify icon={"ion:caret-back"} color={"white"} />
         </IconButton>
-        <Typography className="font-bold">
+        <Typography className="font-bold text-white">
           {getFaseLabel(selectedPhase)}
         </Typography>
         <IconButton
           disabled={selectedPhase === FASE_MAXIMA || rounds.length === 1}
           onClick={() => setSelectedPhase((prev) => prev - prev / 2)}
         >
-          <Iconify icon={"ion:caret-forward"} />
+          <Iconify icon={"ion:caret-forward"} color={"white"} />
         </IconButton>
       </Box>
 

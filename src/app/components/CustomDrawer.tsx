@@ -42,9 +42,9 @@ export const CustomDrawer = () => {
         </Link>
       </ListItem>
       <ListItem disablePadding>
-        <Accordion className="bg-[#A60000] w-full shadow-none">
+        <Accordion className="!bg-[#A60000] !w-full !shadow-none">
           <AccordionSummary
-            className="m-0"
+            className="!m-0"
             aria-controls="categorias-content"
             sx={{
               ".MuiAccordionSummary-content": { margin: 0 },
@@ -53,7 +53,7 @@ export const CustomDrawer = () => {
           >
             <ListItemButton>
               <ListItemText
-                className="flex items-center justify-center text-white "
+                className="!flex !items-center !justify-center !text-white "
                 primary={<p className="text-xl">Categorias</p>}
               />
             </ListItemButton>
@@ -64,7 +64,7 @@ export const CustomDrawer = () => {
             ) : (
               <>
                 <Divider
-                  className="text-white"
+                  className="!text-white"
                   sx={{
                     "&::before, &::after": {
                       borderColor: "white",
@@ -85,9 +85,9 @@ export const CustomDrawer = () => {
                         >
                           <ListItemButton>
                             <ListItemText
-                              className="flex items-center justify-center text-white "
+                              className="!flex !items-center !justify-center !text-white "
                               primary={
-                                <p className="text-xl">Categoria {cat.name}</p>
+                                <p className="!text-xl">Categoria {cat.name}</p>
                               }
                             />
                           </ListItemButton>
@@ -96,7 +96,7 @@ export const CustomDrawer = () => {
                     ))}
                 </List>
                 <Divider
-                  className="text-white"
+                  className="!text-white"
                   sx={{
                     "&::before, &::after": {
                       borderColor: "white",
@@ -117,9 +117,9 @@ export const CustomDrawer = () => {
                         >
                           <ListItemButton>
                             <ListItemText
-                              className="flex items-center justify-center text-white "
+                              className="!flex !items-center !justify-center !text-white "
                               primary={
-                                <p className="text-xl">Categoria {cat.name}</p>
+                                <p className="!text-xl">Categoria {cat.name}</p>
                               }
                             />
                           </ListItemButton>
@@ -133,11 +133,11 @@ export const CustomDrawer = () => {
         </Accordion>
       </ListItem>
       <ListItem disablePadding>
-        <Link href={"/"} onClick={handleClose} className="w-full">
+        <Link href={"/"} onClick={handleClose} className="!w-full">
           <ListItemButton>
             <ListItemText
-              className="flex items-center justify-center text-white "
-              primary={<p className="text-xl">Novedades</p>}
+              className="!flex !items-center !justify-center !text-white "
+              primary={<p className="!text-xl">Novedades</p>}
             />
           </ListItemButton>
         </Link>
@@ -154,8 +154,8 @@ export const CustomDrawer = () => {
           >
             <ListItemButton>
               <ListItemText
-                className="flex items-center justify-center text-white "
-                primary={<p className="text-xl">Copas</p>}
+                className="!flex !items-center !justify-center !text-white "
+                primary={<p className="!text-xl">Copas</p>}
               />
             </ListItemButton>
           </AccordionSummary>
@@ -171,12 +171,12 @@ export const CustomDrawer = () => {
                       <Link
                         href={`/campeonatos/${c.id}`}
                         onClick={handleClose}
-                        className="w-full"
+                        className="!w-full"
                       >
                         <ListItemButton>
                           <ListItemText
-                            className="flex items-center justify-center text-white text-center"
-                            primary={<p className="text-xl">{c.name}</p>}
+                            className="!flex !items-center !justify-center !text-white !text-center"
+                            primary={<p className="!text-xl">{c.name}</p>}
                           />
                         </ListItemButton>
                       </Link>
