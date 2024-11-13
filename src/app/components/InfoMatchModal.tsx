@@ -5,13 +5,15 @@ import {
   Box,
   DialogContent,
   Divider,
+  capitalize,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { abbreviateTeamName } from "../utils/stringUtils";
 import { Incidencia, IncidenciaByTeam } from "./InferenciaByTeam";
 import Image from "next/image";
 import { Match, MatchStatus } from "../models/Match";
 import moment from "moment";
+import "moment/locale/es";
 
 interface InfoMatchModalProps {
   openMatchModal: boolean;
@@ -29,12 +31,11 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
   }
   moment.locale("es");
 
-  console.log(moment.locale());
-
   const golesLocal: Incidencia[] = match.homeTeamPlayerGoals.map(
     (goleador) => ({
       type: "gol",
-      player_name: goleador.name + " " + goleador.lastName,
+      player_name: goleador.name,
+      player_last_name: goleador.lastName,
       team: "home",
     })
   );
@@ -42,7 +43,8 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
   const golesVisitante: Incidencia[] = match.awayTeamPlayerGoals.map(
     (goleador) => ({
       type: "gol",
-      player_name: goleador.name + " " + goleador.lastName,
+      player_name: goleador.name,
+      player_last_name: goleador.lastName,
       team: "away",
     })
   );
@@ -50,7 +52,8 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
   const amarillasLocal: Incidencia[] = match.homeTeamYellowCards.map(
     (amarilla) => ({
       type: "amarilla",
-      player_name: amarilla.name + " " + amarilla.lastName,
+      player_name: amarilla.name,
+      player_last_name: amarilla.lastName,
       team: "home",
     })
   );
@@ -58,20 +61,23 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
   const amarillasVisitante: Incidencia[] = match.awayTeamYellowCards.map(
     (amarilla) => ({
       type: "amarilla",
-      player_name: amarilla.name + " " + amarilla.lastName,
+      player_name: amarilla.name,
+      player_last_name: amarilla.lastName,
       team: "away",
     })
   );
 
   const rojasLocal: Incidencia[] = match.homeTeamRedCards.map((roja) => ({
     type: "expulsion",
-    player_name: roja.name + " " + roja.lastName,
+    player_name: roja.name,
+    player_last_name: roja.lastName,
     team: "home",
   }));
 
   const rojasVisitante: Incidencia[] = match.awayTeamRedCards.map((roja) => ({
     type: "expulsion",
-    player_name: roja.name + " " + roja.lastName,
+    player_name: roja.name,
+    player_last_name: roja.lastName,
     team: "away",
   }));
 
@@ -99,7 +105,16 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
       <DialogTitle className="flex items-center justify-center gap-10 bg-slate-200">
         <Box className="flex gap-2 items-center">
           <CalendarMonth />
-          <p>{match.date ? match.date.format("LLLL") : "A definir"}</p>
+          <p className="sm:flex hidden">
+            {match.date
+              ? capitalize(match.date.format("dddd")) +
+                " " +
+                match.date.format("LL")
+              : "A definir"}
+          </p>
+          <p className="sm:hidden flex">
+            {match.date ? match.date.format("DD/MM/YYYY") : "A definir"}
+          </p>
         </Box>
         <Box className="flex gap-2 items-center">
           <AccessTime />
@@ -132,10 +147,8 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
                 <p className="text-white font-bold text-2xl">{`${match.homeTeamGoals} - ${match.awayTeamGoals}`}</p>
               </div>
             ) : (
-              <div className="w-24 bg-gray-500 px-2 py-1 rounded-md items-center flex justify-center">
-                <p className="text-white font-bold">
-                  {match.date ? match.date.format("HH:mm") : "A definir"}
-                </p>
+              <div className="w-10 bg-gray-500 px-2 py-1 rounded-md items-center flex justify-center">
+                <p className="text-white font-bold">{"-"}</p>
               </div>
             )}
           </Box>
@@ -167,7 +180,7 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
           }}
         />
         {
-          <Box className="flex justify-center items-start gap-24 pt-2">
+          <Box className="flex justify-center items-start md:gap-24 gap-10 pt-2 w-full overflow-x-scroll">
             <Box className=" w-full">
               {incidenciasLocal.map((detail, index) => (
                 <IncidenciaByTeam key={index} incidencia={detail} />
@@ -192,13 +205,13 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
       </DialogContent>
       <DialogTitle className="flex justify-between items-center text-white bg-[#A60000]">
         <Box className="flex flex-col items-center justify-center gap-2 w-full bg-[#A60000] rounded-sm p-2 text-white">
-          <Box className="flex items-center  w-full">
-            <p className="font-extrabold text-xl w-4/12">Cancha:</p>
+          <Box className="flex items-center justify-between w-full">
+            <p className="font-extrabold text-xl ">Cancha:</p>
             <p>{match.field || "A definir"}</p>
           </Box>
 
-          <Box className="flex items-center  w-full">
-            <p className="font-extrabold text-xl w-4/12 ">Equipo Planillero:</p>
+          <Box className="flex items-center justify-between w-full">
+            <p className="font-extrabold text-xl ">Planillero:</p>
             {match.scorer ? (
               <Box className="flex gap-2 items-center justify-between">
                 <Image
@@ -207,14 +220,17 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
                   width={40}
                   alt={match.scorer.name || ""}
                 />
-                <p>{match.scorer.name || ""}</p>
+                <p className="sm:flex hidden">{match.scorer.name || ""}</p>
+                <p className="sm:hidden flex">
+                  {abbreviateTeamName(match.scorer.name || "")}
+                </p>
               </Box>
             ) : (
               <p>A definir</p>
             )}
           </Box>
-          <Box className="flex items-center  w-full">
-            <p className="font-extrabold text-xl w-4/12 ">Equipo Linea:</p>
+          <Box className="flex items-center justify-between w-full">
+            <p className="font-extrabold text-xl">Linea:</p>
             {match.linemenTeam ? (
               <Box className="flex gap-2 items-center justify-between">
                 <Image
@@ -223,7 +239,10 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
                   width={40}
                   alt={match.linemenTeam.name}
                 />
-                <p>{match.linemenTeam.name}</p>
+                <p className="sm:flex hidden">{match.linemenTeam.name || ""}</p>
+                <p className="sm:hidden flex">
+                  {abbreviateTeamName(match.linemenTeam.name || "")}
+                </p>
               </Box>
             ) : (
               <p>A definir</p>
