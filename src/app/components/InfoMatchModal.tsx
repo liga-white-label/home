@@ -124,7 +124,7 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
       <DialogContent>
         <Box className="flex items-center justify-between mt-5">
           <Box
-            className="flex items-center gap-2 h-20 flex-shrink-0  overflow-hidden justify-end"
+            className="flex items-center gap-2 h-20 flex-shrink-0 overflow-hidden justify-end"
             sx={{ width: "40%" }}
           >
             <p className="max-[600px]:hidden flex line-clamp-2 text-center text-ellipsis font-extrabold">
@@ -135,15 +135,15 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
             </p>
             <Image
               src={match.homeTeam.logo}
-              height={60}
-              width={60}
+              height={50}
+              width={50}
               alt={match.homeTeam.name}
             />
           </Box>
 
           <Box className="flex-grow-0 flex-shrink-0 mx-auto ">
             {match.status === MatchStatus.PLAYED ? (
-              <div className="w-24 bg-[#A60000] px-2 py-1 rounded-md items-center flex justify-center">
+              <div className="w-18 bg-[#A60000] px-2 py-1 rounded-md items-center flex justify-center">
                 <p className="text-white font-bold text-2xl">{`${match.homeTeamGoals} - ${match.awayTeamGoals}`}</p>
               </div>
             ) : (
@@ -159,8 +159,8 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
           >
             <Image
               src={match.awayTeam.logo}
-              height={60}
-              width={60}
+              height={50}
+              width={50}
               alt={match.awayTeam.name}
             />
             <p className="max-[600px]:hidden flex line-clamp-2 text-center text-ellipsis font-extrabold">
@@ -180,7 +180,7 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
           }}
         />
         {
-          <Box className="flex justify-center items-start md:gap-24 gap-10 pt-2 w-full overflow-x-scroll">
+          <Box className="flex justify-center items-start md:gap-24 gap-2 pt-2 w-full">
             <Box className=" w-full">
               {incidenciasLocal.map((detail, index) => (
                 <IncidenciaByTeam key={index} incidencia={detail} />

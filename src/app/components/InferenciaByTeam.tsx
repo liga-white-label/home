@@ -31,7 +31,7 @@ export const IncidenciaByTeam: FC<IncidenciaByTeamProps> = ({ incidencia }) => {
           }}
         />
       )}
-      <p className="sm:hidden flex text-lg">{incidencia.player_name}</p>
+      <p className="sm:hidden flex text-lg">{incidencia.player_last_name}</p>
       <p className="sm:flex hidden text-lg">
         {incidencia.player_name + " " + incidencia.player_last_name}
       </p>
