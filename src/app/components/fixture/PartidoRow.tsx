@@ -46,7 +46,7 @@ export const PartidoRow: FC<PartidoRowProps> = ({
     <TableRow
       style={{ backgroundColor: index % 2 === 0 ? "#f5f5f5" : "white" }}
     >
-      <TableCell hidden={isLessThanMd} sx={{ width: "10%" }}>
+      <TableCell sx={{ width: "10%", display: isLessThanMd ? "none" : "flex" }}>
         <Box className="flex gap-2 items-center">
           <CalendarMonth />
           <Typography>

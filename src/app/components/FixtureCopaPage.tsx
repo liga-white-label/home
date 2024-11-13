@@ -51,11 +51,19 @@ const FixtureCopaPage: React.FC<FixtureCopaPageProps> = ({ faseId }) => {
   return data?.map((grupo, index) => (
     <>
       <Box key={index}>
-        <Box className="flex w-full py-2 bg-gray-200 items-center justify-center">
-          <Typography
-            variant="h6"
-            fontWeight={"bold"}
-          >{`Grupo ${grupo.name}`}</Typography>
+        <Box
+          style={{
+            display: "flex",
+            width: "100%",
+            padding: "0.5rem 0",
+            backgroundColor: "#e5e7eb",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Typography variant="h6" style={{ fontWeight: "bold" }}>
+            {`Grupo ${grupo.name}`}
+          </Typography>
         </Box>
         {
           <PartidosAgrupados
