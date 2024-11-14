@@ -8,22 +8,62 @@ import {
   SelectChangeEvent,
   Typography,
 } from "@mui/material";
-import { useGoleadoresQuery } from "@/repositories/CategoriaRepository";
 import LoadingScreen from "./loading/Loading";
+import {
+  useAmarillasCopaQuery,
+  useGoleadoresCopaQuery,
+} from "@/repositories/CampeonatoRepository";
+import {
+  useAmarillasCategoriaQuery,
+  useGoleadoresCategoriaQuery,
+} from "@/repositories/CategoriaRepository";
 
 interface EstadisticasPageProps {
-  faseId?: string;
-  campeonatoId?: string;
+  categoryId?: string;
+  cupId?: string;
 }
 
-export const EstadisticasPage: React.FC<EstadisticasPageProps> = ({
-  faseId = "",
-  campeonatoId = "",
-}) => {
-  const { data: goleadores = [], isLoading: goleadoresLoading } =
-    useGoleadoresQuery(faseId);
+const GoleadoresMapper = (g: any, index: number) => ({
+  pos: index + 1,
+  jugador: g.playerName + " " + g.playerLastName,
+  equipo: g.teamName,
+  escudo: g.teamLogo,
+  goles: g.goals,
+});
 
-  const amarillas: any[] = [];
+const AmarillasMapper = (a: any, index: number) => ({
+  pos: index + 1,
+  jugador: a.playerName + " " + a.playerLastName,
+  equipo: a.teamName,
+  escudo: a.teamLogo,
+  amarillas: a.yellowCards,
+});
+
+export const EstadisticasPage: React.FC<EstadisticasPageProps> = ({
+  categoryId = "",
+  cupId = "",
+}) => {
+  const {
+    data: goleadoresCategory = [],
+    isLoading: goleadoresCategoryLoading,
+  } = useGoleadoresCategoriaQuery(categoryId);
+  const { data: goleadoresCup = [], isLoading: goleadoresCupLoading } =
+    useGoleadoresCopaQuery(cupId);
+
+  const { data: amarillasCategory = [], isLoading: amarillasCategoryLoading } =
+    useAmarillasCategoriaQuery(categoryId);
+  const { data: amarillasCup = [], isLoading: amarillasCupLoading } =
+    useAmarillasCopaQuery(cupId);
+
+  const goleadores = cupId ? goleadoresCup : goleadoresCategory;
+  const goleadoresLoading = cupId
+    ? goleadoresCupLoading
+    : goleadoresCategoryLoading;
+
+  const amarillas = cupId ? amarillasCup : amarillasCategory;
+  const amarillasLoading = cupId
+    ? amarillasCupLoading
+    : amarillasCategoryLoading;
 
   const [selectedOption, setSelectedOption] = useState<string>("0");
 
@@ -31,7 +71,7 @@ export const EstadisticasPage: React.FC<EstadisticasPageProps> = ({
     setSelectedOption(event.target.value as string);
   };
 
-  if (goleadoresLoading) {
+  if (goleadoresLoading || amarillasLoading) {
     return <LoadingScreen />;
   }
   return (
@@ -56,14 +96,8 @@ export const EstadisticasPage: React.FC<EstadisticasPageProps> = ({
       <TablaEstadisticas
         data={
           selectedOption === "0"
-            ? goleadores.map((g: any, index: number) => ({
-                pos: index + 1,
-                jugador: g.playerName + " " + g.playerLastName,
-                equipo: g.teamName,
-                escudo: "",
-                goles: g.goals,
-              }))
-            : amarillas
+            ? goleadores.map(GoleadoresMapper)
+            : amarillas.map(AmarillasMapper)
         }
         tipo={selectedOption === "0" ? "goleadores" : "amarillas"}
       />

@@ -88,6 +88,7 @@ export class CategoriaRepository {
     oneFase: (idFase: string, fecha?: number) => ["fases", idFase + fecha],
     partido: (idPartido: string) => [idPartido],
     goleadores: (idFase: string) => ["goleadores", idFase],
+    amarillas: (idFase: string) => ["amarillas", idFase],
   };
 
   allFases = async (categoryId: string) => {
@@ -148,9 +149,16 @@ export class CategoriaRepository {
     return data.map(getPositionsMapper);
   };
 
-  getGoleadores = async (faseId: string) => {
+  getGoleadores = async (categoryId: string) => {
     const { data } = await httpClient.get<any>(
-      `tournament/league/categories/phase-general/get-scorers?phaseId=${faseId}`
+      `tournament/league/categories/get-scorers?categoryId=${categoryId}`
+    );
+    return data;
+  };
+
+  getAmarillas = async (categoryId: string) => {
+    const { data } = await httpClient.get<any>(
+      `tournament/league/categories/get-yellow-cards?categoryId=${categoryId}`
     );
     return data;
   };
@@ -206,10 +214,18 @@ export const usePositionsFaseRegular = (id: string) =>
     queryFn: () => repo.getPositionsFaseRegular(id),
   });
 
-export const useGoleadoresQuery = (id: string) => {
+export const useGoleadoresCategoriaQuery = (id: string) => {
   return useQuery({
     queryKey: repo.keys.goleadores(id),
     queryFn: () => repo.getGoleadores(id),
+    enabled: id !== "",
+  });
+};
+
+export const useAmarillasCategoriaQuery = (id: string) => {
+  return useQuery({
+    queryKey: repo.keys.amarillas(id),
+    queryFn: () => repo.getAmarillas(id),
     enabled: id !== "",
   });
 };

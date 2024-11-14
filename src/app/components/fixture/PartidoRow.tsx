@@ -46,15 +46,19 @@ export const PartidoRow: FC<PartidoRowProps> = ({
     <TableRow
       style={{ backgroundColor: index % 2 === 0 ? "#f5f5f5" : "white" }}
     >
-      <TableCell sx={{ width: "10%", display: isLessThanMd ? "none" : "flex" }}>
-        <Box className="flex gap-2 items-center">
-          <CalendarMonth />
-          <Typography>
-            {moment(match.date).isValid()
-              ? match?.date?.format("DD/MM/YYYY")
-              : "A definir"}
-          </Typography>
-        </Box>
+      <TableCell
+        sx={{
+          display: isLessThanMd ? "none" : "flex",
+          alignItems: "center",
+          gap: 2,
+        }}
+      >
+        <CalendarMonth />
+        <Typography>
+          {moment(match.date).isValid()
+            ? match?.date?.format("DD/MM/YYYY")
+            : "A definir"}
+        </Typography>
       </TableCell>
       <TableCell
         sx={{
@@ -190,7 +194,7 @@ export const PartidoRow: FC<PartidoRowProps> = ({
             </Box>
 
             <Box
-              display={{ xs: "none", md: "flex" }}
+              display={isLessThanMd ? "none" : "flex"}
               alignItems="center"
               gap="10px"
               width="20%"

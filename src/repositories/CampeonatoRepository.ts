@@ -71,6 +71,8 @@ export class CampeonatoRepository {
     fases: () => ["fases-copa"],
     oneFase: (idFase: string) => ["fases-copa", idFase],
     partido: (idPartido: string) => [idPartido],
+    goleadores: (idFase: string) => ["goleadores", idFase],
+    amarillas: (idFase: string) => ["amarillas", idFase],
   };
 
   getAll = async () => {
@@ -137,6 +139,20 @@ export class CampeonatoRepository {
     );
     return partidoMapper(data);
   };
+
+  getGoleadores = async (categoryId: string) => {
+    const { data } = await httpClient.get<any>(
+      `tournament/cup/get-scorers?categoryId=${categoryId}`
+    );
+    return data;
+  };
+
+  getAmarillas = async (categoryId: string) => {
+    const { data } = await httpClient.get<any>(
+      `tournament/cup/get-yellow-cards?categoryId=${categoryId}`
+    );
+    return data;
+  };
 }
 
 const repo = new CampeonatoRepository();
@@ -197,3 +213,19 @@ export const useOnePartidoCopaPlayoffQuery = (
       }),
     enabled: enabled,
   });
+
+export const useGoleadoresCopaQuery = (id: string) => {
+  return useQuery({
+    queryKey: repo.keys.goleadores(id),
+    queryFn: () => repo.getGoleadores(id),
+    enabled: id !== "",
+  });
+};
+
+export const useAmarillasCopaQuery = (id: string) => {
+  return useQuery({
+    queryKey: repo.keys.amarillas(id),
+    queryFn: () => repo.getAmarillas(id),
+    enabled: id !== "",
+  });
+};
