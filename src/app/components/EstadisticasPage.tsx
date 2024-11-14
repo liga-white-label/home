@@ -36,7 +36,7 @@ const AmarillasMapper = (a: any, index: number) => ({
   jugador: a.playerName + " " + a.playerLastName,
   equipo: a.teamName,
   escudo: a.teamLogo,
-  amarillas: a.yellowCards,
+  tarjetas: a.yellowCards,
 });
 
 export const EstadisticasPage: React.FC<EstadisticasPageProps> = ({

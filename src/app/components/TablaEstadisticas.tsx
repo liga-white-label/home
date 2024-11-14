@@ -50,7 +50,7 @@ export const TablaEstadisticas: FC<TablaEstadisticasProps> = ({
               <td className={`px-2 md:px-4 py-2 text-center`}>
                 {team.jugador}
               </td>
-              <td className="px-2 md:px-4 items-center  gap-4 md:flex hidden">
+              <td className="px-2 md:px-4 items-center justify-center   gap-4 md:flex hidden">
                 <Image
                   src={team.escudo}
                   alt={team.equipo}
@@ -59,8 +59,8 @@ export const TablaEstadisticas: FC<TablaEstadisticasProps> = ({
                 />
                 {team.equipo}
               </td>
-              <td className="px-1 md:px-4  md:hidden">
-                <div className="flex items-center gap-4">
+              <td className="text-xs px-2 md:px-4 py-2  md:hidden">
+                <div className="flex items-center gap-4 justify-center">
                   <Image
                     src={team.escudo}
                     alt={team.equipo}
