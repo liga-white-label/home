@@ -28,7 +28,9 @@ const NovedadesPage = () => {
               <NovedadCard key={novedad.id} novedad={novedad} />
             ))
           ) : (
-            <div>No hay novedades</div>
+            <div className="flex items-center justify-center mt-10 text-center text-gray-500">
+              No hay novedades
+            </div>
           )}
         </Box>
       </Box>
