@@ -1,5 +1,5 @@
 const dev = {
-  backEnd: "https://9943-2001-fb1-d8-1e24-e4f6-83a-a5e2-355c.ngrok-free.app/",
+  backEnd: "http://localhost:8080/",
   production: false,
 };
 
@@ -8,5 +8,5 @@ const _prod = {
   production: true,
 };
 
-export const environment = dev;
+export const environment = _prod;
 //export const environment = dev;
