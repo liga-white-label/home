@@ -142,13 +142,15 @@ export const LinkNavigator = () => {
           )}
         </Menu>
       </div>
-      <p
-        className={`hover:underline ${
-          path.includes("novedades") ? "underline" : ""
-        } hover:cursor-pointer`}
-      >
-        Novedades
-      </p>
+      <Link href={"/novedades"}>
+        <p
+          className={`hover:underline ${
+            path.includes("novedades") ? "underline" : ""
+          } hover:cursor-pointer`}
+        >
+          Novedades
+        </p>
+      </Link>
       <div className="relative">
         <button
           id="basic-button-copa"

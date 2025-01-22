@@ -133,7 +133,7 @@ export const CustomDrawer = () => {
         </Accordion>
       </ListItem>
       <ListItem disablePadding>
-        <Link href={"/"} onClick={handleClose} className="!w-full">
+        <Link href={"/novedades"} onClick={handleClose} className="!w-full">
           <ListItemButton>
             <ListItemText
               className="!flex !items-center !justify-center !text-white "
