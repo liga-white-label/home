@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 export interface SideBarContextType {
   sidebarOpen: boolean;
@@ -17,15 +17,27 @@ const SidebarContext = createContext<SideBarContextType>({
 
 export function SidebarProvider({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
+  const [isInitialized, setIsInitialized] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsInitialized(true);
+    return () => {
+      setIsInitialized(false);
+    };
+  }, []);
 
   const switchSidebar = () => {
+    if (!isInitialized) return;
     setSidebarOpen(!sidebarOpen);
   };
 
   const handleClose = () => {
+    if (!isInitialized) return;
     setSidebarOpen(false);
   };
+
   const handleOpen = () => {
+    if (!isInitialized) return;
     setSidebarOpen(true);
   };
 
@@ -44,5 +56,9 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useSidebar() {
-  return useContext(SidebarContext);
+  const context = useContext(SidebarContext);
+  if (context === undefined) {
+    throw new Error("useSidebar must be used within a SidebarProvider");
+  }
+  return context;
 }

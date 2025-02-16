@@ -31,6 +31,8 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
   }
   moment.locale("es");
 
+  console.log(match);
+
   const golesLocal: Incidencia[] = match.homeTeamPlayerGoals.map(
     (goleador) => ({
       type: "gol",
@@ -142,7 +144,7 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
           </Box>
 
           <Box className="flex-grow-0 flex-shrink-0 mx-auto ">
-            {match.status === MatchStatus.PLAYED ? (
+            {match.status === MatchStatus.JUGADO ? (
               <div className="w-18 bg-[#A60000] px-2 py-1 rounded-md items-center flex justify-center">
                 <p className="text-white font-bold text-2xl">{`${match.homeTeamGoals} - ${match.awayTeamGoals}`}</p>
               </div>
@@ -247,6 +249,13 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
             ) : (
               <p>A definir</p>
             )}
+          </Box>
+          <Box
+            sx={{ display: match.comments ? "flex" : "none" }}
+            className="flex-col items-center justify-between w-full gap-2"
+          >
+            <p className="font-extrabold text-xl">Comentarios:</p>
+            <p>{match.comments || ""}</p>
           </Box>
         </Box>
       </DialogTitle>

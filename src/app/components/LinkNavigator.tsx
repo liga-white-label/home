@@ -3,10 +3,11 @@ import {
   useAllCampeonatosQuery,
   useCampeonatoQuery,
 } from "@/repositories/CampeonatoRepository";
-import { Divider, Menu, MenuItem } from "@mui/material";
+import { Menu, MenuItem } from "@mui/material";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { Liga } from "@/app/models/Campeonato";
 
 export const LinkNavigator = () => {
   const path = usePathname();
@@ -16,9 +17,10 @@ export const LinkNavigator = () => {
 
   const campeonatoActualVacio = allCampeonatos?.find((c) => c.current);
 
-  const { data: campeonatoActual } = useCampeonatoQuery(
-    campeonatoActualVacio?.id || ""
-  );
+  const { data: campeonatoActual, isLoading: isLoadingCampeonatoActual } =
+    useCampeonatoQuery(campeonatoActualVacio?.id || "");
+
+  const ligaActual = campeonatoActual as Liga | undefined;
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [anchorElCopa, setAnchorElCopa] = useState<HTMLButtonElement | null>(
@@ -42,15 +44,14 @@ export const LinkNavigator = () => {
   const openCopa = Boolean(anchorElCopa);
 
   return (
-    <div className="gap-10 text-lg text-white underline-offset-8 hidden lg:flex">
-      <Link href={"/"}>
-        <button
-          className={`transition-opacity	hover:underline ${
-            path === "/" ? "underline" : ""
-          } hover:cursor-pointer`}
-        >
-          Inicio
-        </button>
+    <div className="hidden lg:flex gap-10 text-white text-lg">
+      <Link
+        href={"/"}
+        className={`hover:underline ${
+          path === "/" ? "underline" : ""
+        } hover:cursor-pointer`}
+      >
+        Inicio
       </Link>
       <div className="relative">
         <button
@@ -60,10 +61,10 @@ export const LinkNavigator = () => {
           aria-expanded={open ? "true" : undefined}
           onClick={handleClick}
           className={`hover:underline ${
-            path.includes("categoria") ? "underline" : ""
+            path.includes("categorias") ? "underline" : ""
           } hover:cursor-pointer`}
         >
-          Categorias
+          Categorías
         </button>
         <Menu
           id="basic-menu"
@@ -75,71 +76,17 @@ export const LinkNavigator = () => {
             "aria-labelledby": "basic-button",
           }}
         >
-          {isLoadingAllCampeonatos ? (
-            <MenuItem onClick={handleClose}>
-              <p className="text-lg">Cargando...</p>
-            </MenuItem>
-          ) : (
-            <>
-              <Divider
-                className="text-white"
-                sx={{
-                  "&::before, &::after": {
-                    borderColor: "white",
-                  },
-                }}
-              >
-                Masculino
-              </Divider>
-              {campeonatoActual?.categories
-                ?.filter((c) => c.gender === "male")
-                .map((cat, index) => (
-                  <MenuItem key={index} onClick={handleClose}>
-                    <Link
-                      href={`/campeonatos/${campeonatoActual.id}/categorias/${cat.id}`}
-                    >
-                      <p className="text-lg">
-                        Categoria {cat.name} - Masculina
-                      </p>
-                    </Link>
-                  </MenuItem>
-                ))}
-              {campeonatoActual?.categories?.filter((c) => c.gender === "male")
-                .length === 0 && (
-                <MenuItem onClick={handleClose}>
-                  <p className="text-lg">No hay categorias masculinas</p>
-                </MenuItem>
-              )}
-              <Divider
-                className="text-white"
-                sx={{
-                  "&::before, &::after": {
-                    borderColor: "white",
-                  },
-                }}
-              >
-                Femenino
-              </Divider>
-              {campeonatoActual?.categories
-                ?.filter((c) => c.gender === "female")
-                .map((cat, index) => (
-                  <MenuItem key={index} onClick={handleClose}>
-                    <Link
-                      href={`/campeonatos/${campeonatoActual.id}/categorias/${cat.id}`}
-                    >
-                      <p className="text-lg">Categoria {cat.name} - Femenina</p>
-                    </Link>
-                  </MenuItem>
-                ))}
-              {campeonatoActual?.categories?.filter(
-                (c) => c.gender === "female"
-              ).length === 0 && (
-                <MenuItem onClick={handleClose}>
-                  <p className="text-lg">No hay categorias femeninas</p>
-                </MenuItem>
-              )}
-            </>
-          )}
+          {ligaActual?.categories
+            ?.filter((c) => c.enabled)
+            .map((c, index) => (
+              <MenuItem key={index} onClick={handleClose}>
+                <Link href={`/campeonatos/${ligaActual.id}/categorias/${c.id}`}>
+                  <p className="text-lg">{`${c.name} - ${
+                    c.gender === "male" ? "Masculina" : "Femenina"
+                  }`}</p>
+                </Link>
+              </MenuItem>
+            ))}
         </Menu>
       </div>
       <Link href={"/novedades"}>
@@ -154,9 +101,9 @@ export const LinkNavigator = () => {
       <div className="relative">
         <button
           id="basic-button-copa"
-          aria-controls={open ? "basic-menu-copa" : undefined}
+          aria-controls={openCopa ? "basic-menu-copa" : undefined}
           aria-haspopup="true"
-          aria-expanded={open ? "true" : undefined}
+          aria-expanded={openCopa ? "true" : undefined}
           onClick={handleClickCopas}
           className={`hover:underline ${
             path.includes("campeonatos") && !path.includes("categorias")
@@ -176,21 +123,15 @@ export const LinkNavigator = () => {
             "aria-labelledby": "basic-button",
           }}
         >
-          {isLoadingAllCampeonatos ? (
-            <MenuItem onClick={handleClose}>
-              <p className="text-lg">Cargando...</p>
-            </MenuItem>
-          ) : (
-            allCampeonatos
-              ?.filter((c) => c.type === "cup" && c.enabled)
-              .map((c, index) => (
-                <MenuItem key={index} onClick={handleClose}>
-                  <Link href={`/campeonatos/${c.id}`}>
-                    <p className="text-lg">{c.name}</p>
-                  </Link>
-                </MenuItem>
-              ))
-          )}
+          {allCampeonatos
+            ?.filter((c) => c.type === "cup" && c.enabled)
+            .map((c, index) => (
+              <MenuItem key={index} onClick={handleClose}>
+                <Link href={`/campeonatos/${c.id}`}>
+                  <p className="text-lg">{c.name}</p>
+                </Link>
+              </MenuItem>
+            ))}
         </Menu>
       </div>
     </div>

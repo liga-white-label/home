@@ -15,10 +15,10 @@ export const MainLayout = ({
 }>) => {
   return (
     <html lang="en">
-      <body className={"font-sans"}>
-        <div className="flex flex-col min-w-full">
+      <body>
+        <div className="flex flex-col">
           <NavBar />
-          {children}
+          <main>{children}</main>
           <Footer />
           <CustomDrawer />
         </div>

@@ -1,68 +1,87 @@
-import { Moment } from "moment";
-import { Incidencia } from "../components/InferenciaByTeam";
-import { Team } from "./Team";
 import moment from "moment";
-export enum MatchStatus {
-  PENDING = "Upcoming",
-  PLAYED = "Played",
-  IN_PROGRESS = "Suspended",
-}
-
+import { Moment } from "moment";
+import { Team } from "./Equipo";
+import { Jugador } from "./Jugador";
 export interface Match {
   date: Moment | null;
   dateNumber: number;
   field: string | null;
   linemenTeam: Team | null;
   scorer: Team | null;
-  comments: string;
+  comments: string | null;
   homeTeam: Team;
   awayTeam: Team;
   homeTeamGoals: number | null;
   awayTeamGoals: number | null;
-  homeTeamPlayerGoals: any[];
-  awayTeamPlayerGoals: any[];
-  homeTeamYellowCards: any[];
-  awayTeamYellowCards: any[];
-  homeTeamRedCards: any[];
-  awayTeamRedCards: any[];
+  homeTeamPlayerGoals: Jugador[];
+  awayTeamPlayerGoals: Jugador[];
+  homeTeamYellowCards: Jugador[];
+  awayTeamYellowCards: Jugador[];
+  homeTeamRedCards: Jugador[];
+  awayTeamRedCards: Jugador[];
   status: MatchStatus;
+  homeTeamPenalties: number | null;
+  awayTeamPenalties: number | null;
 }
 
-export type IndexMatch = Omit<
-  Match,
-  | "linemenTeam"
-  | "scorer"
-  | "comments"
-  | "homeTeamRedCards"
-  | "homeTeamYellowCards"
-  | "homeTeamPlayerGoals"
-  | "awayTeamRedCards"
-  | "awayTeamYellowCards"
-  | "awayTeamPlayerGoals"
-  | "homeTeam"
-  | "awayTeam"
-> & {
+export enum MatchStatus {
+  PENDIENTE = "Upcoming",
+  JUGADO = "Played",
+  SUSPENDIDO = "Suspended",
+}
+
+export interface MatchToGenerate {
+  id?: string;
+  equipoLocal: Team;
+  equipoVisitante: Team;
+}
+
+export interface MatchData {
+  date: Moment | "";
+  dateNumber: number;
+  field: string | null;
   homeTeamId: string;
   awayTeamId: string;
-  homeTeamLogo: string;
-  awayTeamLogo: string;
+  linemenTeamId: string | null;
+  scorerTeamId: string | null; //planillero
+  comments: string | null;
+  homeTeamGoals: string;
+  awayTeamGoals: string;
+  homeTeamPlayerGoalsIds: string[];
+  awayTeamPlayerGoalsIds: string[];
+  homeTeamYellowCardsIds: string[];
+  awayTeamYellowCardsIds: string[];
+  homeTeamRedCardsIds: string[];
+  awayTeamRedCardsIds: string[];
+  status: MatchStatus;
+  homeTeamPenalties: string | null;
+  awayTeamPenalties: string | null;
+}
+
+export const partidoMapper = (x: any): Match => ({
+  ...x,
+  date: !!x?.date ? moment(x?.date) : null,
+  homeTeamPlayerGoals: x?.homeTeamPlayerGoals || [],
+  awayTeamPlayerGoals: x?.awayTeamPlayerGoals || [],
+  homeTeamYellowCards: x?.homeTeamYellowCards || [],
+  awayTeamYellowCards: x?.awayTeamYellowCards || [],
+  homeTeamRedCards: x?.homeTeamRedCards || [],
+  awayTeamRedCards: x?.awayTeamRedCards || [],
+  homeTeamPenalties: x?.homeTeamPenalties || null,
+  awayTeamPenalties: x?.awayTeamPenalties || null,
+});
+
+export interface SimplifiedMatch {
+  homeTeamId: string;
+  awayTeamId: string;
   homeTeamName: string;
   awayTeamName: string;
-};
-
-export const indexMatchMapper = (x: Match): IndexMatch => {
-  return {
-    homeTeamId: x.homeTeam?.id,
-    awayTeamId: x.awayTeam?.id,
-    homeTeamLogo: x.homeTeam?.logo,
-    awayTeamLogo: x.awayTeam?.logo,
-    homeTeamName: x.homeTeam?.name,
-    awayTeamName: x.awayTeam?.name,
-    date: !!x.date ? moment(x.date) : null,
-    dateNumber: x.dateNumber,
-    field: x.field,
-    homeTeamGoals: x.homeTeamGoals,
-    awayTeamGoals: x.awayTeamGoals,
-    status: x.status,
-  };
-};
+  homeTeamLogo: string;
+  awayTeamLogo: string;
+  status: MatchStatus;
+  homeTeamGoals: number | null;
+  awayTeamGoals: number | null;
+  date: Moment | null;
+  dateNumber: number;
+  field: string | null;
+}

@@ -1,25 +1,16 @@
-import Image from "next/image";
-import StadiumOutlinedIcon from "@mui/icons-material/StadiumOutlined";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import {
-  Box,
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-  Typography,
-} from "@mui/material";
+import { Box, TableCell, TableRow, Typography } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { FC, useEffect, useState } from "react";
-import moment from "moment";
-import { IndexMatch, MatchStatus } from "@/app/models/Match";
-import { LOGO_DEFAULT_TEAM } from "@/app/utils/constants";
-import { abbreviateTeamName } from "@/app/utils/stringUtils";
-import { CalendarMonth } from "@mui/icons-material";
+import { MatchDate } from "./match-row/MatchDate";
+import { TeamInfo } from "./match-row/TeamInfo";
+import { MatchScore } from "./match-row/MatchScore";
+import { MatchField } from "./match-row/MatchField";
+import { SimplifiedMatch } from "@/app/models/Match";
 
 interface PartidoRowProps {
-  match: IndexMatch;
-  handleClickSeeMatch: (match: any) => void;
+  match: SimplifiedMatch;
+  handleClickSeeMatch: (match: SimplifiedMatch) => void;
   isLoadingMatch: boolean;
   index: number;
 }
@@ -42,188 +33,53 @@ export const PartidoRow: FC<PartidoRowProps> = ({
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
   return (
     <TableRow
       style={{ backgroundColor: index % 2 === 0 ? "#f5f5f5" : "white" }}
     >
-      <TableCell
-        sx={{
-          display: isLessThanMd ? "none" : "flex",
-          alignItems: "center",
-          gap: 2,
-        }}
-      >
-        <CalendarMonth />
-        <Typography>
-          {moment(match.date).isValid()
-            ? match?.date?.format("DD/MM/YYYY")
-            : "A definir"}
-        </Typography>
+      <TableCell width="15%">
+        <MatchDate date={match.date} isLessThanMd={isLessThanMd} />
       </TableCell>
-      <TableCell
-        sx={{
-          px: { sm: "5%", md: "10%" },
-        }}
-      >
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent={"space-between"}
+      <TableCell width="30%" align="right" sx={{ pr: 3 }}>
+        <TeamInfo teamName={match.homeTeamName} teamLogo={match.homeTeamLogo} />
+      </TableCell>
+      <TableCell width="10%" align="center" sx={{ px: 0 }}>
+        <MatchScore
+          status={match.status}
+          date={match.date}
+          homeTeamGoals={match.homeTeamGoals}
+          awayTeamGoals={match.awayTeamGoals}
+        />
+      </TableCell>
+      <TableCell width="30%" align="left" sx={{ pl: 3 }}>
+        <TeamInfo
+          teamName={match.awayTeamName}
+          teamLogo={match.awayTeamLogo}
+          isReverse
+        />
+      </TableCell>
+      <TableCell width="10%" align="center">
+        <MatchField field={match.field} isLessThanMd={isLessThanMd} />
+      </TableCell>
+      <TableCell width="5%" align="right">
+        <LoadingButton
+          onClick={() => handleClickSeeMatch(match)}
+          loading={isLoadingMatch}
+          startIcon={<VisibilityIcon />}
+          sx={{ color: "black", minWidth: 0 }}
+          disabled={
+            match.homeTeamId === undefined || match.awayTeamId === undefined
+          }
         >
-          <Box width={"100%"} className="flex">
-            <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="flex-end"
-              gap="10px"
-              sx={{
-                width: {
-                  sm: "30%",
-                  md: "35%",
-                },
-              }}
-            >
-              <Typography
-                variant="body1"
-                noWrap
-                sx={{ display: { xs: "none", sm: "block" } }}
-              >
-                {match.homeTeamName || "A definir"}
-              </Typography>
-              <Typography
-                variant="body2"
-                noWrap
-                width={"40px"}
-                sx={{ display: { xs: "block", sm: "none" } }}
-              >
-                {abbreviateTeamName(match.homeTeamName || "")}
-              </Typography>
-              <Image
-                src={
-                  match.homeTeamLogo
-                    ? match.homeTeamLogo.includes("https://")
-                      ? match.homeTeamLogo
-                      : "https://" + match.homeTeamLogo
-                    : LOGO_DEFAULT_TEAM
-                }
-                height={20}
-                width={30}
-                alt={match.homeTeamName}
-              />
-            </Box>
-
-            <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              sx={{ minWidth: 100, width: "fit-content", px: 1 }}
-            >
-              {match.status === MatchStatus.PLAYED ? (
-                <Box bgcolor="#A60000" px={2} py={1} borderRadius="4px">
-                  <Typography
-                    variant="body2"
-                    color="white"
-                    fontWeight="bold"
-                    textAlign="center"
-                  >{`${match?.homeTeamGoals} - ${match?.awayTeamGoals}`}</Typography>
-                </Box>
-              ) : (
-                <Box
-                  bgcolor="gray"
-                  px={2}
-                  py={1}
-                  borderRadius="4px"
-                  width="56px"
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
-                >
-                  <Typography
-                    variant="body2"
-                    color="white"
-                    fontWeight="bold"
-                    textAlign="center"
-                    fontSize={moment(match.date).isValid() ? 12 : 8}
-                  >
-                    {moment(match.date).isValid()
-                      ? match?.date?.format("HH:mm")
-                      : "A definir"}
-                  </Typography>
-                </Box>
-              )}
-            </Box>
-
-            <Box
-              display="flex"
-              alignItems="center"
-              gap="10px"
-              sx={{
-                width: {
-                  sm: "30%",
-                  md: "35%",
-                },
-              }}
-            >
-              <Image
-                src={
-                  match.awayTeamLogo
-                    ? match.awayTeamLogo.includes("https://")
-                      ? match.awayTeamLogo
-                      : "https://" + match.awayTeamLogo
-                    : LOGO_DEFAULT_TEAM
-                }
-                height={20}
-                width={30}
-                alt={match.awayTeamName}
-              />
-              <Typography
-                variant="body1"
-                noWrap
-                sx={{ display: { xs: "none", sm: "block" } }}
-              >
-                {match.awayTeamName || "A definir"}
-              </Typography>
-              <Typography
-                variant="body2"
-                noWrap
-                width={"40px"}
-                sx={{ display: { xs: "block", sm: "none" } }}
-              >
-                {abbreviateTeamName(match.awayTeamName || "")}
-              </Typography>
-            </Box>
-
-            <Box
-              display={isLessThanMd ? "none" : "flex"}
-              alignItems="center"
-              gap="10px"
-              width="20%"
-            >
-              <StadiumOutlinedIcon />
-              <Typography variant="body2">
-                {!!match.field ? match.field : "A definir"}
-              </Typography>
-            </Box>
-          </Box>
-
-          <LoadingButton
-            onClick={() => handleClickSeeMatch(match)}
-            loading={isLoadingMatch}
-            startIcon={<VisibilityIcon />}
-            sx={{ color: "black" }}
-            disabled={
-              match.homeTeamId === undefined || match.awayTeamId === undefined
-            }
+          <Typography
+            variant="body2"
+            noWrap
+            display={{ xs: "none", sm: "block" }}
           >
-            <Typography
-              variant="body2"
-              noWrap
-              display={{ xs: "none", sm: "block" }}
-            >
-              Ver
-            </Typography>
-          </LoadingButton>
-        </Box>
+            Ver
+          </Typography>
+        </LoadingButton>
       </TableCell>
     </TableRow>
   );

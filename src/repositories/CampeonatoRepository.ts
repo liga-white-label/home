@@ -1,10 +1,11 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import moment from "moment";
-import { Campeonato } from "@/app/models/Campeonato";
+import { faseCopaMapper, RoundCup } from "@/app/models/FaseCampeonato";
 import { httpClient } from "@/app/utils/httpClient";
-import { IndexMatch, indexMatchMapper, Match } from "@/app/models/Match";
-import { Team } from "@/app/models/Team";
-import { RoundMatch } from "./CategoriaRepository";
+import { useQuery } from "@tanstack/react-query";
+import { Copa } from "@/app/models/Campeonato";
+import { Liga } from "@/app/models/Campeonato";
+import { getCampeonatoMapper } from "@/app/models/Campeonato";
+import { playoffFaseMapper } from "@/app/models/FaseCampeonato";
+import { partidoMapper } from "@/app/models/Match";
 
 interface ICreateCampeonato {
   name: string;
@@ -17,53 +18,6 @@ interface IEditCampeonato {
   name: string;
 }
 
-interface RoundCup {
-  matchesPlayoff: RoundMatch[];
-  roundNumber: number;
-  doubleMatch: boolean;
-}
-
-export const partidoMapper = (x: any): Match => ({
-  ...x,
-  date: !!x?.date ? moment(x?.date) : null,
-});
-
-export const playoffFaseMapper = (data: any): RoundCup => {
-  const matchesPlayoff: RoundMatch[] = data.matchesPlayoff.map((x: any) => ({
-    id: x.id,
-    awayMatch: partidoMapper(x.awayMatch),
-    homeMatch: partidoMapper(x.homeMatch),
-    teamWinner: x.teamWinner,
-    nextMatchId: x.nextMatchId,
-  }));
-
-  return {
-    matchesPlayoff: matchesPlayoff,
-    roundNumber: data.roundNumber,
-    doubleMatch: data.doubleMatch,
-  };
-};
-
-export const getCampeonatoMapper = (x: any): Campeonato => x;
-
-export const createCampeonatoMapper = (x: ICreateCampeonato) => x;
-
-const getTeamMapper = (x: any): Team => ({ ...x });
-
-const faseCopaMapper = (
-  x: any
-): {
-  matches: IndexMatch[];
-  name: string;
-  teams: Team[];
-  positions: any[];
-} => ({
-  matches: x.matches.map(indexMatchMapper),
-  name: x.name,
-  teams: x.teams.map(getTeamMapper),
-  positions: x.positions,
-});
-
 export class CampeonatoRepository {
   keys = {
     all: () => ["campeonatos"],
@@ -71,8 +25,6 @@ export class CampeonatoRepository {
     fases: () => ["fases-copa"],
     oneFase: (idFase: string) => ["fases-copa", idFase],
     partido: (idPartido: string) => [idPartido],
-    goleadores: (idFase: string) => ["goleadores", idFase],
-    amarillas: (idFase: string) => ["amarillas", idFase],
   };
 
   getAll = async () => {
@@ -81,10 +33,25 @@ export class CampeonatoRepository {
   };
 
   get = async (id: string) => {
-    const { data } = await httpClient.get<Campeonato>(
+    const { data } = await httpClient.get<Liga | Copa>(
       `tournament?tournamentId=${id}`
     );
-    return data;
+    return getCampeonatoMapper(data);
+  };
+
+  remove = async (id: string) => httpClient.delete("campeonatos/" + id);
+
+  createFaseGruposCopa = async ({
+    campeonatoId,
+    grupos,
+  }: {
+    campeonatoId: string;
+    grupos: { groupName: string; matches: any[]; teamsIds: string[] }[];
+  }) => {
+    await httpClient.post("tournament/cup/create-phase-group", {
+      tournamentId: campeonatoId,
+      groupTeams: grupos,
+    });
   };
 
   allFases = async (cupId: string) => {
@@ -116,13 +83,6 @@ export class CampeonatoRepository {
     return partidoMapper(data);
   };
 
-  getOneFasePlayoff = async (faseId: string) => {
-    const { data } = await httpClient.get<RoundCup[]>(
-      `tournament/cup/phase-playoff/get-rounds?phaseId=${faseId}`
-    );
-    return data.map(playoffFaseMapper);
-  };
-
   getOnePartidoPlayoff = async ({
     homeTeamId,
     awayTeamId,
@@ -140,36 +100,54 @@ export class CampeonatoRepository {
     return partidoMapper(data);
   };
 
-  getGoleadores = async (categoryId: string) => {
-    const { data } = await httpClient.get<any>(
-      `tournament/cup/get-scorers?categoryId=${categoryId}`
+  getOneFasePlayoff = async (faseId: string) => {
+    const { data } = await httpClient.get<RoundCup[]>(
+      `tournament/cup/phase-playoff/get-rounds?phaseId=${faseId}`
     );
-    return data;
-  };
-
-  getAmarillas = async (categoryId: string) => {
-    const { data } = await httpClient.get<any>(
-      `tournament/cup/get-yellow-cards?categoryId=${categoryId}`
-    );
-    return data;
+    return data.map(playoffFaseMapper);
   };
 }
 
 const repo = new CampeonatoRepository();
 
 export const useAllCampeonatosQuery = () =>
-  useQuery({ queryKey: repo.keys.all(), queryFn: repo.getAll });
+  useQuery({
+    queryKey: repo.keys.all(),
+    queryFn: repo.getAll,
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    retry: 1,
+  });
 
 export const useCampeonatoQuery = (id: string) =>
-  useQuery({ queryKey: repo.keys.one(id), queryFn: () => repo.get(id) });
+  useQuery({
+    queryKey: repo.keys.one(id),
+    queryFn: () => repo.get(id),
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    retry: 1,
+  });
 
 export const useAllFasesByCampeonato = (id: string) =>
-  useQuery({ queryKey: repo.keys.fases(), queryFn: () => repo.allFases(id) });
+  useQuery({
+    queryKey: repo.keys.fases(),
+    queryFn: () => repo.allFases(id),
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    retry: 1,
+  });
 
 export const useOneFaseCampeonatoQuery = (id: string) =>
   useQuery({
     queryKey: repo.keys.oneFase(id),
     queryFn: () => repo.getOneFase(id),
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    retry: 1,
   });
 
 export const useOnePartidoCopaQuery = (
@@ -187,12 +165,6 @@ export const useOnePartidoCopaQuery = (
         faseId: faseId,
       }),
     enabled: enabled,
-  });
-
-export const useOneFasePlayoffCopaQuery = (id: string) =>
-  useQuery({
-    queryKey: repo.keys.oneFase(id),
-    queryFn: () => repo.getOneFasePlayoff(id),
   });
 
 export const useOnePartidoCopaPlayoffQuery = (
@@ -214,18 +186,12 @@ export const useOnePartidoCopaPlayoffQuery = (
     enabled: enabled,
   });
 
-export const useGoleadoresCopaQuery = (id: string) => {
-  return useQuery({
-    queryKey: repo.keys.goleadores(id),
-    queryFn: () => repo.getGoleadores(id),
-    enabled: id !== "",
+export const useOneFasePlayoffCopaQuery = (id: string) =>
+  useQuery({
+    queryKey: repo.keys.oneFase(id),
+    queryFn: () => repo.getOneFasePlayoff(id),
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    retry: 1,
   });
-};
-
-export const useAmarillasCopaQuery = (id: string) => {
-  return useQuery({
-    queryKey: repo.keys.amarillas(id),
-    queryFn: () => repo.getAmarillas(id),
-    enabled: id !== "",
-  });
-};

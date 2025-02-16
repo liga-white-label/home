@@ -45,12 +45,11 @@ export default function Home() {
     },
   ];
   return (
-    <>
+    <div className="flex flex-col w-full">
       <WelcomeGifContainer />
-      <div className="bg-red-100 w-full">
+      <section className="w-full bg-red-100">
         <EmblaCarousel slides={SLIDES} options={{ align: "start" }} />
-        {/* <ImageSlider images={SLIDES} /> */}
-      </div>
-    </>
+      </section>
+    </div>
   );
 }

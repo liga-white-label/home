@@ -2,6 +2,7 @@
 
 import { CopaPageBase } from "@/app/components/CopaPageBase";
 import LoadingScreen from "@/app/components/loading/Loading";
+import ErrorPage from "@/app/components/ErrorPage";
 import { useCampeonatoQuery } from "@/repositories/CampeonatoRepository";
 import { useParams } from "next/navigation";
 
@@ -19,7 +20,7 @@ export default function Home() {
   }
 
   if (isError) {
-    return <div>Error...</div>;
+    return <ErrorPage />;
   }
 
   return (

@@ -4,7 +4,7 @@ import { CategoriaPageBase } from "@/app/components/CategoriaPageBase";
 import LoadingScreen from "@/app/components/loading/Loading";
 import { useCampeonatoQuery } from "@/repositories/CampeonatoRepository";
 import { useParams } from "next/navigation";
-
+import ErrorPage from "@/app/components/ErrorPage";
 export default function Home() {
   const { idCampeonato, idCategoria } = useParams();
 
@@ -23,7 +23,7 @@ export default function Home() {
   }
 
   if (isError) {
-    return <div>Error...</div>;
+    return <ErrorPage />;
   }
 
   return (

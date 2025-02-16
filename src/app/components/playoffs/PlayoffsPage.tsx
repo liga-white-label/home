@@ -7,7 +7,7 @@ import {
 } from "@/repositories/CategoriaRepository";
 import LoadingScreen from "../loading/Loading";
 import { MatchStatus } from "@/app/models/Match";
-
+import ErrorPage from "../ErrorPage";
 interface CuadroPlayoffProps {
   faseId: string;
 }
@@ -16,7 +16,7 @@ const CuadroPlayoffV2: React.FC<CuadroPlayoffProps> = ({ faseId }) => {
   const { data: fase, isLoading, isError } = useOneFasePlayoffQuery(faseId);
 
   if (isLoading) return <LoadingScreen />;
-  if (isError) return <div>Error...</div>;
+  if (isError) return <ErrorPage />;
 
   console.log(fase);
 

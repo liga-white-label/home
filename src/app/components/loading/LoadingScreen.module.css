@@ -2,19 +2,34 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Ocupa toda la pantalla */
+    height: 70svh; /* Ocupa toda la pantalla */
+  }
+  
+  .spinnerWrapper {
+    position: relative;
+    width: 100px;
+    height: 100px;
   }
   
   .spinner {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 200px;
-    height: 200px;
-    border: 8px solid rgba(0, 0, 0, 0.1); /* Borde exterior */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 10px solid #7f7f7f; /* Borde exterior */
     border-top: 8px solid #a60000; /* Color del spinner */
     border-radius: 50%;
     animation: spin 2s linear infinite; /* Animación de giro */
+    background: #7f7f7f;
+  }
+  
+  .imageContainer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
   }
   
   @keyframes spin {

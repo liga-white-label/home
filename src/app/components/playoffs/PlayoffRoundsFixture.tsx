@@ -4,10 +4,10 @@ import {
 } from "@/repositories/CampeonatoRepository";
 import { TableBody, Table } from "@mui/material";
 import { useRef, useState } from "react";
-import { RoundMatch } from "@/repositories/CategoriaRepository";
-import { IndexMatch, indexMatchMapper } from "@/app/models/Match";
 import InfoMatchModal from "../InfoMatchModal";
 import { PartidoRow } from "../fixture/PartidoRow";
+import { RoundMatch } from "@/app/models/FaseCampeonato";
+import { SimplifiedMatch, Match, MatchStatus } from "@/app/models/Match";
 
 interface PlayoffRoundsFixtureProps {
   cruce: RoundMatch;
@@ -36,7 +36,7 @@ const PlayoffRoundsFixture: React.FC<PlayoffRoundsFixtureProps> = ({
 
   const isDoubleMatch = fase![0]?.doubleMatch || false;
 
-  const handleClickSeeMatch = (match: IndexMatch) => {
+  const handleClickSeeMatch = (match: SimplifiedMatch) => {
     currentMatchSelected.current = {
       homeTeam: match.homeTeamId,
       awayTeam: match.awayTeamId,
@@ -52,10 +52,25 @@ const PlayoffRoundsFixture: React.FC<PlayoffRoundsFixtureProps> = ({
     setOpenMatchModal(false);
   };
 
-  const partidoIda: IndexMatch = indexMatchMapper(cruce.homeMatch);
+  const convertToSimplifiedMatch = (match: Match): SimplifiedMatch => ({
+    homeTeamId: match?.homeTeam?.id || "",
+    awayTeamId: match?.awayTeam?.id || "",
+    homeTeamName: match?.homeTeam?.name || "",
+    awayTeamName: match?.awayTeam?.name || "",
+    homeTeamLogo: match?.homeTeam?.logo || "",
+    awayTeamLogo: match?.awayTeam?.logo || "",
+    status: match?.status || MatchStatus.PENDIENTE,
+    homeTeamGoals: match?.homeTeamGoals || 0,
+    awayTeamGoals: match?.awayTeamGoals || 0,
+    date: match?.date || null,
+    dateNumber: match?.dateNumber || 0,
+    field: match?.field || null,
+  });
+
+  const partidoIda = convertToSimplifiedMatch(cruce.homeMatch);
 
   const partidoVuelta = isDoubleMatch
-    ? indexMatchMapper(cruce.awayMatch)
+    ? convertToSimplifiedMatch(cruce.awayMatch)
     : null;
 
   return (

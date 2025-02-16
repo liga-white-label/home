@@ -1,270 +1,207 @@
 import React from "react";
 import { Box } from "@mui/material";
-import { TeamBox, FinalTeamBox, InvertedTeamBox } from "./TeamBox";
+import { FinalTeamBox, InvertedTeamBox, TeamBox } from "./TeamBox";
+import {
+  calculateLeftPosition,
+  calculateRightPosition,
+  calculateScreenHeight,
+  getFinalPosition,
+} from "./CuadroPlayoffUtils";
+import { RoundCup, RoundMatch } from "@/app/models/FaseCampeonato";
 import { MatchStatus } from "@/app/models/Match";
-import { RoundMatch } from "@/repositories/CategoriaRepository";
-
-export interface Round {
-  matchesPlayoff: RoundMatch[];
-}
-
+import PlayoffArrows from "./PlayoffArrows";
 interface CuadroPlayoffProps {
-  rondas: Round[];
+  rondas: RoundCup[];
 }
 
 const CuadroPlayoff: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
-  const teams = {
-    r16_left: rondas[3].matchesPlayoff.filter((_, i) => i < 4),
-    r16_right: rondas[3].matchesPlayoff.filter((_, i) => i >= 4),
-    qf_left: rondas[2].matchesPlayoff.filter((_, i) => i < 2),
-    qf_right: rondas[2].matchesPlayoff.filter((_, i) => i >= 2),
-    sf_left: rondas[1].matchesPlayoff.filter((_, i) => i < 1),
-    sf_right: rondas[1].matchesPlayoff.filter((_, i) => i >= 1),
-    f: rondas[0],
+  const { doubleMatch } = rondas[0];
+  const finalMatch = rondas[0]?.matchesPlayoff[0] || {
+    homeMatch: {},
+    awayMatch: {},
+  }; // At least always will have the final
+  const roundsWithoutFinal = rondas
+    .slice(1)
+    .reverse()
+    .map((ronda) => ronda?.matchesPlayoff || []); // Remove the final and reverse
+
+  /**
+   * Divide the left brach rounds from the rigth branch rounds
+   */
+  const divideRounds = (
+    rounds: RoundMatch[][]
+  ): { leftRounds: RoundMatch[][]; rightRounds: RoundMatch[][] } => {
+    const leftRounds: RoundMatch[][] = [];
+    let rightRounds: RoundMatch[][] = [];
+
+    rounds.forEach((roundMatches) => {
+      const midIndex = Math.ceil(roundMatches.length / 2); // Find the middle point
+      leftRounds.push(roundMatches.slice(0, midIndex));
+      rightRounds.push(roundMatches.slice(midIndex));
+    });
+
+    rightRounds = rightRounds.slice().reverse();
+
+    return { leftRounds, rightRounds };
+  };
+
+  const { leftRounds, rightRounds } = divideRounds(roundsWithoutFinal);
+
+  const screenHeight = calculateScreenHeight(leftRounds.length);
+  const screenClassName = `bg-cover overflow-x-scroll overflow-y-scroll relative w-full`;
+
+  const getLeftForCenterElements = () => {
+    const options = {
+      semi: `${150}px`,
+      final: `${400}px`,
+    };
+
+    if (leftRounds.length === 1) {
+      // semis
+      return options.semi;
+    } else if (leftRounds.length === 0) {
+      // final
+      return options.final;
+    } else {
+      return "";
+    }
   };
 
   return (
     <>
-      <Box className="bg-[url('/assets/background/soccer_background.jpg')] bg-cover overflow-auto">
-        <Box className="relative h-[600px] w-[1350px] ">
-          {/* Round of 16 - Left */}
-          {teams.r16_left.map((match, i) => (
+      <Box
+        className={screenClassName}
+        style={{
+          height: `${screenHeight}px`,
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('/assets/category_banner.jpg')`,
+        }}
+      >
+        <div
+          style={{
+            position: "relative",
+            display: "flex",
+            justifyContent: "center",
+            left: getLeftForCenterElements(),
+            marginRight: "100px",
+          }}
+        >
+          {leftRounds.map((matches, roundIndex) =>
+            matches.map((match, matchIndex) => (
+              <Box
+                component="div"
+                id={`match-${match.id}`}
+                key={`round-${roundIndex}-match-${matchIndex}`}
+                className="absolute"
+                style={calculateLeftPosition(matchIndex, roundIndex)}
+              >
+                <TeamBox
+                  doubleMatch={doubleMatch}
+                  homeTeam={
+                    match.teamWinner
+                      ? match.teamWinner
+                      : match.homeMatch?.homeTeam
+                  }
+                  awayTeam={match.homeMatch?.awayTeam}
+                  resultHomeIda={
+                    match.homeMatch?.status === MatchStatus.JUGADO
+                      ? match.homeMatch?.homeTeamGoals
+                      : null
+                  }
+                  resultHomeVuelta={
+                    match.awayMatch?.status === MatchStatus.JUGADO
+                      ? match.awayMatch?.homeTeamGoals
+                      : null
+                  }
+                  resultAwayIda={
+                    match.homeMatch?.status === MatchStatus.JUGADO
+                      ? match.homeMatch?.awayTeamGoals
+                      : null
+                  }
+                  resultAwayVuelta={
+                    match.awayMatch?.status === MatchStatus.JUGADO
+                      ? match.awayMatch?.awayTeamGoals
+                      : null
+                  }
+                  resultHomePenales={match.homeTeamPenalties}
+                  resultAwayPenales={match.awayTeamPenalties}
+                  idaMatchStatus={match.homeMatch?.status}
+                  vueltaMatchStatus={match.awayMatch?.status}
+                />
+              </Box>
+            ))
+          )}
+
+          {finalMatch && (
             <Box
-              key={`r16-left-${i}`}
+              component="div"
+              id={`match-${finalMatch.id}`}
               className="absolute"
-              style={{ top: `${i * 110 + 20}px`, left: "10px" }}
+              style={getFinalPosition(leftRounds.length)}
             >
-              <TeamBox
-                homeTeam={
-                  match.teamWinner
-                    ? match.teamWinner
-                    : match.homeMatch?.homeTeam
-                }
-                awayTeam={match.homeMatch?.awayTeam}
-                resultHomeIda={
-                  match.homeMatch?.status !== MatchStatus.PLAYED
-                    ? undefined
-                    : match.homeMatch?.homeTeamGoals
-                }
-                resultHomeVuelta={
-                  match.homeMatch?.status !== MatchStatus.PLAYED
-                    ? undefined
-                    : match.homeMatch?.awayTeamGoals
-                }
-                resultAwayIda={
-                  match.awayMatch?.status !== MatchStatus.PLAYED
-                    ? undefined
-                    : match.awayMatch?.homeTeamGoals
-                }
-                resultAwayVuelta={
-                  match.awayMatch?.status !== MatchStatus.PLAYED
-                    ? undefined
-                    : match.awayMatch?.awayTeamGoals
-                }
+              <FinalTeamBox
+                doubleMatch={doubleMatch}
+                nameHome={finalMatch.homeMatch?.homeTeam}
+                nameAway={finalMatch.homeMatch?.awayTeam}
+                resultHome={finalMatch.homeMatch?.homeTeamGoals}
+                resultAway={finalMatch.awayMatch?.awayTeamGoals}
+                penaltyResultHome={finalMatch.homeTeamPenalties}
+                penaltyResultAway={finalMatch.awayTeamPenalties}
               />
             </Box>
-          ))}
+          )}
 
-          {/* Quarter-finals - Left */}
-          {teams.qf_left.map((match, i) => (
-            <Box
-              key={`qf-left-${i}`}
-              className="absolute"
-              style={{ top: `${i * 220 + 75}px`, left: "240px" }}
-            >
-              <TeamBox
-                homeTeam={
-                  match.teamWinner
-                    ? match.teamWinner
-                    : match.homeMatch?.homeTeam
-                }
-                awayTeam={match.homeMatch?.awayTeam}
-                resultHomeIda={
-                  match.homeMatch?.status !== MatchStatus.PLAYED
-                    ? undefined
-                    : match.homeMatch?.homeTeamGoals
-                }
-                resultHomeVuelta={
-                  match.homeMatch?.status !== MatchStatus.PLAYED
-                    ? undefined
-                    : match.homeMatch?.awayTeamGoals
-                }
-                resultAwayIda={
-                  match.awayMatch?.status !== MatchStatus.PLAYED
-                    ? undefined
-                    : match.awayMatch?.homeTeamGoals
-                }
-                resultAwayVuelta={
-                  match.awayMatch?.status !== MatchStatus.PLAYED
-                    ? undefined
-                    : match.awayMatch?.awayTeamGoals
-                }
-              />
-            </Box>
-          ))}
+          {rightRounds.map((matches, roundIndex) =>
+            matches.map((match, matchIndex) => (
+              <Box
+                component="div"
+                id={`match-${match.id}`}
+                key={`round-${roundIndex}-match-${matchIndex}`}
+                className="absolute"
+                style={calculateRightPosition(
+                  matchIndex,
+                  roundIndex,
+                  leftRounds.length
+                )}
+              >
+                <InvertedTeamBox
+                  doubleMatch={doubleMatch}
+                  homeTeam={
+                    match.teamWinner
+                      ? match.teamWinner
+                      : match.homeMatch?.homeTeam
+                  }
+                  awayTeam={match.homeMatch?.awayTeam}
+                  resultHomeIda={
+                    match.homeMatch?.status === MatchStatus.JUGADO
+                      ? match.homeMatch?.homeTeamGoals
+                      : null
+                  }
+                  resultHomeVuelta={
+                    match.awayMatch?.status === MatchStatus.JUGADO
+                      ? match.awayMatch?.homeTeamGoals
+                      : null
+                  }
+                  resultAwayIda={
+                    match.homeMatch?.status === MatchStatus.JUGADO
+                      ? match.homeMatch?.awayTeamGoals
+                      : null
+                  }
+                  resultAwayVuelta={
+                    match.awayMatch?.status === MatchStatus.JUGADO
+                      ? match.awayMatch?.awayTeamGoals
+                      : null
+                  }
+                  resultHomePenales={match.homeTeamPenalties}
+                  resultAwayPenales={match.awayTeamPenalties}
+                  idaMatchStatus={match.homeMatch?.status}
+                  vueltaMatchStatus={match.awayMatch?.status}
+                />
+              </Box>
+            ))
+          )}
 
-          {/* Semi-finals - Left */}
-          {teams.sf_left.map((match, i) => (
-            <Box
-              key={`sf-left-${i}`}
-              className="absolute"
-              style={{ top: `${i * 440 + 185}px`, left: "400px" }}
-            >
-              <TeamBox
-                homeTeam={
-                  match.teamWinner
-                    ? match.teamWinner
-                    : match.homeMatch?.homeTeam
-                }
-                awayTeam={match.homeMatch?.awayTeam}
-                resultHomeIda={
-                  match.homeMatch?.status !== MatchStatus.PLAYED
-                    ? undefined
-                    : match.homeMatch?.homeTeamGoals
-                }
-                resultHomeVuelta={
-                  match.homeMatch?.status !== MatchStatus.PLAYED
-                    ? undefined
-                    : match.homeMatch?.awayTeamGoals
-                }
-                resultAwayIda={
-                  match.awayMatch?.status !== MatchStatus.PLAYED
-                    ? undefined
-                    : match.awayMatch?.homeTeamGoals
-                }
-                resultAwayVuelta={
-                  match.awayMatch?.status !== MatchStatus.PLAYED
-                    ? undefined
-                    : match.awayMatch?.awayTeamGoals
-                }
-              />
-            </Box>
-          ))}
-
-          {/* Final */}
-          <Box className="absolute" style={{ top: "90px", left: "580px" }}>
-            <FinalTeamBox
-              nameHome={teams.f.matchesPlayoff[0].homeMatch?.homeTeam}
-              nameAway={teams.f.matchesPlayoff[0].homeMatch?.awayTeam}
-              resultHome={teams.f.matchesPlayoff[0].homeMatch?.homeTeamGoals}
-              resultAway={teams.f.matchesPlayoff[0].awayMatch?.homeTeamGoals}
-            />
-          </Box>
-
-          {/* Semi-finals - Right */}
-          {teams.sf_right.map((match, i) => (
-            <Box
-              key={`sf-right-${i}`}
-              className="absolute"
-              style={{ top: `${i * 440 + 185}px`, left: "760px" }}
-            >
-              <InvertedTeamBox
-                homeTeam={
-                  match.teamWinner
-                    ? match.teamWinner
-                    : match.homeMatch?.homeTeam
-                }
-                awayTeam={match.homeMatch?.awayTeam}
-                resultHomeIda={
-                  match.homeMatch?.status !== MatchStatus.PLAYED
-                    ? undefined
-                    : match.homeMatch?.homeTeamGoals
-                }
-                resultHomeVuelta={
-                  match.homeMatch?.status !== MatchStatus.PLAYED
-                    ? undefined
-                    : match.homeMatch?.awayTeamGoals
-                }
-                resultAwayIda={
-                  match.awayMatch?.status !== MatchStatus.PLAYED
-                    ? undefined
-                    : match.awayMatch?.homeTeamGoals
-                }
-                resultAwayVuelta={
-                  match.awayMatch?.status !== MatchStatus.PLAYED
-                    ? undefined
-                    : match.awayMatch?.awayTeamGoals
-                }
-              />
-            </Box>
-          ))}
-
-          {/* Quarter-finals - Right */}
-          {teams.qf_right.map((match, i) => (
-            <Box
-              key={`qf-right-${i}`}
-              className="absolute"
-              style={{ top: `${i * 220 + 75}px`, left: "900px" }}
-            >
-              <InvertedTeamBox
-                homeTeam={
-                  match.teamWinner
-                    ? match.teamWinner
-                    : match.homeMatch?.homeTeam
-                }
-                awayTeam={match.homeMatch?.awayTeam}
-                resultHomeIda={
-                  match.homeMatch?.status !== MatchStatus.PLAYED
-                    ? undefined
-                    : match.homeMatch?.homeTeamGoals
-                }
-                resultHomeVuelta={
-                  match.homeMatch?.status !== MatchStatus.PLAYED
-                    ? undefined
-                    : match.homeMatch?.awayTeamGoals
-                }
-                resultAwayIda={
-                  match.awayMatch?.status !== MatchStatus.PLAYED
-                    ? undefined
-                    : match.awayMatch?.homeTeamGoals
-                }
-                resultAwayVuelta={
-                  match.awayMatch?.status !== MatchStatus.PLAYED
-                    ? undefined
-                    : match.awayMatch?.awayTeamGoals
-                }
-              />
-            </Box>
-          ))}
-
-          {/* Round of 16 - Right */}
-          {teams.r16_right.map((match, i) => (
-            <Box
-              key={`r16-right-${i}`}
-              className="absolute"
-              style={{ top: `${i * 110 + 20}px`, left: "1150px" }}
-            >
-              <InvertedTeamBox
-                homeTeam={
-                  !!match.teamWinner
-                    ? match.teamWinner
-                    : match.homeMatch?.homeTeam
-                }
-                awayTeam={match.homeMatch?.awayTeam}
-                resultHomeIda={
-                  match.homeMatch?.status !== MatchStatus.PLAYED
-                    ? undefined
-                    : match.homeMatch?.homeTeamGoals
-                }
-                resultHomeVuelta={
-                  match.homeMatch?.status !== MatchStatus.PLAYED
-                    ? undefined
-                    : match.homeMatch?.awayTeamGoals
-                }
-                resultAwayIda={
-                  match.awayMatch?.status !== MatchStatus.PLAYED
-                    ? undefined
-                    : match.awayMatch?.homeTeamGoals
-                }
-                resultAwayVuelta={
-                  match.awayMatch?.status !== MatchStatus.PLAYED
-                    ? undefined
-                    : match.awayMatch?.awayTeamGoals
-                }
-              />
-            </Box>
-          ))}
-        </Box>
+          <PlayoffArrows leftRounds={leftRounds} rightRounds={rightRounds} />
+        </div>
       </Box>
     </>
   );

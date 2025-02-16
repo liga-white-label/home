@@ -11,7 +11,7 @@ import { PartidosAgrupados } from "./fixture/PartidosAgrupados";
 import LoadingScreen from "./loading/Loading";
 import InfoMatchModal from "./InfoMatchModal";
 import { IndexMatch } from "../models/Match";
-
+import ErrorPage from "./ErrorPage";
 interface FixtureCopaPageProps {
   faseId: string;
 }
@@ -46,7 +46,7 @@ const FixtureCopaPage: React.FC<FixtureCopaPageProps> = ({ faseId }) => {
   };
 
   if (isLoading) return <LoadingScreen />;
-  if (isError) return <div>Error...</div>;
+  if (isError) return <ErrorPage />;
 
   return data?.map((grupo, index) => (
     <>

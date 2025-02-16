@@ -1,13 +1,13 @@
 import { GeneroEnum } from "../utils/enums/GeneroEnum";
-import { Equipo } from "./Equipo";
-
+import { Team } from "./Equipo";
 
 export interface Categoria {
   id: string;
   name: string;
   gender: string;
+  enabled: boolean;
 }
 
 export interface CategoriaConEquipos extends Categoria {
-  teams: Equipo[];
+  teams: Team[];
 }
