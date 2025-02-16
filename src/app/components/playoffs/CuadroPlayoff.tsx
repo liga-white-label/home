@@ -74,15 +74,17 @@ const CuadroPlayoff: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
         style={{
           height: `${screenHeight}px`,
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('/assets/category_banner.jpg')`,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "flex-start",
         }}
       >
         <div
           style={{
             position: "relative",
-            display: "flex",
-            justifyContent: "center",
-            left: getLeftForCenterElements(),
-            marginRight: "100px",
+            minWidth: "fit-content",
+            width: "100%",
+            height: "100%",
           }}
         >
           {leftRounds.map((matches, roundIndex) =>
@@ -200,7 +202,11 @@ const CuadroPlayoff: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
             ))
           )}
 
-          <PlayoffArrows leftRounds={leftRounds} rightRounds={rightRounds} />
+          <PlayoffArrows
+            leftRounds={leftRounds}
+            rightRounds={rightRounds}
+            finalMatchId={finalMatch?.id}
+          />
         </div>
       </Box>
     </>

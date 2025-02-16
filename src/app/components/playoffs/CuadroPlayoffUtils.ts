@@ -1,16 +1,26 @@
-import { Match, MatchStatus } from 'src/models/Match';
+import { Match, MatchStatus } from "@/app/models/Match";
 
 const vertialSpacing = 110; // It's the spacing used to define the progressive vertical distance between each Teambox
+const horizontalSpacing = 300; // Spacing between rounds
+const initialOffset = 50; // Initial offset from the left
 
-export const calculateLeftPosition = (matchIndex: number, roundIndex: number) => {
-  const leftOffset = 100 + roundIndex * 250; // Horizontal spacing per rounds
+const calculateTotalWidth = (leftRoundsLength: number) => {
+  // Calculate total width including both sides and final
+  return (leftRoundsLength * 2 + 1) * horizontalSpacing;
+};
+
+export const calculateLeftPosition = (
+  matchIndex: number,
+  roundIndex: number
+) => {
+  const leftOffset = initialOffset + roundIndex * horizontalSpacing; // Add initial offset
   const spacing = vertialSpacing * Math.pow(2, roundIndex); // Vertical spacing per round
   const topOffset = matchIndex * spacing + spacing / 2 + 5; // Progressive downward position
   return { left: `${leftOffset}px`, top: `${topOffset}px` };
 };
 
 const getFinalLeftOffset = (leftRoundsLength: number) => {
-  return 50 + leftRoundsLength * 250;
+  return initialOffset + leftRoundsLength * horizontalSpacing - 50;
 };
 
 export const calculateRightPosition = (
@@ -18,8 +28,9 @@ export const calculateRightPosition = (
   roundIndex: number,
   leftRoundsLength: number
 ) => {
-  const firstRightLeftOffsetStart = getFinalLeftOffset(leftRoundsLength) + 192; // The 192 for the horizontal spacing of the final box
-  const leftOffset = firstRightLeftOffsetStart + roundIndex * 250;
+  const finalOffset = getFinalLeftOffset(leftRoundsLength);
+  const firstRightLeftOffsetStart = finalOffset + 250; // Space after the final match
+  const leftOffset = firstRightLeftOffsetStart + roundIndex * horizontalSpacing;
   const adjustedRoundIndex = leftRoundsLength - roundIndex - 1; // Invert the order of the rounds
   const spacing = vertialSpacing * Math.pow(2, adjustedRoundIndex); // Vertical progressive spacing but in reverse
   const topOffset = matchIndex * spacing + spacing / 2 + 5; // Same formula as left side
@@ -30,7 +41,7 @@ export const calculateRightPosition = (
 export const getFinalPosition = (leftRoundsLength: number) => {
   const leftOffset = getFinalLeftOffset(leftRoundsLength); // Center horizontally the final
   const semiTopOffset = vertialSpacing * Math.pow(2, leftRoundsLength - 2);
-  const topOffset = leftRoundsLength === 0 ? 75 : semiTopOffset + 158; // if there's only a final then 110 else ...
+  const topOffset = leftRoundsLength === 0 ? 75 : semiTopOffset + 158; // if there's only a final then 75 else ...
   return { left: `${leftOffset}px`, top: `${topOffset}px` };
 };
 

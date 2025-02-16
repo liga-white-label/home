@@ -54,7 +54,7 @@ export const TeamBox: React.FC<TeamBoxProps> = ({
   vueltaMatchStatus,
 }) => {
   return (
-    <Box className="flex flex-col bg-[#24598f] text-white w-48 relative">
+    <Box className="flex flex-col bg-[#a60000cd] text-white w-48 relative">
       <ResultBox
         team={homeTeam}
         resultIda={resultHomeIda}
@@ -106,7 +106,7 @@ export const InvertedTeamBox: React.FC<TeamBoxProps> = ({
   vueltaMatchStatus,
 }) => {
   return (
-    <Box className="flex flex-col bg-[#24598f] text-white w-48 relative">
+    <Box className="flex flex-col bg-[#a60000cd] text-white w-48 relative">
       <InvertedResultBox
         team={homeTeam}
         resultIda={resultHomeIda}
@@ -161,7 +161,7 @@ export const FinalTeamBox: React.FC<{
   penaltyResultAway,
   doubleMatch,
 }) => (
-  <Box className="flex flex-col bg-[#24598f] text-white w-48 relative">
+  <Box className="flex flex-col bg-[#a60000cd] text-white w-48 relative">
     <ResultBox
       team={nameHome}
       resultIda={resultHome}
