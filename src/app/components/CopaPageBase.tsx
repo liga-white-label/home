@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { EstadisticasPage } from "./EstadisticasPage";
 import { useAllFasesByCampeonato } from "@/repositories/CampeonatoRepository";
@@ -28,9 +28,11 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
 
   const { data: fases = [] } = useAllFasesByCampeonato(id);
 
-  const faseGrupos = fases.find((f: any) => f.type === "group") || null;
-
-  const fasesPlayoff = fases.filter((f: any) => f.type === "playoff") || [];
+  const faseGrupos = fases.find((f) => f.type === "group") || null;
+  const fasesPlayoff = useMemo(
+    () => fases.filter((f) => f.type === "playoff") || [],
+    [fases]
+  );
 
   useEffect(() => {
     if (tabParam) {
@@ -53,7 +55,7 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
     } else {
       setSelectedTab(TabsEnum.FIXTURE);
     }
-  }, [faseGrupos, fasesPlayoff]);
+  }, [faseGrupos, fasesPlayoff, tabParam]);
 
   return (
     <div className="w-full">

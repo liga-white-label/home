@@ -1,7 +1,7 @@
 import { Box, Typography, Divider } from "@mui/material";
 import { LOGO_DEFAULT_TEAM } from "@/app/utils/constants";
 import { Team } from "@/app/models/Equipo";
-
+import Image from "next/image";
 interface ResultBoxProps {
   team?: Team;
   resultIda?: number | null;
@@ -23,13 +23,15 @@ export const ResultBox: React.FC<ResultBoxProps> = ({
 }) => {
   return (
     <Box className="flex gap-2 items-center">
-      <img
+      <Image
         src={!!team ? team?.logo : LOGO_DEFAULT_TEAM}
         style={{ height: logo_size, width: logo_size }}
         className={
           !!team ? "bg-gray-200 object-contain" : "bg-black object-contain"
         }
         alt={""}
+        width={logo_size}
+        height={logo_size}
       />
       <Typography
         variant="body2"
@@ -79,13 +81,15 @@ export const InvertedResultBox: React.FC<ResultBoxProps> = ({
   showPenales,
 }) => (
   <Box className="flex flex-row-reverse gap-2 items-center">
-    <img
+    <Image
       src={!!team ? team?.logo : LOGO_DEFAULT_TEAM}
       style={{ height: logo_size, width: logo_size }}
       className={
         !!team ? "bg-gray-200 object-contain" : "bg-black object-contain"
       }
       alt={""}
+      width={logo_size}
+      height={logo_size}
     />
     <Typography
       variant="body2"
