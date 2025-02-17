@@ -10,7 +10,7 @@ import React, { useRef, useState } from "react";
 import { PartidosAgrupados } from "./fixture/PartidosAgrupados";
 import LoadingScreen from "./loading/Loading";
 import InfoMatchModal from "./InfoMatchModal";
-import { IndexMatch } from "../models/Match";
+import { convertToSimplifiedMatch, SimplifiedMatch } from "../models/Match";
 import ErrorPage from "./ErrorPage";
 interface FixtureCopaPageProps {
   faseId: string;
@@ -30,7 +30,7 @@ const FixtureCopaPage: React.FC<FixtureCopaPageProps> = ({ faseId }) => {
 
   const [openMatchModal, setOpenMatchModal] = useState<boolean>(false);
 
-  const handleClickSeeMatch = (match: IndexMatch) => {
+  const handleClickSeeMatch = (match: SimplifiedMatch) => {
     currentMatchSelected.current = {
       homeTeam: match.homeTeamId,
       awayTeam: match.awayTeamId,
@@ -68,9 +68,10 @@ const FixtureCopaPage: React.FC<FixtureCopaPageProps> = ({ faseId }) => {
         {
           <PartidosAgrupados
             matches={
-              grupo.matches.sort((m1, m2) =>
-                m1.dateNumber < m2.dateNumber ? -1 : 1
-              ) || []
+              grupo.matches
+                .map(convertToSimplifiedMatch)
+                .sort((m1, m2) => (m1.dateNumber < m2.dateNumber ? -1 : 1)) ||
+              []
             }
             handleClickSeeMatch={handleClickSeeMatch}
             isLoadingMatch={matchLoading}

@@ -17,27 +17,12 @@ import {
   useAmarillasCategoriaQuery,
   useGoleadoresCategoriaQuery,
 } from "@/repositories/CategoriaRepository";
+import { GoleadoresMapper, AmarillasMapper } from "../models/FaseCampeonato";
 
 interface EstadisticasPageProps {
   categoryId?: string;
   cupId?: string;
 }
-
-const GoleadoresMapper = (g: any, index: number) => ({
-  pos: index + 1,
-  jugador: g.playerName + " " + g.playerLastName,
-  equipo: g.teamName,
-  escudo: g.teamLogo,
-  goles: g.goals,
-});
-
-const AmarillasMapper = (a: any, index: number) => ({
-  pos: index + 1,
-  jugador: a.playerName + " " + a.playerLastName,
-  equipo: a.teamName,
-  escudo: a.teamLogo,
-  tarjetas: a.yellowCards,
-});
 
 export const EstadisticasPage: React.FC<EstadisticasPageProps> = ({
   categoryId = "",

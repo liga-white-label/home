@@ -1,11 +1,6 @@
 import { Categoria } from "@/app/models/Categoria";
 import { GeneroEnum } from "@/app/utils/enums/GeneroEnum";
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-  useSuspenseQuery,
-} from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { httpClient } from "@/app/utils/httpClient";
 import { partidoMapper, SimplifiedMatch } from "@/app/models/Match";
 import { Team } from "@/app/models/Equipo";
@@ -14,23 +9,10 @@ import {
   getPositionsMapper,
 } from "@/app/models/FaseCampeonato";
 
-interface ICreateCategoria {
-  name: string;
-  gender: string;
-  leagueName: string;
-}
-
-interface IEditCategoria {
-  id: string;
-  name: string;
-}
-
 export const getCategoriaMapper = (x: any): Categoria => ({
   ...x,
   gender: x.gender as GeneroEnum,
 });
-
-export const createCategoriaMapper = (x: ICreateCategoria) => x;
 
 export const faseMapper = (data: any) => {
   return {
@@ -57,6 +39,8 @@ export class CategoriaRepository {
     oneFase: (idFase: string, fecha?: number) => ["fases", idFase + fecha],
     partido: (idPartido: string) => [idPartido],
     lastTeams: (idFase: string) => ["lastTeams", idFase],
+    goleadores: (idFase: string) => ["goleadores", idFase],
+    amarillas: (idFase: string) => ["amarillas", idFase],
   };
 
   allFases = async (categoryId: string) => {
@@ -114,6 +98,20 @@ export class CategoriaRepository {
   getFaseCuadrangular = async (faseId: string) => {
     const { data } = await httpClient.get<any>(
       `tournament/league/categories/phase-cuadrangular/get-groups?phaseId=${faseId}`
+    );
+    return data;
+  };
+
+  getGoleadores = async (categoryId: string) => {
+    const { data } = await httpClient.get<any>(
+      `tournament/league/categories/get-scorers?categoryId=${categoryId}`
+    );
+    return data;
+  };
+
+  getAmarillas = async (categoryId: string) => {
+    const { data } = await httpClient.get<any>(
+      `tournament/league/categories/get-yellow-cards?categoryId=${categoryId}`
     );
     return data;
   };
@@ -175,3 +173,19 @@ export const useGetFaseCuadrangularQuery = (faseId: string) =>
     queryKey: repo.keys.oneFase(faseId),
     queryFn: () => repo.getFaseCuadrangular(faseId),
   });
+
+export const useGoleadoresCategoriaQuery = (id: string) => {
+  return useQuery({
+    queryKey: repo.keys.goleadores(id),
+    queryFn: () => repo.getGoleadores(id),
+    enabled: id !== "",
+  });
+};
+
+export const useAmarillasCategoriaQuery = (id: string) => {
+  return useQuery({
+    queryKey: repo.keys.amarillas(id),
+    queryFn: () => repo.getAmarillas(id),
+    enabled: id !== "",
+  });
+};

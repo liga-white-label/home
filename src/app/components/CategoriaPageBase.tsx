@@ -2,17 +2,11 @@
 
 import { FC, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Match } from "../models/Match";
 import { FixturePage } from "./FixturePage";
 import { EstadisticasPage } from "./EstadisticasPage";
-import { EquipoTablaPosicion } from "../models/Team";
-import { PlayerStatistic } from "../models/PlayerStatistic";
 import { TablaDePosicionesWrapper } from "./TablasDePosicionesWrapper";
 import PlayoffsPage from "./playoffs/PlayoffsPage";
-import {
-  CategoriaRepository,
-  useAllFasesByCategory,
-} from "@/repositories/CategoriaRepository";
+import { useAllFasesByCategory } from "@/repositories/CategoriaRepository";
 
 interface CategoriaPageBaseProps {
   id: string;

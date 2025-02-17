@@ -17,6 +17,7 @@ import {
   useAllCampeonatosQuery,
   useCampeonatoQuery,
 } from "@/repositories/CampeonatoRepository";
+import { Liga } from "../models/Campeonato";
 
 export const CustomDrawer = () => {
   const { sidebarOpen, handleClose } = useSidebar();
@@ -26,9 +27,11 @@ export const CustomDrawer = () => {
 
   const campeonatoActualVacio = allCampeonatos?.find((c) => c.current);
 
-  const { data: campeonatoActual } = useCampeonatoQuery(
+  const { data: campeonatoActualData } = useCampeonatoQuery(
     campeonatoActualVacio?.id || ""
   );
+
+  const campeonatoActual = campeonatoActualData as Liga;
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation">
       <ListItem disablePadding>

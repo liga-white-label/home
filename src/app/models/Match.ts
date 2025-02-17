@@ -85,3 +85,18 @@ export interface SimplifiedMatch {
   dateNumber: number;
   field: string | null;
 }
+
+export const convertToSimplifiedMatch = (match: Match): SimplifiedMatch => ({
+  homeTeamId: match?.homeTeam?.id || "",
+  awayTeamId: match?.awayTeam?.id || "",
+  homeTeamName: match?.homeTeam?.name || "",
+  awayTeamName: match?.awayTeam?.name || "",
+  homeTeamLogo: match?.homeTeam?.logo || "",
+  awayTeamLogo: match?.awayTeam?.logo || "",
+  status: match?.status || MatchStatus.PENDIENTE,
+  homeTeamGoals: match?.homeTeamGoals || 0,
+  awayTeamGoals: match?.awayTeamGoals || 0,
+  date: match?.date || null,
+  dateNumber: match?.dateNumber || 0,
+  field: match?.field || null,
+});

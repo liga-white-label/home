@@ -19,6 +19,8 @@ export class CampeonatoRepository {
     fases: () => ["fases-copa"],
     oneFase: (idFase: string) => ["fases-copa", idFase],
     partido: (idPartido: string) => [idPartido],
+    goleadores: (idFase: string) => ["goleadores", idFase],
+    amarillas: (idFase: string) => ["amarillas", idFase],
   };
 
   getAll = async () => {
@@ -31,21 +33,6 @@ export class CampeonatoRepository {
       `tournament?tournamentId=${id}`
     );
     return getCampeonatoMapper(data);
-  };
-
-  remove = async (id: string) => httpClient.delete("campeonatos/" + id);
-
-  createFaseGruposCopa = async ({
-    campeonatoId,
-    grupos,
-  }: {
-    campeonatoId: string;
-    grupos: { groupName: string; matches: any[]; teamsIds: string[] }[];
-  }) => {
-    await httpClient.post("tournament/cup/create-phase-group", {
-      tournamentId: campeonatoId,
-      groupTeams: grupos,
-    });
   };
 
   allFases = async (cupId: string) => {
@@ -99,6 +86,20 @@ export class CampeonatoRepository {
       `tournament/cup/phase-playoff/get-rounds?phaseId=${faseId}`
     );
     return data.map(playoffFaseMapper);
+  };
+
+  getGoleadores = async (categoryId: string) => {
+    const { data } = await httpClient.get<any>(
+      `tournament/cup/get-scorers?categoryId=${categoryId}`
+    );
+    return data;
+  };
+
+  getAmarillas = async (categoryId: string) => {
+    const { data } = await httpClient.get<any>(
+      `tournament/cup/get-yellow-cards?categoryId=${categoryId}`
+    );
+    return data;
   };
 }
 
@@ -189,3 +190,19 @@ export const useOneFasePlayoffCopaQuery = (id: string) =>
     refetchOnReconnect: false,
     retry: 1,
   });
+
+export const useGoleadoresCopaQuery = (id: string) => {
+  return useQuery({
+    queryKey: repo.keys.goleadores(id),
+    queryFn: () => repo.getGoleadores(id),
+    enabled: id !== "",
+  });
+};
+
+export const useAmarillasCopaQuery = (id: string) => {
+  return useQuery({
+    queryKey: repo.keys.amarillas(id),
+    queryFn: () => repo.getAmarillas(id),
+    enabled: id !== "",
+  });
+};

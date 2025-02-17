@@ -7,7 +7,12 @@ import { useRef, useState } from "react";
 import InfoMatchModal from "../InfoMatchModal";
 import { PartidoRow } from "../fixture/PartidoRow";
 import { RoundMatch } from "@/app/models/FaseCampeonato";
-import { SimplifiedMatch, Match, MatchStatus } from "@/app/models/Match";
+import {
+  SimplifiedMatch,
+  Match,
+  MatchStatus,
+  convertToSimplifiedMatch,
+} from "@/app/models/Match";
 
 interface PlayoffRoundsFixtureProps {
   cruce: RoundMatch;
@@ -51,21 +56,6 @@ const PlayoffRoundsFixture: React.FC<PlayoffRoundsFixtureProps> = ({
     currentMatchSelected.current = undefined;
     setOpenMatchModal(false);
   };
-
-  const convertToSimplifiedMatch = (match: Match): SimplifiedMatch => ({
-    homeTeamId: match?.homeTeam?.id || "",
-    awayTeamId: match?.awayTeam?.id || "",
-    homeTeamName: match?.homeTeam?.name || "",
-    awayTeamName: match?.awayTeam?.name || "",
-    homeTeamLogo: match?.homeTeam?.logo || "",
-    awayTeamLogo: match?.awayTeam?.logo || "",
-    status: match?.status || MatchStatus.PENDIENTE,
-    homeTeamGoals: match?.homeTeamGoals || 0,
-    awayTeamGoals: match?.awayTeamGoals || 0,
-    date: match?.date || null,
-    dateNumber: match?.dateNumber || 0,
-    field: match?.field || null,
-  });
 
   const partidoIda = convertToSimplifiedMatch(cruce.homeMatch);
 

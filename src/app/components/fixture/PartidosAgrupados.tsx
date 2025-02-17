@@ -1,10 +1,9 @@
 import { Table, TableBody } from "@mui/material";
-import { IndexMatch } from "../../models/Match";
 import { PartidoRow } from "./PartidoRow";
-
+import { SimplifiedMatch } from "@/app/models/Match";
 interface PartidosAgrupadosProps {
-  matches: IndexMatch[];
-  handleClickSeeMatch: (match: any) => void;
+  matches: SimplifiedMatch[];
+  handleClickSeeMatch: (match: SimplifiedMatch) => void;
   isLoadingMatch: boolean;
   selectedMatch: string;
 }

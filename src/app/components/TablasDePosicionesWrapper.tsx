@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { TablaPosiciones } from "./TablaPosiciones";
-import { usePositionsFaseRegular } from "@/repositories/CategoriaRepository";
+import { useGetPositionsFaseRegular } from "@/repositories/CategoriaRepository";
 import LoadingScreen from "./loading/Loading";
 import ErrorPage from "./ErrorPage";
 interface TablaDePosicionesWrapperProps {
@@ -9,7 +9,7 @@ interface TablaDePosicionesWrapperProps {
 export const TablaDePosicionesWrapper: FC<TablaDePosicionesWrapperProps> = ({
   faseId,
 }) => {
-  const { data, isLoading, isError } = usePositionsFaseRegular(faseId);
+  const { data, isLoading, isError } = useGetPositionsFaseRegular(faseId);
 
   if (isLoading) return <LoadingScreen />;
   if (isError) return <ErrorPage />;

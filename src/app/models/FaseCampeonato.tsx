@@ -1,5 +1,5 @@
-import { Team } from './Equipo';
-import { Match, partidoMapper } from './Match';
+import { Team } from "./Equipo";
+import { Match, partidoMapper } from "./Match";
 
 export interface RoundCup {
   matchesPlayoff: RoundMatch[];
@@ -82,4 +82,20 @@ export const getPositionsMapper = (data: any): TablePosition => ({
   nextMatch: !!data.nextOpponent
     ? { name: data.nextOpponent.name, logo: data.nextOpponent.logo }
     : null,
+});
+
+export const GoleadoresMapper = (g: any, index: number) => ({
+  pos: index + 1,
+  jugador: g.playerName + " " + g.playerLastName,
+  equipo: g.teamName,
+  escudo: g.teamLogo,
+  goles: g.goals,
+});
+
+export const AmarillasMapper = (a: any, index: number) => ({
+  pos: index + 1,
+  jugador: a.playerName + " " + a.playerLastName,
+  equipo: a.teamName,
+  escudo: a.teamLogo,
+  tarjetas: a.yellowCards,
 });

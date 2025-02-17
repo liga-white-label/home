@@ -2,9 +2,9 @@ import { FC } from "react";
 import { useOneFaseCampeonatoQuery } from "@/repositories/CampeonatoRepository";
 import { Box, Typography } from "@mui/material";
 import { TablaPosiciones } from "./TablaPosiciones";
-import { getPositionsMapper } from "@/repositories/CategoriaRepository";
 import LoadingScreen from "./loading/Loading";
 import ErrorPage from "./ErrorPage";
+import { getPositionsMapper } from "../models/FaseCampeonato";
 interface FaseGruposWrapperProps {
   faseId: string;
 }

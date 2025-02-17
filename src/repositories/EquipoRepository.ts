@@ -1,10 +1,10 @@
-import { Equipo } from "@/app/models/Equipo";
 import { GeneroEnum } from "@/app/utils/enums/GeneroEnum";
 import { httpClient } from "@/app/utils/httpClient";
-import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getJugadorMapper } from "./JugadoresRepository";
+import { Team } from "@/app/models/Equipo";
 
-export const getEquipoMapper = (x: any): Equipo => ({
+export const getEquipoMapper = (x: any): Team => ({
   ...x,
   genero: x.gender === "male" ? GeneroEnum.MASCULINO : GeneroEnum.FEMENINO,
   jugadores: x.players.map(getJugadorMapper),

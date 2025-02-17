@@ -10,12 +10,12 @@ import {
 import { useRef, useState } from "react";
 import { PartidosAgrupados } from "./fixture/PartidosAgrupados";
 import {
-  useOneFaseQuery,
+  useAllMatchesByFaseQuery,
   useOnePartidoQuery,
 } from "@/repositories/CategoriaRepository";
 import InfoMatchModal from "./InfoMatchModal";
 import LoadingScreen from "./loading/Loading";
-import { IndexMatch } from "../models/Match";
+import { SimplifiedMatch } from "../models/Match";
 
 interface FixturePageProps {
   faseId: string;
@@ -25,7 +25,7 @@ export const FixturePage: React.FC<FixturePageProps> = ({ faseId }) => {
   const [selectedFecha, setSelectedFecha] = useState<number>(1);
   const currentMatchSelected = useRef<any | undefined>();
 
-  const { data: matchesFechaActual, isLoading } = useOneFaseQuery(
+  const { data: matchesFechaActual, isLoading } = useAllMatchesByFaseQuery(
     faseId,
     selectedFecha
   );
@@ -38,7 +38,7 @@ export const FixturePage: React.FC<FixturePageProps> = ({ faseId }) => {
   );
   const [openMatchModal, setOpenMatchModal] = useState<boolean>(false);
 
-  const handleClickSeeMatch = (match: IndexMatch) => {
+  const handleClickSeeMatch = (match: SimplifiedMatch) => {
     currentMatchSelected.current = {
       homeTeam: match.homeTeamId,
       awayTeam: match.awayTeamId,

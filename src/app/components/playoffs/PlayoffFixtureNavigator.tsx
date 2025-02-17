@@ -1,11 +1,10 @@
-import { Round } from "@/repositories/CategoriaRepository";
 import { Box, IconButton, Typography } from "@mui/material";
 import React, { useState } from "react";
 import Iconify from "../iconify";
 import PlayoffRoundsFixture from "./PlayoffRoundsFixture";
-
+import { RoundCup } from "@/app/models/FaseCampeonato";
 interface PlayoffFixtureNavigatorProps {
-  rounds: Round[];
+  rounds: RoundCup[];
   faseId: string;
 }
 
@@ -39,11 +38,11 @@ const PlayoffFixtureNavigator: React.FC<PlayoffFixtureNavigatorProps> = ({
     rounds[rounds.length - 1].roundNumber
   );
   const currentPhase = rounds.find(
-    (fase: Round) => fase.roundNumber === selectedPhase
+    (fase: RoundCup) => fase.roundNumber === selectedPhase
   );
 
   const doesRoundExist = (roundNumber: number) => {
-    return rounds.some((fase: Round) => fase.roundNumber === roundNumber);
+    return rounds.some((fase: RoundCup) => fase.roundNumber === roundNumber);
   };
 
   return (
