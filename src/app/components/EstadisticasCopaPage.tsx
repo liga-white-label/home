@@ -10,23 +10,23 @@ import {
 } from "@mui/material";
 import LoadingScreen from "./loading/Loading";
 import {
-  useAmarillasCategoriaQuery,
-  useGoleadoresCategoriaQuery,
-} from "@/repositories/CategoriaRepository";
+  useAmarillasCopaQuery,
+  useGoleadoresCopaQuery,
+} from "@/repositories/CampeonatoRepository";
 import { GoleadoresMapper, AmarillasMapper } from "../models/FaseCampeonato";
 
-interface EstadisticasPageProps {
-  categoryId: string;
+interface EstadisticasCopaPageProps {
+  cupId: string;
 }
 
-export const EstadisticasPage: React.FC<EstadisticasPageProps> = ({
-  categoryId = "",
+export const EstadisticasCopaPage: React.FC<EstadisticasCopaPageProps> = ({
+  cupId = "",
 }) => {
   const { data: goleadores = [], isLoading: goleadoresLoading } =
-    useGoleadoresCategoriaQuery(categoryId);
+    useGoleadoresCopaQuery(cupId);
 
   const { data: amarillas = [], isLoading: amarillasLoading } =
-    useAmarillasCategoriaQuery(categoryId);
+    useAmarillasCopaQuery(cupId);
 
   const [selectedOption, setSelectedOption] = useState<string>("0");
 

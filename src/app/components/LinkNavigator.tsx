@@ -8,6 +8,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Liga } from "@/app/models/Campeonato";
+import MiniLoading from "./loading/MiniLoading";
 
 export const LinkNavigator = () => {
   const path = usePathname();
@@ -20,7 +21,7 @@ export const LinkNavigator = () => {
   const { data: campeonatoActual, isLoading: isLoadingCampeonatoActual } =
     useCampeonatoQuery(campeonatoActualVacio?.id || "");
 
-  const ligaActual = campeonatoActual as Liga | undefined;
+  const ligaActual = campeonatoActual as Liga;
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [anchorElCopa, setAnchorElCopa] = useState<HTMLButtonElement | null>(
@@ -43,6 +44,16 @@ export const LinkNavigator = () => {
   const open = Boolean(anchorEl);
   const openCopa = Boolean(anchorElCopa);
 
+  if (isLoadingAllCampeonatos || isLoadingCampeonatoActual) {
+    return (
+      <div className="hidden md:block">
+        <MiniLoading />
+      </div>
+    );
+  }
+
+  const categorias = ligaActual?.categories || [];
+
   return (
     <div className="hidden lg:flex gap-10 text-white text-lg">
       <Link
@@ -53,42 +64,42 @@ export const LinkNavigator = () => {
       >
         Inicio
       </Link>
-      <div className="relative">
-        <button
-          id="basic-button"
-          aria-controls={open ? "basic-menu" : undefined}
-          aria-haspopup="true"
-          aria-expanded={open ? "true" : undefined}
-          onClick={handleClick}
-          className={`hover:underline ${
-            path.includes("categorias") ? "underline" : ""
-          } hover:cursor-pointer`}
-        >
-          Categorías
-        </button>
-        <Menu
-          id="basic-menu"
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleClose}
-          MenuListProps={{
-            className: "bg-[#A60000] text-white",
-            "aria-labelledby": "basic-button",
-          }}
-        >
-          {ligaActual?.categories
-            ?.filter((c) => c.enabled)
-            .map((c, index) => (
+      {categorias.length > 0 && (
+        <div className="relative">
+          <button
+            id="basic-button"
+            aria-controls={open ? "basic-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? "true" : undefined}
+            onClick={handleClick}
+            className={`hover:underline ${
+              path.includes("categorias") ? "underline" : ""
+            } hover:cursor-pointer`}
+          >
+            Categorías
+          </button>
+          <Menu
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            MenuListProps={{
+              className: "bg-[#A60000] text-white",
+              "aria-labelledby": "basic-button",
+            }}
+          >
+            {categorias.map((c, index) => (
               <MenuItem key={index} onClick={handleClose}>
                 <Link href={`/campeonatos/${ligaActual.id}/categorias/${c.id}`}>
-                  <p className="text-lg">{`${c.name} - ${
+                  <p className="text-lg">{`Categoria ${c.name} - ${
                     c.gender === "male" ? "Masculina" : "Femenina"
                   }`}</p>
                 </Link>
               </MenuItem>
             ))}
-        </Menu>
-      </div>
+          </Menu>
+        </div>
+      )}
       <Link href={"/novedades"}>
         <p
           className={`hover:underline ${

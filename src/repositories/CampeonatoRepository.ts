@@ -88,16 +88,16 @@ export class CampeonatoRepository {
     return data.map(playoffFaseMapper);
   };
 
-  getGoleadores = async (categoryId: string) => {
+  getGoleadores = async (cupId: string) => {
     const { data } = await httpClient.get<any>(
-      `tournament/cup/get-scorers?categoryId=${categoryId}`
+      `tournament/cup/get-scorers?cupId=${cupId}`
     );
     return data;
   };
 
-  getAmarillas = async (categoryId: string) => {
+  getAmarillas = async (cupId: string) => {
     const { data } = await httpClient.get<any>(
-      `tournament/cup/get-yellow-cards?categoryId=${categoryId}`
+      `tournament/cup/get-yellow-cards?cupId=${cupId}`
     );
     return data;
   };

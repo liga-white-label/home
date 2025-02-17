@@ -1,24 +1,93 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Liga CUBB Home
 
-## Getting Started
+This is the home website for Liga CUBB, built with [Next.js](https://nextjs.org/) and bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-First, run the development server:
+## Prerequisites
+
+Before you begin, ensure you have the following installed on your system:
+
+- [Node.js](https://nodejs.org/) (version 18 or higher)
+- [npm](https://www.npmjs.com/) (usually comes with Node.js)
+
+## Installation
+
+1. Clone the repository:
+
+```bash
+git clone [repository-url]
+cd liga-cubb-home
+```
+
+2. Install the dependencies:
+
+```bash
+npm install
+```
+
+## Running the Project
+
+### Development Mode
+
+To run the project in development mode with hot-reload:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The application will be available at [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Production Build
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+To create a production build:
+
+```bash
+npm run build
+```
+
+To start the production server:
+
+```bash
+npm run start
+```
+
+### Additional Scripts
+
+- Run linting:
+
+```bash
+npm run lint
+```
+
+- Type checking:
+
+```bash
+npm run type-check
+```
+
+- Watch mode type checking:
+
+```bash
+npm run type-check:watch
+```
+
+## Project Structure
+
+- `/src` - Source code
+  - `/app` - Next.js app directory containing pages and components
+  - `/components` - Reusable React components
+  - `/models` - Data models and types
+  - `/repositories` - Data fetching and API integration
+  - `/environment` - Environment configuration
+
+## Main Dependencies
+
+- Next.js - React framework
+- Material-UI - UI component library
+- React Query - Data fetching and state management
+- Tailwind CSS - Utility-first CSS framework
+- FontAwesome - Icon library
+- Axios - HTTP client
+- TypeScript - Type checking
 
 ## Learn More
 
