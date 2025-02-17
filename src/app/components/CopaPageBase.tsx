@@ -26,12 +26,11 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
   const initialTab = tabParam ? parseInt(tabParam, 10) : TabsEnum.GRUPOS;
   const [selectedTab, setSelectedTab] = useState<TabsEnum>(initialTab);
 
-  const { data: fases } = useAllFasesByCampeonato(id);
+  const { data: fases = [] } = useAllFasesByCampeonato(id);
 
-  const faseGrupos = fases?.phases.find((f: any) => f.type === "group") || null;
+  const faseGrupos = fases.find((f: any) => f.type === "group") || null;
 
-  const fasePlayoff =
-    fases?.phases.find((f: any) => f.type === "playoff") || null;
+  const fasesPlayoff = fases.filter((f: any) => f.type === "playoff") || [];
 
   useEffect(() => {
     if (tabParam) {
@@ -49,12 +48,12 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
       setSelectedTab(parseInt(tabParam, 10));
     } else if (faseGrupos) {
       setSelectedTab(TabsEnum.GRUPOS);
-    } else if (fasePlayoff) {
+    } else if (fasesPlayoff.length > 0) {
       setSelectedTab(TabsEnum.PLAYOFFS);
     } else {
       setSelectedTab(TabsEnum.FIXTURE);
     }
-  }, [faseGrupos, fasePlayoff]);
+  }, [faseGrupos, fasesPlayoff]);
 
   return (
     <div className="w-full">
@@ -91,7 +90,7 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
                 <p className="line-clamp-1">Fixture</p>
               </div>
             )}
-            {!!fasePlayoff && (
+            {!!fasesPlayoff && (
               <div
                 onClick={() => handleChangeTab(TabsEnum.PLAYOFFS)}
                 className={`p-2 md:p-4 rounded-t-lg cursor-pointer whitespace-nowrap ${
@@ -124,7 +123,7 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
           <FixtureCopaPage faseId={faseGrupos?.id || ""} />
         )}
         {selectedTab === TabsEnum.PLAYOFFS && (
-          <PlayoffsCopaPage faseId={fasePlayoff?.id || ""} />
+          <PlayoffsCopaPage faseId={fasesPlayoff[2]?.id || ""} />
         )}
         {selectedTab === TabsEnum.ESTADISTICAS && (
           <EstadisticasPage cupId={id} />

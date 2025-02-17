@@ -11,15 +11,28 @@ const calculateTotalWidth = (leftRoundsLength: number) => {
 
 export const calculateLeftPosition = (
   matchIndex: number,
-  roundIndex: number
+  roundIndex: number,
+  totalRounds: number
 ) => {
-  const leftOffset = initialOffset + roundIndex * horizontalSpacing; // Add initial offset
-  const spacing = vertialSpacing * Math.pow(2, roundIndex); // Vertical spacing per round
-  const topOffset = matchIndex * spacing + spacing / 2 + 5; // Progressive downward position
+  // For semifinals (when there's only one round before final)
+  if (totalRounds === 1) {
+    const leftOffset = 300; // Fixed position for semifinals
+    const spacing = vertialSpacing * 2; // Increased spacing for semifinals
+    const topOffset = matchIndex * spacing + 150; // Adjusted vertical position
+    return { left: `${leftOffset}px`, top: `${topOffset}px` };
+  }
+
+  // Regular case (more than semifinals)
+  const leftOffset = initialOffset + roundIndex * horizontalSpacing;
+  const spacing = vertialSpacing * Math.pow(2, roundIndex);
+  const topOffset = matchIndex * spacing + spacing / 2 + 5;
   return { left: `${leftOffset}px`, top: `${topOffset}px` };
 };
 
 const getFinalLeftOffset = (leftRoundsLength: number) => {
+  if (leftRoundsLength === 1) {
+    return 600; // Fixed position for final when only semifinals
+  }
   return initialOffset + leftRoundsLength * horizontalSpacing - 50;
 };
 
@@ -28,24 +41,39 @@ export const calculateRightPosition = (
   roundIndex: number,
   leftRoundsLength: number
 ) => {
+  // For semifinals (when there's only one round before final)
+  if (leftRoundsLength === 1) {
+    const leftOffset = 900; // Fixed position for right semifinals
+    const spacing = vertialSpacing * 2; // Increased spacing for semifinals
+    const topOffset = matchIndex * spacing + 150; // Adjusted vertical position
+    return { left: `${leftOffset}px`, top: `${topOffset}px` };
+  }
+
+  // Regular case (more than semifinals)
   const finalOffset = getFinalLeftOffset(leftRoundsLength);
-  const firstRightLeftOffsetStart = finalOffset + 250; // Space after the final match
+  const firstRightLeftOffsetStart = finalOffset + 250;
   const leftOffset = firstRightLeftOffsetStart + roundIndex * horizontalSpacing;
-  const adjustedRoundIndex = leftRoundsLength - roundIndex - 1; // Invert the order of the rounds
-  const spacing = vertialSpacing * Math.pow(2, adjustedRoundIndex); // Vertical progressive spacing but in reverse
-  const topOffset = matchIndex * spacing + spacing / 2 + 5; // Same formula as left side
+  const adjustedRoundIndex = leftRoundsLength - roundIndex - 1;
+  const spacing = vertialSpacing * Math.pow(2, adjustedRoundIndex);
+  const topOffset = matchIndex * spacing + spacing / 2 + 5;
 
   return { left: `${leftOffset}px`, top: `${topOffset}px` };
 };
 
 export const getFinalPosition = (leftRoundsLength: number) => {
-  const leftOffset = getFinalLeftOffset(leftRoundsLength); // Center horizontally the final
+  const leftOffset = getFinalLeftOffset(leftRoundsLength);
+  if (leftRoundsLength === 1) {
+    return { left: `${leftOffset}px`, top: "225px" }; // Fixed vertical position for semifinals case
+  }
   const semiTopOffset = vertialSpacing * Math.pow(2, leftRoundsLength - 2);
-  const topOffset = leftRoundsLength === 0 ? 75 : semiTopOffset + 158; // if there's only a final then 75 else ...
+  const topOffset = leftRoundsLength === 0 ? 75 : semiTopOffset + 158;
   return { left: `${leftOffset}px`, top: `${topOffset}px` };
 };
 
 export const calculateScreenHeight = (leftRoundsLength: number) => {
+  if (leftRoundsLength === 1) {
+    return 400; // Fixed height for semifinals case
+  }
   const totalRounds = leftRoundsLength + 1;
   const initialRoundMatches = totalRounds <= 2 ? totalRounds : totalRounds - 1;
   const matchHeight = 160;

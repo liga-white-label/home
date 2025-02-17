@@ -15,7 +15,6 @@ const PlayoffArrows: React.FC<PlayoffArrowsProps> = ({
   // Get the last matches from left and right rounds that should connect to the final
   const lastLeftRound = leftRounds[leftRounds.length - 1] || [];
   const lastRightRound = rightRounds[0] || [];
-  console.log(lastRightRound);
 
   return (
     <>

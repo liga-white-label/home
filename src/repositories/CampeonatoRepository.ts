@@ -7,17 +7,11 @@ import { getCampeonatoMapper } from "@/app/models/Campeonato";
 import { playoffFaseMapper } from "@/app/models/FaseCampeonato";
 import { partidoMapper } from "@/app/models/Match";
 
-interface ICreateCampeonato {
-  name: string;
-  year: number;
-  type: string;
-}
-
-interface IEditCampeonato {
+type FaseCopaType = "group" | "playoff";
+interface FaseCopa {
+  type: FaseCopaType;
   id: string;
-  name: string;
 }
-
 export class CampeonatoRepository {
   keys = {
     all: () => ["campeonatos"],
@@ -55,10 +49,10 @@ export class CampeonatoRepository {
   };
 
   allFases = async (cupId: string) => {
-    const { data } = await httpClient.get<any>(
+    const { data } = await httpClient.get<{ phases: FaseCopa[] }>(
       `tournament/cup/get-phases?cupId=${cupId}`
     );
-    return data;
+    return data.phases;
   };
 
   getOneFase = async (faseId: string) => {

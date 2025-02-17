@@ -1,5 +1,5 @@
 const dev = {
-  backEnd: "https://b1ce-2001-fb1-d9-90f5-8d8a-5c46-9b4d-7206.ngrok-free.app/",
+  backEnd: "http://localhost:8080/",
   production: false,
 };
 

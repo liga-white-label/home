@@ -94,7 +94,11 @@ const CuadroPlayoff: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
                 id={`match-${match.id}`}
                 key={`round-${roundIndex}-match-${matchIndex}`}
                 className="absolute"
-                style={calculateLeftPosition(matchIndex, roundIndex)}
+                style={calculateLeftPosition(
+                  matchIndex,
+                  roundIndex,
+                  leftRounds.length
+                )}
               >
                 <TeamBox
                   doubleMatch={doubleMatch}
