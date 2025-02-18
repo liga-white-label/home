@@ -8,14 +8,14 @@ import {
 } from "@mui/material";
 
 import { useRef, useState } from "react";
-import { PartidosAgrupados } from "./fixture/PartidosAgrupados";
+import { PartidosAgrupados } from "../fixture/PartidosAgrupados";
 import {
   useAllMatchesByFaseQuery,
   useOnePartidoQuery,
 } from "@/repositories/CategoriaRepository";
-import InfoMatchModal from "./InfoMatchModal";
-import LoadingScreen from "./loading/Loading";
-import { SimplifiedMatch } from "../models/Match";
+import InfoMatchModal from "../InfoMatchModal";
+import LoadingScreen from "../loading/Loading";
+import { SimplifiedMatch } from "../../models/Match";
 
 interface FixturePageProps {
   faseId: string;

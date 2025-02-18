@@ -1,5 +1,5 @@
 "use client";
-import { TablaEstadisticas } from "./TablaEstadisticas";
+import { TablaEstadisticas } from "../TablaEstadisticas";
 import { useState } from "react";
 import {
   FormControl,
@@ -8,12 +8,12 @@ import {
   SelectChangeEvent,
   Typography,
 } from "@mui/material";
-import LoadingScreen from "./loading/Loading";
+import LoadingScreen from "../loading/Loading";
 import {
   useAmarillasCopaQuery,
   useGoleadoresCopaQuery,
 } from "@/repositories/CampeonatoRepository";
-import { GoleadoresMapper, AmarillasMapper } from "../models/FaseCampeonato";
+import { GoleadoresMapper, AmarillasMapper } from "@/app/models/FaseCampeonato";
 
 interface EstadisticasCopaPageProps {
   cupId: string;

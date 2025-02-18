@@ -53,6 +53,8 @@ export const LinkNavigator = () => {
   }
 
   const categorias = ligaActual?.categories || [];
+  const allCopas =
+    allCampeonatos?.filter((c) => c.type === "cup" && c.enabled) || [];
 
   return (
     <div className="hidden lg:flex gap-10 text-white text-lg">
@@ -134,15 +136,19 @@ export const LinkNavigator = () => {
             "aria-labelledby": "basic-button",
           }}
         >
-          {allCampeonatos
-            ?.filter((c) => c.type === "cup" && c.enabled)
-            .map((c, index) => (
+          {allCopas?.length > 0 ? (
+            allCopas?.map((c, index) => (
               <MenuItem key={index} onClick={handleClose}>
                 <Link href={`/campeonatos/${c.id}`}>
                   <p className="text-lg">{c.name}</p>
                 </Link>
               </MenuItem>
-            ))}
+            ))
+          ) : (
+            <MenuItem disabled onClick={handleClose}>
+              <p className="text-lg">No hay copas</p>
+            </MenuItem>
+          )}
         </Menu>
       </div>
     </div>

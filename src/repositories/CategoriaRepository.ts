@@ -74,6 +74,17 @@ export class CategoriaRepository {
     return partidoMapper(data);
   };
 
+  getOnePartidoDescenso = async (
+    faseId: string,
+    homeTeamId: string,
+    awayTeamId: string
+  ) => {
+    const { data } = await httpClient.get<any>(
+      `tournament/league/categories/phase-relegated/get-match?phaseId=${faseId}&homeTeamId=${homeTeamId}&awayTeamId=${awayTeamId}`
+    );
+    return partidoMapper(data);
+  };
+
   getOneFasePlayoff = async (faseId: string) => {
     const { data } = await httpClient.get<any>(
       `tournament/league/categories/phase-playoff/get-rounds?phaseId=${faseId}`
@@ -189,3 +200,15 @@ export const useAmarillasCategoriaQuery = (id: string) => {
     enabled: id !== "",
   });
 };
+
+export const useOnePartidoDescensoQuery = (
+  homeTeamId: string,
+  awayTeamId: string,
+  faseId: string,
+  enabled: boolean
+) =>
+  useQuery({
+    queryKey: repo.keys.partido(homeTeamId + awayTeamId + faseId),
+    queryFn: () => repo.getOnePartidoDescenso(faseId, homeTeamId, awayTeamId),
+    enabled: enabled,
+  });

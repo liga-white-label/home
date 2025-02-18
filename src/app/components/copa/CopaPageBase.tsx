@@ -2,11 +2,10 @@
 
 import { FC, useState, useEffect, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { EstadisticasPage } from "./EstadisticasPage";
 import { useAllFasesByCampeonato } from "@/repositories/CampeonatoRepository";
 import { FaseGruposWrapper } from "./FaseGruposWrapper";
 import FixtureCopaPage from "./FixtureCopaPage";
-import PlayoffsCopaPage from "./playoffs/PlayoffsCopaPage";
+import PlayoffsCopaPage from "../playoffs/PlayoffsCopaPage";
 import { EstadisticasCopaPage } from "./EstadisticasCopaPage";
 
 interface CopaPageBaseProps {

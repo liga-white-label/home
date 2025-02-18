@@ -1,10 +1,10 @@
 import { FC } from "react";
 import { useOneFaseCampeonatoQuery } from "@/repositories/CampeonatoRepository";
 import { Box, Typography } from "@mui/material";
-import { TablaPosiciones } from "./TablaPosiciones";
-import LoadingScreen from "./loading/Loading";
-import ErrorPage from "./ErrorPage";
-import { getPositionsMapper } from "../models/FaseCampeonato";
+import { TablaPosiciones } from "../TablaPosiciones";
+import LoadingScreen from "../loading/Loading";
+import ErrorPage from "../ErrorPage";
+
 interface FaseGruposWrapperProps {
   faseId: string;
 }
@@ -23,7 +23,7 @@ export const FaseGruposWrapper: FC<FaseGruposWrapperProps> = ({ faseId }) => {
             fontWeight={"bold"}
           >{`Grupo ${grupo.name}`}</Typography>
         </Box>
-        {<TablaPosiciones data={grupo.positions.map(getPositionsMapper)} />}
+        <TablaPosiciones data={grupo.positions} />
       </Box>
     </>
   ));

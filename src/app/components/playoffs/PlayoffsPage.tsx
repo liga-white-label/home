@@ -1,11 +1,7 @@
 import React from "react";
-import { Box } from "@mui/material";
-import { TeamBox, FinalTeamBox } from "./TeamBox";
 import { useOneFasePlayoffQuery } from "@/repositories/CategoriaRepository";
 import LoadingScreen from "../loading/Loading";
-import { MatchStatus } from "@/app/models/Match";
 import ErrorPage from "../ErrorPage";
-import { RoundMatch } from "@/app/models/FaseCampeonato";
 import CuadroPlayoff from "./CuadroPlayoff";
 import PlayoffFixtureNavigator from "./PlayoffFixtureNavigator";
 interface CuadroPlayoffProps {

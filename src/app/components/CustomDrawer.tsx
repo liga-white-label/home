@@ -11,13 +11,14 @@ import {
   ListItemButton,
   ListItemText,
 } from "@mui/material";
-import { useSidebar } from "../context/SideBarContext";
+import { useSidebar } from "@/app/context/SideBarContext";
 import Link from "next/link";
 import {
   useAllCampeonatosQuery,
   useCampeonatoQuery,
 } from "@/repositories/CampeonatoRepository";
-import { Liga } from "../models/Campeonato";
+import { Liga } from "@/app/models/Campeonato";
+import { Categoria } from "@/app/models/Categoria";
 import MiniLoading from "./loading/MiniLoading";
 
 export const CustomDrawer = () => {
@@ -36,6 +37,9 @@ export const CustomDrawer = () => {
   const categorias = ligaActual?.categories || [];
 
   const isLoading = isLoadingAllCampeonatos || isLoadingCampeonatoActual;
+
+  const allCopas =
+    allCampeonatos?.filter((c) => c.type === "cup" && c.enabled) || [];
 
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation">
@@ -84,8 +88,8 @@ export const CustomDrawer = () => {
                   </Divider>
                   <List>
                     {categorias
-                      ?.filter((c) => c.gender === "male")
-                      .map((cat, index) => (
+                      ?.filter((c: Categoria) => c.gender === "male")
+                      .map((cat: Categoria, index: number) => (
                         <ListItem key={index} disablePadding>
                           <Link
                             href={`/campeonatos/${ligaActual.id}/categorias/${cat.id}`}
@@ -118,8 +122,8 @@ export const CustomDrawer = () => {
                   </Divider>
                   <List>
                     {categorias
-                      ?.filter((c) => c.gender === "female")
-                      .map((cat, index) => (
+                      ?.filter((c: Categoria) => c.gender === "female")
+                      .map((cat: Categoria, index: number) => (
                         <ListItem key={index} disablePadding>
                           <Link
                             href={`/campeonatos/${ligaActual.id}/categorias/${cat.id}`}
@@ -178,9 +182,8 @@ export const CustomDrawer = () => {
               <p>Cargando...</p>
             ) : (
               <List>
-                {allCampeonatos
-                  ?.filter((c) => c.type === "cup" && c.enabled)
-                  .map((c, index) => (
+                {allCopas?.length > 0 ? (
+                  allCopas?.map((c, index) => (
                     <ListItem key={index} disablePadding>
                       <Link
                         href={`/campeonatos/${c.id}`}
@@ -195,7 +198,15 @@ export const CustomDrawer = () => {
                         </ListItemButton>
                       </Link>
                     </ListItem>
-                  ))}
+                  ))
+                ) : (
+                  <ListItem disablePadding>
+                    <ListItemText
+                      className="!flex !items-center !justify-center !text-white !text-center"
+                      primary={<p className="!text-xl">No hay copas</p>}
+                    />
+                  </ListItem>
+                )}
               </List>
             )}
           </AccordionDetails>

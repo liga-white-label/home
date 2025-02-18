@@ -7,11 +7,12 @@ import {
 import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import React, { useRef, useState } from "react";
-import { PartidosAgrupados } from "./fixture/PartidosAgrupados";
-import LoadingScreen from "./loading/Loading";
-import InfoMatchModal from "./InfoMatchModal";
-import { convertToSimplifiedMatch, SimplifiedMatch } from "../models/Match";
-import ErrorPage from "./ErrorPage";
+import { PartidosAgrupados } from "../fixture/PartidosAgrupados";
+import LoadingScreen from "../loading/Loading";
+import InfoMatchModal from "../InfoMatchModal";
+import { SimplifiedMatch, convertToSimplifiedMatch } from "@/app/models/Match";
+import ErrorPage from "../ErrorPage";
+
 interface FixtureCopaPageProps {
   faseId: string;
 }

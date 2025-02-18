@@ -123,6 +123,7 @@ export const useCampeonatoQuery = (id: string) =>
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     retry: 1,
+    enabled: id !== "",
   });
 
 export const useAllFasesByCampeonato = (id: string) =>
@@ -143,6 +144,7 @@ export const useOneFaseCampeonatoQuery = (id: string) =>
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     retry: 1,
+    enabled: id !== "",
   });
 
 export const useOnePartidoCopaQuery = (

@@ -6,6 +6,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import "../carousel/embla.css";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
+import { Box } from "@mui/material";
 
 type PropType = {
   slides: { title: string; asset: string; link: string }[];
@@ -28,9 +29,8 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
         <div className="embla__container">
           {slides.map((item, index) => {
             return (
-              <Link
-                href={item.link}
-                className="embla__slide h-svh cursor-pointer transform transition-transform duration-300 hover:scale-105 bg-center"
+              <Box
+                className="embla__slide h-svh cursor-default transform transition-transform duration-300 hover:scale-105 bg-center"
                 key={index}
                 style={{
                   backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${item.asset})`,
@@ -39,7 +39,7 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
                 <div className="embla__slide__text text-white text-center">
                   {item.title}
                 </div>
-              </Link>
+              </Box>
             );
           })}
         </div>

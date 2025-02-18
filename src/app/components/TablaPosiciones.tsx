@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { FC } from "react";
-import { abbreviateTeamName } from "../utils/stringUtils";
+import { abbreviateTeamName } from "@/app/utils/stringUtils";
 import { NextTeamInfo } from "./NextTeamInfo";
 
 interface TablaPosicionesProps {

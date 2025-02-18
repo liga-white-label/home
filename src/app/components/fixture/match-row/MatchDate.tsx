@@ -10,14 +10,14 @@ interface MatchDateProps {
 
 export const MatchDate: FC<MatchDateProps> = ({ date, isLessThanMd }) => {
   if (isLessThanMd) return null;
-
+  console.log(date);
   return (
     <TableCell>
       <Box display="flex" alignItems="center" gap={2} height="100%">
         <CalendarMonth />
         <Typography>
-          {date && moment(date).isValid()
-            ? date?.format("DD/MM/YYYY")
+          {!!date && moment(date).isValid()
+            ? moment(date)?.format("DD/MM/YYYY")
             : "A definir"}
         </Typography>
       </Box>

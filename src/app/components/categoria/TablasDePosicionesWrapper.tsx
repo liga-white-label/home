@@ -1,8 +1,8 @@
 import { FC } from "react";
-import { TablaPosiciones } from "./TablaPosiciones";
+import { TablaPosiciones } from "../TablaPosiciones";
 import { useGetPositionsFaseRegular } from "@/repositories/CategoriaRepository";
-import LoadingScreen from "./loading/Loading";
-import ErrorPage from "./ErrorPage";
+import LoadingScreen from "../loading/Loading";
+import ErrorPage from "../ErrorPage";
 interface TablaDePosicionesWrapperProps {
   faseId: string;
 }

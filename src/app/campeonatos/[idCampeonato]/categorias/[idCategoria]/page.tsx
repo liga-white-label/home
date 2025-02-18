@@ -1,6 +1,6 @@
 "use client";
 
-import { CategoriaPageBase } from "@/app/components/CategoriaPageBase";
+import { CategoriaPageBase } from "@/app/components/categoria/CategoriaPageBase";
 import LoadingScreen from "@/app/components/loading/Loading";
 import { useCampeonatoQuery } from "@/repositories/CampeonatoRepository";
 import { useParams } from "next/navigation";

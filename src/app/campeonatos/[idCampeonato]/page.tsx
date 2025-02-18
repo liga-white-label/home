@@ -1,6 +1,6 @@
 "use client";
 
-import { CopaPageBase } from "@/app/components/CopaPageBase";
+import { CopaPageBase } from "@/app/components/copa/CopaPageBase";
 import LoadingScreen from "@/app/components/loading/Loading";
 import ErrorPage from "@/app/components/ErrorPage";
 import { useCampeonatoQuery } from "@/repositories/CampeonatoRepository";

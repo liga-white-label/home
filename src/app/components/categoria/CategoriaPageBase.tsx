@@ -3,10 +3,11 @@
 import { FC, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { FixturePage } from "./FixturePage";
-import { EstadisticasPage } from "./EstadisticasPage";
 import { TablaDePosicionesWrapper } from "./TablasDePosicionesWrapper";
-import PlayoffsPage from "./playoffs/PlayoffsPage";
+import PlayoffsPage from "../playoffs/PlayoffsPage";
 import { useAllFasesByCategory } from "@/repositories/CategoriaRepository";
+import { EstadisticasPage } from "./EstadisticasPage";
+import CuadrangularDescensoPage from "./CuadrangularDescensoPage";
 
 interface CategoriaPageBaseProps {
   id: string;
@@ -18,6 +19,7 @@ export enum TabsEnum {
   PLAYOFFS = 2,
   GRUPOS = 3,
   ESTADISTICAS = 4,
+  DESCENSO = 5,
 }
 
 export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
@@ -32,6 +34,8 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
 
   const { data: fases } = useAllFasesByCategory(id);
 
+  const hasFases = fases?.phases.length > 0;
+
   const faseRegular =
     fases?.phases.find((f: any) => f.type === "general") || null;
 
@@ -40,6 +44,9 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
 
   const faseGrupos =
     fases?.phases.find((f: any) => f.type === "groups") || null;
+
+  const faseDescenso =
+    fases?.phases.find((f: any) => f.type === "relegated") || null;
 
   useEffect(() => {
     if (tabParam) {
@@ -62,7 +69,12 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
       >
         <div className="flex flex-col justify-between max-w-full">
           <p className="text-white text-4xl px-10">{title}</p>
-          <div className="flex gap-2 px-0 md:px-10 max-w-full overflow-hidden">
+          <div
+            style={{
+              display: hasFases ? "flex" : "none",
+            }}
+            className="flex gap-2 px-0 md:px-10 max-w-full overflow-hidden"
+          >
             <div
               onClick={() => handleChangeTab(TabsEnum.POSICIONES)}
               className={`p-2 md:p-4 rounded-t-lg  cursor-pointer ${
@@ -110,6 +122,18 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
               </div>
             )}
 
+            {!!faseDescenso && (
+              <div
+                onClick={() => handleChangeTab(TabsEnum.DESCENSO)}
+                className={` p-2 md:p-4 rounded-t-lg  cursor-pointer ${
+                  selectedTab === TabsEnum.DESCENSO
+                    ? "font-bold bg-white"
+                    : "bg-slate-300 hover:font-bold hover:bg-slate-400"
+                }`}
+              >
+                <p className="line-clamp-1">Cuadrangular de descenso</p>
+              </div>
+            )}
             <div
               onClick={() => handleChangeTab(TabsEnum.ESTADISTICAS)}
               className={` p-2 md:p-4 rounded-t-lg  cursor-pointer ${
@@ -136,8 +160,18 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
         {selectedTab === TabsEnum.PLAYOFFS && !!fasePlayoff && (
           <PlayoffsPage faseId={fasePlayoff?.id || ""} />
         )}
+        {selectedTab === TabsEnum.DESCENSO && !!faseDescenso && (
+          <CuadrangularDescensoPage faseId={faseDescenso?.id || ""} />
+        )}
         {selectedTab === TabsEnum.ESTADISTICAS && (
           <EstadisticasPage categoryId={id} />
+        )}
+        {!hasFases && (
+          <div className="flex justify-center items-center h-full">
+            <p className="text-xl text-center text-gray-500">
+              Todavía no hay información disponible para esta categoría.
+            </p>
+          </div>
         )}
       </div>
     </main>
