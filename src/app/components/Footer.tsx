@@ -57,7 +57,7 @@ export const Footer = () => {
       </div>
 
       <div className="mt-6 border-t border-gray-200 py-10 text-center">
-        <p>&copy; 2024 Liga CUBB. Todos los derechos reservados.</p>
+        <p>&copy; 2025 Liga CUBB. Todos los derechos reservados.</p>
       </div>
     </footer>
   );
