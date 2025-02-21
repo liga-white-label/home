@@ -3,13 +3,6 @@ import React, { useState } from "react";
 import Iconify from "../iconify";
 import PlayoffRoundsFixture from "./PlayoffRoundsFixture";
 import { RoundCup } from "@/app/models/FaseCampeonato";
-interface PlayoffFixtureNavigatorProps {
-  rounds: RoundCup[];
-  faseId: string;
-}
-
-const FASE_MINIMA = 32;
-const FASE_MAXIMA = 1;
 
 const getFaseLabel = (fase: number) => {
   switch (fase) {
@@ -29,10 +22,19 @@ const getFaseLabel = (fase: number) => {
       return "";
   }
 };
+interface PlayoffFixtureNavigatorProps {
+  rounds: RoundCup[];
+  faseId: string;
+  isLeague?: boolean;
+}
+
+const FASE_MINIMA = 32;
+const FASE_MAXIMA = 1;
 
 const PlayoffFixtureNavigator: React.FC<PlayoffFixtureNavigatorProps> = ({
   rounds,
   faseId,
+  isLeague = false,
 }) => {
   const [selectedPhase, setSelectedPhase] = useState<number>(
     rounds[rounds.length - 1].roundNumber
@@ -86,6 +88,7 @@ const PlayoffFixtureNavigator: React.FC<PlayoffFixtureNavigatorProps> = ({
             cruce={cruce}
             index={index}
             idFase={faseId}
+            isLeague={isLeague}
           />
         ))}
       </Box>

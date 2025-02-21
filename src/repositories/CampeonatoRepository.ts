@@ -183,7 +183,13 @@ export const useOnePartidoCopaPlayoffQuery = (
     enabled: enabled,
   });
 
-export const useOneFasePlayoffCopaQuery = (id: string) =>
+export const useOneFasePlayoffCopaQuery = ({
+  id,
+  enabled = true,
+}: {
+  id: string;
+  enabled?: boolean;
+}) =>
   useQuery({
     queryKey: repo.keys.oneFase(id),
     queryFn: () => repo.getOneFasePlayoff(id),
@@ -191,6 +197,7 @@ export const useOneFasePlayoffCopaQuery = (id: string) =>
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     retry: 1,
+    enabled: enabled,
   });
 
 export const useGoleadoresCopaQuery = (id: string) => {

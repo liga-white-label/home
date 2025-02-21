@@ -10,20 +10,31 @@ import {
 import { RoundCup, RoundMatch } from "@/app/models/FaseCampeonato";
 import { MatchStatus } from "@/app/models/Match";
 import PlayoffArrows from "./PlayoffArrows";
+
 interface CuadroPlayoffProps {
   rondas: RoundCup[];
 }
 
 const CuadroPlayoff: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
-  const { doubleMatch } = rondas[0];
-  const finalMatch = rondas[0]?.matchesPlayoff[0] || {
+  if (!rondas || !Array.isArray(rondas) || rondas.length === 0) {
+    return <div>No hay rondas disponibles</div>;
+  }
+
+  const firstRound = rondas[0];
+  if (!firstRound || !firstRound.matchesPlayoff) {
+    return <div>Formato de ronda inválido</div>;
+  }
+
+  const doubleMatch = firstRound.doubleMatch || false;
+  const finalMatch = firstRound.matchesPlayoff[0] || {
     homeMatch: {},
     awayMatch: {},
-  }; // At least always will have the final
+  };
+
   const roundsWithoutFinal = rondas
     .slice(1)
     .reverse()
-    .map((ronda) => ronda?.matchesPlayoff || []); // Remove the final and reverse
+    .map((ronda) => ronda?.matchesPlayoff || []);
 
   /**
    * Divide the left brach rounds from the rigth branch rounds
@@ -148,10 +159,30 @@ const CuadroPlayoff: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
                 doubleMatch={doubleMatch}
                 nameHome={finalMatch.homeMatch?.homeTeam}
                 nameAway={finalMatch.homeMatch?.awayTeam}
-                resultHome={finalMatch.homeMatch?.homeTeamGoals}
-                resultAway={finalMatch.awayMatch?.awayTeamGoals}
+                resultHomeIda={
+                  finalMatch.homeMatch?.status === MatchStatus.JUGADO
+                    ? finalMatch.homeMatch?.homeTeamGoals
+                    : null
+                }
+                resultHomeVuelta={
+                  finalMatch.awayMatch?.status === MatchStatus.JUGADO
+                    ? finalMatch.awayMatch?.homeTeamGoals
+                    : null
+                }
+                resultAwayIda={
+                  finalMatch.homeMatch?.status === MatchStatus.JUGADO
+                    ? finalMatch.homeMatch?.awayTeamGoals
+                    : null
+                }
+                resultAwayVuelta={
+                  finalMatch.awayMatch?.status === MatchStatus.JUGADO
+                    ? finalMatch.awayMatch?.awayTeamGoals
+                    : null
+                }
                 penaltyResultHome={finalMatch.homeTeamPenalties}
                 penaltyResultAway={finalMatch.awayTeamPenalties}
+                idaMatchStatus={finalMatch.homeMatch?.status}
+                vueltaMatchStatus={finalMatch.awayMatch?.status}
               />
             </Box>
           )}

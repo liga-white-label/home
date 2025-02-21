@@ -4,22 +4,39 @@ import LoadingScreen from "../loading/Loading";
 import ErrorPage from "../ErrorPage";
 import CuadroPlayoff from "./CuadroPlayoff";
 import PlayoffFixtureNavigator from "./PlayoffFixtureNavigator";
+
 interface CuadroPlayoffProps {
   faseId: string;
 }
 
-const CuadroPlayoffV2: React.FC<CuadroPlayoffProps> = ({ faseId }) => {
-  const { data: fase, isLoading, isError } = useOneFasePlayoffQuery(faseId);
+const PlayoffsPage: React.FC<CuadroPlayoffProps> = ({ faseId }) => {
+  const {
+    data: fase,
+    isError,
+    isLoading,
+  } = useOneFasePlayoffQuery({
+    id: faseId,
+    enabled: true,
+  });
+
+  if (
+    !isLoading &&
+    (!fase || !Array.isArray(fase) || fase.length === 0 || isError)
+  )
+    return <ErrorPage />;
 
   if (isLoading) return <LoadingScreen />;
-  if (isError) return <ErrorPage />;
 
   return (
     <>
       <CuadroPlayoff rondas={fase || []} />
-      <PlayoffFixtureNavigator rounds={fase || []} faseId={faseId} />
+      <PlayoffFixtureNavigator
+        rounds={fase || []}
+        faseId={faseId}
+        isLeague={true}
+      />
     </>
   );
 };
 
-export default CuadroPlayoffV2;
+export default PlayoffsPage;

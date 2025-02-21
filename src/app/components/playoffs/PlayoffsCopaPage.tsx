@@ -14,7 +14,7 @@ const PlayoffCopaPage: React.FC<CuadroPlayoffProps> = ({ faseId }) => {
     data: fase,
     isLoading,
     isError,
-  } = useOneFasePlayoffCopaQuery(faseId || "");
+  } = useOneFasePlayoffCopaQuery({ id: faseId || "", enabled: true });
 
   if (isLoading) return <LoadingScreen />;
   if (isError) return <ErrorPage />;
@@ -22,7 +22,11 @@ const PlayoffCopaPage: React.FC<CuadroPlayoffProps> = ({ faseId }) => {
   return (
     <>
       <CuadroPlayoff rondas={fase || []} />
-      <PlayoffFixtureNavigator rounds={fase || []} faseId={faseId} />
+      <PlayoffFixtureNavigator
+        rounds={fase || []}
+        faseId={faseId}
+        isLeague={false}
+      />
     </>
   );
 };

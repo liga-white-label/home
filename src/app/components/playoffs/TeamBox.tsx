@@ -146,49 +146,61 @@ export const InvertedTeamBox: React.FC<TeamBoxProps> = ({
 
 export const FinalTeamBox: React.FC<{
   nameHome?: Team;
-  resultHome?: number | null;
+  resultHomeIda?: number | null;
+  resultHomeVuelta?: number | null;
   penaltyResultHome?: number | null;
   nameAway?: Team;
-  resultAway?: number | null;
+  resultAwayIda?: number | null;
+  resultAwayVuelta?: number | null;
   penaltyResultAway?: number | null;
   doubleMatch?: boolean;
+  idaMatchStatus?: MatchStatus;
+  vueltaMatchStatus?: MatchStatus;
 }> = ({
   nameHome,
-  resultHome,
+  resultHomeIda,
+  resultHomeVuelta,
   penaltyResultHome,
   nameAway,
-  resultAway,
+  resultAwayIda,
+  resultAwayVuelta,
   penaltyResultAway,
   doubleMatch,
+  idaMatchStatus,
+  vueltaMatchStatus,
 }) => (
   <Box className="flex flex-col bg-[#a60000cd] text-white w-48 relative">
     <ResultBox
       team={nameHome}
-      resultIda={resultHome}
-      resultVuelta={resultAway}
+      resultIda={resultHomeIda}
+      resultVuelta={resultHomeVuelta}
       resultPenales={penaltyResultHome}
       showVuelta={doubleMatch}
       showPenales={isDrawInMatches(
-        resultHome,
-        resultAway,
-        resultAway,
-        resultHome,
-        doubleMatch
+        resultHomeIda,
+        resultAwayIda,
+        resultHomeVuelta,
+        resultAwayVuelta,
+        doubleMatch,
+        idaMatchStatus,
+        vueltaMatchStatus
       )}
     />
     <Divider className="bg-white" />
     <ResultBox
       team={nameAway}
-      resultIda={resultAway}
-      resultVuelta={resultHome}
+      resultIda={resultAwayIda}
+      resultVuelta={resultAwayVuelta}
       resultPenales={penaltyResultAway}
       showVuelta={doubleMatch}
       showPenales={isDrawInMatches(
-        resultAway,
-        resultHome,
-        resultHome,
-        resultAway,
-        doubleMatch
+        resultAwayIda,
+        resultHomeIda,
+        resultAwayVuelta,
+        resultHomeVuelta,
+        doubleMatch,
+        idaMatchStatus,
+        vueltaMatchStatus
       )}
     />
   </Box>

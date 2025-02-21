@@ -7,6 +7,7 @@ import { Team } from "@/app/models/Equipo";
 import {
   playoffFaseMapper,
   getPositionsMapper,
+  RoundCup,
 } from "@/app/models/FaseCampeonato";
 
 export const getCategoriaMapper = (x: any): Categoria => ({
@@ -86,7 +87,7 @@ export class CategoriaRepository {
   };
 
   getOneFasePlayoff = async (faseId: string) => {
-    const { data } = await httpClient.get<any>(
+    const { data } = await httpClient.get<RoundCup[]>(
       `tournament/league/categories/phase-playoff/get-rounds?phaseId=${faseId}`
     );
     return data.map(playoffFaseMapper);
@@ -159,10 +160,17 @@ export const useOnePartidoQuery = (
     enabled: enabled,
   });
 
-export const useOneFasePlayoffQuery = (id: string) =>
-  useSuspenseQuery({
+export const useOneFasePlayoffQuery = ({
+  id,
+  enabled = true,
+}: {
+  id: string;
+  enabled?: boolean;
+}) =>
+  useQuery({
     queryKey: repo.keys.oneFase(id),
     queryFn: () => repo.getOneFasePlayoff(id),
+    enabled: enabled,
   });
 
 export const useGetPositionsFaseRegular = (faseId: string) =>

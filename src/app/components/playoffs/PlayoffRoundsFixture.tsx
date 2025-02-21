@@ -13,21 +13,34 @@ import {
   MatchStatus,
   convertToSimplifiedMatch,
 } from "@/app/models/Match";
+import { useOneFasePlayoffQuery } from "@/repositories/CategoriaRepository";
 
 interface PlayoffRoundsFixtureProps {
   cruce: RoundMatch;
   index: number;
   idFase: string;
+  isLeague: boolean;
 }
 
 const PlayoffRoundsFixture: React.FC<PlayoffRoundsFixtureProps> = ({
   cruce,
   index,
   idFase,
+  isLeague,
 }) => {
   const currentMatchSelected = useRef<any | undefined>();
 
-  const { data: fase } = useOneFasePlayoffCopaQuery(idFase || "");
+  const { data: faseCopa } = useOneFasePlayoffCopaQuery({
+    id: idFase || "",
+    enabled: !isLeague,
+  });
+
+  const { data: faseLeague } = useOneFasePlayoffQuery({
+    id: idFase || "",
+    enabled: isLeague,
+  });
+
+  const fase = isLeague ? faseLeague : faseCopa;
   const { data: match, isLoading: matchLoading } =
     useOnePartidoCopaPlayoffQuery(
       currentMatchSelected.current?.homeTeam,
