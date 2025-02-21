@@ -67,13 +67,15 @@ export const TablaPosiciones: FC<TablaPosicionesProps> = ({
               key={index}
               className={`max-w-full 
                 border-b
+                w-full
+                flex-1
                 ${calculateBorderBottomColor(team.pos)}
                `}
             >
               <td className={`px-2 md:px-4 py-2 font-bold text-center`}>
                 {team.pos}
               </td>
-              <td className="px-2 md:px-4 items-center gap-4 md:flex hidden">
+              <td className="px-2 md:px-4 items-center gap-4 md:flex hidden w-[30svw]">
                 <Image
                   src={team.escudo}
                   alt={team.equipo}
