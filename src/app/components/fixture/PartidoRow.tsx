@@ -1,7 +1,15 @@
+"use client";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import { Box, TableCell, TableRow, Typography } from "@mui/material";
+import {
+  Box,
+  TableCell,
+  TableRow,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import { MatchDate } from "./match-row/MatchDate";
 import { TeamInfo } from "./match-row/TeamInfo";
 import { MatchScore } from "./match-row/MatchScore";
@@ -21,18 +29,8 @@ export const PartidoRow: FC<PartidoRowProps> = ({
   isLoadingMatch,
   index,
 }) => {
-  const [isLessThanMd, setIsLessThanMd] = useState(window.innerWidth < 960);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsLessThanMd(window.innerWidth < 960);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+  const theme = useTheme();
+  const isLessThanMd = useMediaQuery(theme.breakpoints.down("md"));
 
   return (
     <TableRow
