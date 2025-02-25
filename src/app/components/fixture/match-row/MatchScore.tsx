@@ -35,8 +35,8 @@ export const MatchScore: FC<MatchScoreProps> = ({
       >
         {status === MatchStatus.JUGADO
           ? `${homeTeamGoals ?? 0} - ${awayTeamGoals ?? 0}`
-          : date && moment(date).isValid()
-          ? date?.format("HH:mm")
+          : !!date && moment(date).isValid()
+          ? moment(date).format("HH:mm")
           : "A definir"}
       </Typography>
     </Box>

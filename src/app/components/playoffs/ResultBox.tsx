@@ -97,21 +97,26 @@ export const InvertedResultBox: React.FC<ResultBoxProps> = ({
     >
       {team?.name}
     </Typography>
-    <Typography variant="body2" className="absolute left-2">
-      {resultIda ?? "-"}
-    </Typography>
-    {showVuelta && (
+    <Box className="flex items-center">
       <Typography variant="body2" className="absolute left-8">
-        {resultVuelta ?? "-"}
+        {resultIda ?? "-"}
       </Typography>
-    )}
-    {showPenales && (
-      <>
-        <Divider orientation="vertical" flexItem className="bg-white mx-1" />
-        <Typography variant="body2" className="absolute left-2">
-          {`(${resultPenales ?? "-"})`}
-        </Typography>
-      </>
-    )}
+      {showVuelta && (
+        <>
+          <Divider orientation="vertical" flexItem className="bg-white mx-1" />
+          <Typography variant="body2" className="absolute left-2">
+            {resultVuelta ?? "-"}
+          </Typography>
+        </>
+      )}
+      {showPenales && (
+        <>
+          <Divider orientation="vertical" flexItem className="bg-white mx-1" />
+          <Typography variant="body2" className="absolute left-2">
+            {`(${resultPenales ?? "-"})`}
+          </Typography>
+        </>
+      )}
+    </Box>
   </Box>
 );
