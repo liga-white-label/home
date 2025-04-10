@@ -6,9 +6,9 @@ export const Footer = () => {
       <div className="container mx-auto flex flex-wrap justify-between p-10">
         <div className="w-full md:w-1/3 mb-6 md:mb-0">
           <h3 className="text-lg font-semibold">Contacto</h3>
-          <p>Dirección: Calle Ficticia 123, Ciudad, País</p>
-          <p>Teléfono: +123 456 789</p>
-          <p>Email: info@ejemplo.com</p>
+          <p>Dirección: Avenida Alem 1101 8000 Bahía Blanca, Argentina</p>
+          <p>Teléfono: +54 9 291 516-0723</p>
+          <p>Email: cubbgestion@gmail.com</p>
         </div>
 
         <div className="w-full md:w-1/3 mb-6 md:mb-0">
@@ -29,29 +29,49 @@ export const Footer = () => {
                 Servicios
               </a>
             </li>
-            <li>
+            {/* <li>
               <a href="#" className="hover:underline">
                 Contacto
               </a>
-            </li>
+            </li> */}
           </ul>
         </div>
 
         <div className="w-full md:w-1/3">
           <h3 className="text-lg font-semibold">Seguinos!</h3>
           <div className="flex space-x-4">
-            <a href="#" className="hover:underline">
+            <a
+              href="https://www.facebook.com/cubboficial"
+              className="hover:underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <Facebook className="h-10 w-10" />
             </a>
-            <a href="#" className="hover:underline">
+            {/* <a
+              href="#"
+              className="hover:underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <Twitter className="h-10 w-10" />
-            </a>
-            <a href="#" className="hover:underline">
+            </a> */}
+            <a
+              href="https://www.instagram.com/ligacubb"
+              className="hover:underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <Instagram className="h-10 w-10" />
             </a>
-            <a href="#" className="hover:underline">
+            {/* <a
+              href="#"
+              className="hover:underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <LinkedIn className="h-10 w-10" />
-            </a>
+            </a> */}
           </div>
         </div>
       </div>

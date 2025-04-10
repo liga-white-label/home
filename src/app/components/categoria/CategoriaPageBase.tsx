@@ -73,7 +73,7 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
             style={{
               display: hasFases ? "flex" : "none",
             }}
-            className="flex gap-2 px-0 md:px-10 max-w-full overflow-hidden"
+            className="flex gap-2 px-0 md:px-10 max-w-full overflow-x-auto"
           >
             <div
               onClick={() => handleChangeTab(TabsEnum.POSICIONES)}
@@ -147,7 +147,7 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
           </div>
         </div>
       </div>
-      <div className="h-full w-full min-h-lvh overflow-hidden overflow-x-hidden p-4 md:p-10">
+      <div className="h-full w-full min-h-lvh overflow-hidden overflow-x- p-4 md:p-10">
         {selectedTab === TabsEnum.POSICIONES && (
           <TablaDePosicionesWrapper faseId={faseRegular?.id || ""} />
         )}
