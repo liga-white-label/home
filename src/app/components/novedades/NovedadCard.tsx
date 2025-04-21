@@ -40,10 +40,6 @@ const NovedadCard: React.FC<NovedadCardProps> = ({ novedad }) => {
         />
       </Box>
       <Box className="flex flex-col gap-2 justify-between h-full w-full py-0 flex-1">
-        <Typography variant="body2" color="text.secondary">
-          {novedad.fecha.format("LL")}
-        </Typography>
-
         <Typography variant="h5">{novedad.titulo}</Typography>
         <Typography variant="body1" color="text.secondary">
           {novedad.descripcion}

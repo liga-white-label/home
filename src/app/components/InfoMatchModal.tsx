@@ -101,7 +101,14 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
       }}
     >
       <DialogTitle className="flex justify-between items-center text-white bg-[#A60000]">
-        <p className="text-2xl">Detalles del Partido</p>
+        <p className="text-2xl">
+          Detalles del Partido{" "}
+          <span className="text-sm">
+            {match.status === MatchStatus.JUGADO
+              ? "(Resultado sujeto a modificaciones)"
+              : ""}
+          </span>
+        </p>
         <Close onClick={handleCloseModal} className="cursor-pointer" />
       </DialogTitle>
       <DialogTitle className="flex items-center justify-center gap-10 bg-slate-200">

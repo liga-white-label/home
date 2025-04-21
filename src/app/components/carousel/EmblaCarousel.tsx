@@ -30,10 +30,16 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
           {slides.map((item, index) => {
             return (
               <Box
-                className="embla__slide h-svh cursor-default transform transition-transform duration-300 hover:scale-105 bg-center"
+                className="embla__slide h-svh transform transition-transform duration-300 hover:scale-105 bg-center"
                 key={index}
                 style={{
                   backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${item.asset})`,
+                  cursor: item.link !== "/" ? "pointer" : "default",
+                }}
+                onClick={() => {
+                  if (item.link !== "/") {
+                    window.location.href = item.link;
+                  }
                 }}
               >
                 <div className="embla__slide__text text-white text-center">

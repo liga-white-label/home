@@ -9,8 +9,8 @@ export default function LoadingScreen() {
         <div className={styles.spinner}></div>
         <div className={styles.imageContainer}>
           <Image
-            src={"/assets/liga_cubb_logo_v2.png"}
-            alt={"LIGA CUBB 2024"}
+            src={"/assets/logo_2025.png"}
+            alt={"LIGA CUBB 2025"}
             width={100}
             height={100}
           />

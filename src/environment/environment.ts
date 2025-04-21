@@ -1,6 +1,6 @@
 let baseUrl = "https://api.ligacubb.com.ar/";
 
-if (process.env.NODE_ENV === "development") {
+if (false) {
   baseUrl = "http://localhost:8080";
 }
 

@@ -14,8 +14,8 @@ export const NavBar = () => {
     >
       <Link href="/" className="md:absolute md:left-10">
         <Image
-          src={"/assets/liga_cubb_logo_v2.png"}
-          alt={"LIGA CUBB 2024"}
+          src={"/assets/logo_2025.png"}
+          alt={"LIGA CUBB 2025"}
           width={200}
           height={100}
         />
