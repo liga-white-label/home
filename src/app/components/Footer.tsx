@@ -21,8 +21,8 @@ export const Footer = () => {
 
             <div className="flex items-center hover:text-red-200 transition-colors duration-300">
               <Email className="mr-2 h-6 w-6" />
-              <a href="mailto:cubbgestion@gmail.com" className="text-lg">
-                cubbgestion@gmail.com
+              <a href="mailto:ligacubb@gmail.com" className="text-lg">
+                ligacubb@gmail.com
               </a>
             </div>
           </div>
