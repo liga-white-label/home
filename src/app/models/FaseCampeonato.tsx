@@ -92,7 +92,16 @@ export const GoleadoresMapper = (g: any, index: number) => ({
   goles: g.goals,
 });
 
-export const AmarillasMapper = (a: any, index: number) => ({
+export const AmarillasMapper = (
+  a: any,
+  index: number
+): {
+  pos: number;
+  jugador: string;
+  equipo: string;
+  escudo: string;
+  tarjetas: number;
+} => ({
   pos: index + 1,
   jugador: a.playerName + " " + a.playerLastName,
   equipo: a.teamName,

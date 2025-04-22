@@ -60,7 +60,7 @@ export const EstadisticasPage: React.FC<EstadisticasPageProps> = ({
         data={
           selectedOption === "0"
             ? goleadores.map(GoleadoresMapper)
-            : amarillas.map(AmarillasMapper)
+            : amarillas.map(AmarillasMapper).filter((a: any) => a.tarjetas > 0)
         }
         tipo={selectedOption === "0" ? "goleadores" : "amarillas"}
       />

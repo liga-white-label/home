@@ -22,7 +22,7 @@ const NovedadesContent = () => {
           </Typography>
         </Box>
 
-        <Box className="flex flex-col gap-4 w-full items-center justify-center px-10">
+        <Box className="flex flex-col gap-4 w-full items-center justify-center px-10 pb-10">
           {novedades && novedades?.length > 0 ? (
             novedades?.map((novedad) => (
               <NovedadCard key={novedad.id} novedad={novedad} />
