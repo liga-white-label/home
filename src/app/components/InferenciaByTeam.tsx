@@ -4,8 +4,7 @@ import { FC } from "react";
 
 export interface Incidencia {
   type: "amarilla" | "expulsion" | "gol";
-  player_name: string;
-  player_last_name: string;
+  playerFullName: string;
   team: "home" | "away";
 }
 
@@ -31,10 +30,8 @@ export const IncidenciaByTeam: FC<IncidenciaByTeamProps> = ({ incidencia }) => {
           }}
         />
       )}
-      <p className="sm:hidden flex text-lg">{incidencia.player_last_name}</p>
-      <p className="sm:flex hidden text-lg">
-        {incidencia.player_name + " " + incidencia.player_last_name}
-      </p>
+      <p className="sm:hidden flex text-lg">{incidencia.playerFullName}</p>
+      <p className="sm:flex hidden text-lg">{incidencia.playerFullName}</p>
     </div>
   );
 };

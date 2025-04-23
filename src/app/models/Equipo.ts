@@ -5,7 +5,7 @@ export interface Team {
   id: string;
   name: string;
   gender: GeneroEnum;
-  logo: string;
+  logoUrl: string;
   categoryName: string | null;
   leagueName: string | null;
   players: Jugador[];

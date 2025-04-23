@@ -2,9 +2,8 @@ import { GeneroEnum } from "../utils/enums/GeneroEnum";
 
 export interface Jugador {
   id: string;
-  gender: GeneroEnum;
-  name: string;
-  lastName: string;
+  dni: string;
+  fullName: string;
   membershipNumber: string;
 }
 

@@ -1,4 +1,4 @@
-let baseUrl = "https://api.ligacubb.com.ar/";
+let baseUrl = "https://d84c-190-109-48-252.ngrok-free.app/";
 
 if (false) {
   baseUrl = "http://localhost:8080";

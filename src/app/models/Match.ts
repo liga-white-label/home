@@ -9,8 +9,8 @@ export interface Match {
   linemenTeam: Team | null;
   scorer: Team | null;
   comments: string | null;
-  homeTeam: Team;
-  awayTeam: Team;
+  homeTeam: Team | null;
+  awayTeam: Team | null;
   homeTeamGoals: number | null;
   awayTeamGoals: number | null;
   homeTeamPlayerGoals: Jugador[];
@@ -91,8 +91,8 @@ export const convertToSimplifiedMatch = (match: Match): SimplifiedMatch => ({
   awayTeamId: match?.awayTeam?.id || "",
   homeTeamName: match?.homeTeam?.name || "",
   awayTeamName: match?.awayTeam?.name || "",
-  homeTeamLogo: match?.homeTeam?.logo || "",
-  awayTeamLogo: match?.awayTeam?.logo || "",
+  homeTeamLogo: match?.homeTeam?.logoUrl || "",
+  awayTeamLogo: match?.awayTeam?.logoUrl || "",
   status: match?.status || MatchStatus.PENDIENTE,
   homeTeamGoals: match?.homeTeamGoals || 0,
   awayTeamGoals: match?.awayTeamGoals || 0,

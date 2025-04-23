@@ -1,15 +1,6 @@
 import { Jugador } from "@/app/models/Jugador";
-import { GeneroEnum } from "@/app/utils/enums/GeneroEnum";
 import { httpClient } from "@/app/utils/httpClient";
-import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
-
-export const getJugadorMapper = (x: any): Jugador => ({
-  id: x.id,
-  name: x.name,
-  lastName: x.lastName,
-  membershipNumber: x.membershipNumber,
-  gender: x.gender || GeneroEnum.MASCULINO,
-});
+import { useQuery } from "@tanstack/react-query";
 
 export class JugadoresRepository {
   keys = {
@@ -19,13 +10,13 @@ export class JugadoresRepository {
   };
 
   getAll = async () => {
-    const { data } = await httpClient.get<any[]>("players/get-all-players");
-    return data.map(getJugadorMapper);
+    const { data } = await httpClient.get<Jugador[]>("players/get-all-players");
+    return data;
   };
 
   get = async (id: string) => {
-    const { data } = await httpClient.get(`players/${id}`);
-    return getJugadorMapper(data);
+    const { data } = await httpClient.get<Jugador>(`players/${id}`);
+    return data;
   };
 }
 

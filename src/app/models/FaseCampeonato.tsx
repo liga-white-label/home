@@ -86,7 +86,7 @@ export const getPositionsMapper = (data: any): TablePosition => ({
 
 export const GoleadoresMapper = (g: any, index: number) => ({
   pos: index + 1,
-  jugador: g.playerName + " " + g.playerLastName,
+  jugador: g.playerFullName,
   equipo: g.teamName,
   escudo: g.teamLogo,
   goles: g.goals,
@@ -103,7 +103,7 @@ export const AmarillasMapper = (
   tarjetas: number;
 } => ({
   pos: index + 1,
-  jugador: a.playerName + " " + a.playerLastName,
+  jugador: a.playerFullName,
   equipo: a.teamName,
   escudo: a.teamLogo,
   tarjetas: a.yellowCards,

@@ -36,8 +36,7 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
   const golesLocal: Incidencia[] = match.homeTeamPlayerGoals.map(
     (goleador) => ({
       type: "gol",
-      player_name: goleador.name,
-      player_last_name: goleador.lastName,
+      playerFullName: goleador.fullName,
       team: "home",
     })
   );
@@ -45,8 +44,7 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
   const golesVisitante: Incidencia[] = match.awayTeamPlayerGoals.map(
     (goleador) => ({
       type: "gol",
-      player_name: goleador.name,
-      player_last_name: goleador.lastName,
+      playerFullName: goleador.fullName,
       team: "away",
     })
   );
@@ -54,8 +52,7 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
   const amarillasLocal: Incidencia[] = match.homeTeamYellowCards.map(
     (amarilla) => ({
       type: "amarilla",
-      player_name: amarilla.name,
-      player_last_name: amarilla.lastName,
+      playerFullName: amarilla.fullName,
       team: "home",
     })
   );
@@ -63,23 +60,20 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
   const amarillasVisitante: Incidencia[] = match.awayTeamYellowCards.map(
     (amarilla) => ({
       type: "amarilla",
-      player_name: amarilla.name,
-      player_last_name: amarilla.lastName,
+      playerFullName: amarilla.fullName,
       team: "away",
     })
   );
 
   const rojasLocal: Incidencia[] = match.homeTeamRedCards.map((roja) => ({
     type: "expulsion",
-    player_name: roja.name,
-    player_last_name: roja.lastName,
+    playerFullName: roja.fullName,
     team: "home",
   }));
 
   const rojasVisitante: Incidencia[] = match.awayTeamRedCards.map((roja) => ({
     type: "expulsion",
-    player_name: roja.name,
-    player_last_name: roja.lastName,
+    playerFullName: roja.fullName,
     team: "away",
   }));
 
@@ -137,16 +131,16 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
             sx={{ width: "40%" }}
           >
             <p className="max-[600px]:hidden flex line-clamp-2 text-center text-ellipsis font-extrabold">
-              {match.homeTeam.name}
+              {match.homeTeam?.name || ""}
             </p>
             <p className="max-[600px]:flex hidden font-extrabold">
-              {abbreviateTeamName(match.homeTeam.name || "")}
+              {abbreviateTeamName(match.homeTeam?.name || "")}
             </p>
             <Image
-              src={match.homeTeam.logo}
+              src={match.homeTeam?.logoUrl || ""}
               height={50}
               width={50}
-              alt={match.homeTeam.name}
+              alt={match.homeTeam?.name || ""}
             />
           </Box>
 
@@ -167,16 +161,16 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
             sx={{ width: "40%" }}
           >
             <Image
-              src={match.awayTeam.logo}
+              src={match.awayTeam?.logoUrl || ""}
               height={50}
               width={50}
-              alt={match.awayTeam.name}
+              alt={match.awayTeam?.name || ""}
             />
             <p className="max-[600px]:hidden flex line-clamp-2 text-center text-ellipsis font-extrabold">
-              {match.awayTeam.name}
+              {match.awayTeam?.name || ""}
             </p>
             <p className="max-[600px]:flex hidden font-extrabold">
-              {abbreviateTeamName(match.awayTeam.name || "")}
+              {abbreviateTeamName(match.awayTeam?.name || "")}
             </p>
           </Box>
         </Box>
@@ -224,7 +218,7 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
             {match.scorer ? (
               <Box className="flex gap-2 items-center justify-between">
                 <Image
-                  src={match.scorer.logo}
+                  src={match.scorer.logoUrl}
                   height={40}
                   width={40}
                   alt={match.scorer.name || ""}
@@ -243,7 +237,7 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
             {match.linemenTeam ? (
               <Box className="flex gap-2 items-center justify-between">
                 <Image
-                  src={match.linemenTeam.logo}
+                  src={match.linemenTeam.logoUrl}
                   height={40}
                   width={40}
                   alt={match.linemenTeam.name}
