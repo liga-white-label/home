@@ -14,6 +14,7 @@ import Image from "next/image";
 import { Match, MatchStatus } from "../models/Match";
 import moment from "moment";
 import "moment/locale/es";
+import { getGeneroLabel } from "../models/Jugador";
 
 interface InfoMatchModalProps {
   openMatchModal: boolean;
@@ -223,9 +224,17 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
                   width={40}
                   alt={match.scorer.name || ""}
                 />
-                <p className="sm:flex hidden">{match.scorer.name || ""}</p>
+                <p className="sm:flex hidden">
+                  {match.scorer.name +
+                    " (" +
+                    getGeneroLabel(match.scorer.gender) +
+                    ")"}
+                </p>
                 <p className="sm:hidden flex">
-                  {abbreviateTeamName(match.scorer.name || "")}
+                  {abbreviateTeamName(match.scorer.name || "") +
+                    " (" +
+                    getGeneroLabel(match.scorer.gender) +
+                    ")"}
                 </p>
               </Box>
             ) : (
@@ -242,9 +251,17 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
                   width={40}
                   alt={match.linemenTeam.name}
                 />
-                <p className="sm:flex hidden">{match.linemenTeam.name || ""}</p>
+                <p className="sm:flex hidden">
+                  {match.linemenTeam.name +
+                    " (" +
+                    getGeneroLabel(match.linemenTeam.gender) +
+                    ")"}
+                </p>
                 <p className="sm:hidden flex">
-                  {abbreviateTeamName(match.linemenTeam.name || "")}
+                  {abbreviateTeamName(match.linemenTeam.name || "") +
+                    " (" +
+                    getGeneroLabel(match.linemenTeam.gender) +
+                    ")"}
                 </p>
               </Box>
             ) : (
