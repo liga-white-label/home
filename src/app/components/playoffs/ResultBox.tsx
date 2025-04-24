@@ -24,7 +24,7 @@ export const ResultBox: React.FC<ResultBoxProps> = ({
   return (
     <Box className="flex gap-2 items-center">
       <Image
-        src={!!team ? team?.logo : LOGO_DEFAULT_TEAM}
+        src={!!team ? team?.logoUrl : LOGO_DEFAULT_TEAM}
         style={{ height: logo_size, width: logo_size }}
         className={
           !!team ? "bg-gray-200 object-contain" : "bg-black object-contain"
@@ -82,7 +82,7 @@ export const InvertedResultBox: React.FC<ResultBoxProps> = ({
 }) => (
   <Box className="flex flex-row-reverse gap-2 items-center">
     <Image
-      src={!!team ? team?.logo : LOGO_DEFAULT_TEAM}
+      src={!!team ? team?.logoUrl : LOGO_DEFAULT_TEAM}
       style={{ height: logo_size, width: logo_size }}
       className={
         !!team ? "bg-gray-200 object-contain" : "bg-black object-contain"
