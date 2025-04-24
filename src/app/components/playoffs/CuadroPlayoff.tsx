@@ -113,8 +113,8 @@ const CuadroPlayoff: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
               >
                 <TeamBox
                   doubleMatch={doubleMatch}
-                  homeTeam={match.homeMatch?.homeTeam}
-                  awayTeam={match.homeMatch?.awayTeam}
+                  homeTeam={match.homeMatch?.homeTeam || undefined}
+                  awayTeam={match.homeMatch?.awayTeam || undefined}
                   resultHomeIda={
                     match.homeMatch?.status === MatchStatus.JUGADO
                       ? match.homeMatch?.homeTeamGoals
@@ -153,8 +153,8 @@ const CuadroPlayoff: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
             >
               <FinalTeamBox
                 doubleMatch={doubleMatch}
-                nameHome={finalMatch.homeMatch?.homeTeam}
-                nameAway={finalMatch.homeMatch?.awayTeam}
+                nameHome={finalMatch.homeMatch?.homeTeam || undefined}
+                nameAway={finalMatch.homeMatch?.awayTeam || undefined}
                 resultHomeIda={
                   finalMatch.homeMatch?.status === MatchStatus.JUGADO
                     ? finalMatch.homeMatch?.homeTeamGoals
@@ -198,8 +198,8 @@ const CuadroPlayoff: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
               >
                 <InvertedTeamBox
                   doubleMatch={doubleMatch}
-                  homeTeam={match.homeMatch?.homeTeam}
-                  awayTeam={match.homeMatch?.awayTeam}
+                  homeTeam={match.homeMatch?.homeTeam || undefined}
+                  awayTeam={match.homeMatch?.awayTeam || undefined}
                   resultHomeIda={
                     match.homeMatch?.status === MatchStatus.JUGADO
                       ? match.homeMatch?.homeTeamGoals
