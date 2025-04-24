@@ -8,7 +8,8 @@ import PlayoffsPage from "../playoffs/PlayoffsPage";
 import { useAllFasesByCategory } from "@/repositories/CategoriaRepository";
 import { EstadisticasPage } from "./EstadisticasPage";
 import CuadrangularDescensoPage from "./CuadrangularDescensoPage";
-
+import { FaseGruposWrapper } from "../copa/FaseGruposWrapper";
+import FixtureCopaPage from "../copa/FixtureCopaPage";
 interface CategoriaPageBaseProps {
   id: string;
   title: string;
@@ -16,10 +17,11 @@ interface CategoriaPageBaseProps {
 export enum TabsEnum {
   POSICIONES = 0,
   FIXTURE = 1,
-  PLAYOFFS = 2,
-  GRUPOS = 3,
-  ESTADISTICAS = 4,
-  DESCENSO = 5,
+  FIXTURE_ZONAS = 2,
+  PLAYOFFS = 3,
+  GRUPOS = 4,
+  ESTADISTICAS = 5,
+  DESCENSO = 6,
 }
 
 export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
@@ -29,8 +31,6 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
   const searchParams = useSearchParams();
   const router = useRouter();
   const tabParam = searchParams.get("tab");
-  const initialTab = tabParam ? parseInt(tabParam, 10) : TabsEnum.POSICIONES;
-  const [selectedTab, setSelectedTab] = useState<TabsEnum>(initialTab);
 
   const { data: fases } = useAllFasesByCategory(id);
 
@@ -42,11 +42,17 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
   const fasePlayoff =
     fases?.phases.find((f: any) => f.type === "playoff") || null;
 
-  const faseGrupos =
-    fases?.phases.find((f: any) => f.type === "groups") || null;
+  const faseGrupos = fases?.phases.find((f: any) => f.type === "group") || null;
 
   const faseDescenso =
     fases?.phases.find((f: any) => f.type === "relegated") || null;
+
+  const initialTab = tabParam
+    ? parseInt(tabParam, 10)
+    : faseGrupos
+    ? TabsEnum.GRUPOS
+    : TabsEnum.POSICIONES;
+  const [selectedTab, setSelectedTab] = useState<TabsEnum>(initialTab);
 
   useEffect(() => {
     if (tabParam) {
@@ -75,16 +81,18 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
             }}
             className="flex gap-2 px-0 md:px-10 max-w-full overflow-x-auto"
           >
-            <div
-              onClick={() => handleChangeTab(TabsEnum.POSICIONES)}
-              className={`p-2 md:p-4 rounded-t-lg  cursor-pointer ${
-                selectedTab === TabsEnum.POSICIONES
-                  ? "font-bold bg-white"
-                  : "bg-slate-300 hover:font-bold hover:bg-slate-400"
-              }`}
-            >
-              <p className="line-clamp-1">Posiciones</p>
-            </div>
+            {!!faseRegular && (
+              <div
+                onClick={() => handleChangeTab(TabsEnum.POSICIONES)}
+                className={`p-2 md:p-4 rounded-t-lg  cursor-pointer ${
+                  selectedTab === TabsEnum.POSICIONES
+                    ? "font-bold bg-white"
+                    : "bg-slate-300 hover:font-bold hover:bg-slate-400"
+                }`}
+              >
+                <p className="line-clamp-1">Posiciones</p>
+              </div>
+            )}
             {!!faseGrupos && (
               <div
                 onClick={() => handleChangeTab(TabsEnum.GRUPOS)}
@@ -94,7 +102,19 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
                     : "bg-slate-300 hover:font-bold hover:bg-slate-400"
                 }`}
               >
-                Fase de grupos
+                Fase de zonas
+              </div>
+            )}
+            {!!faseGrupos && (
+              <div
+                onClick={() => handleChangeTab(TabsEnum.FIXTURE_ZONAS)}
+                className={` p-2 md:p-4 rounded-t-lg  cursor-pointer ${
+                  selectedTab === TabsEnum.FIXTURE_ZONAS
+                    ? "font-bold bg-white"
+                    : "bg-slate-300 hover:font-bold hover:bg-slate-400"
+                }`}
+              >
+                <p className="line-clamp-1">Fixture zonas</p>
               </div>
             )}
             {!!faseRegular && (
@@ -155,7 +175,10 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
           <FixturePage faseId={faseRegular?.id || ""} />
         )}
         {selectedTab === TabsEnum.GRUPOS && !!faseGrupos && (
-          <FixturePage faseId={faseRegular?.id || ""} />
+          <FaseGruposWrapper faseId={faseGrupos?.id || ""} fromCategoria />
+        )}
+        {selectedTab === TabsEnum.FIXTURE_ZONAS && !!faseGrupos && (
+          <FixtureCopaPage faseId={faseGrupos?.id || ""} fromCategoria />
         )}
         {selectedTab === TabsEnum.PLAYOFFS && !!fasePlayoff && (
           <PlayoffsPage faseId={fasePlayoff?.id || ""} />

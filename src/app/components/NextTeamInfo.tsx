@@ -6,6 +6,8 @@ interface NextTeamInfoProps {
   data: {
     escudo: string;
     nextTeam: string | null;
+    nombreEquipo: string;
+    nombreEquipoRival: string;
   };
 }
 export const NextTeamInfo: FC<NextTeamInfoProps> = ({ data }) => {
@@ -27,16 +29,18 @@ export const NextTeamInfo: FC<NextTeamInfoProps> = ({ data }) => {
 
   return (
     <>
-      <Image
-        aria-owns={open ? "mouse-over-popover" : undefined}
-        aria-haspopup="true"
-        onMouseEnter={handlePopoverOpen}
-        onMouseLeave={handlePopoverClose}
-        src={data.nextTeam}
-        alt={data.nextTeam}
-        height={20}
-        width={30}
-      />
+      <div className="flex flex-col items-center">
+        <Image
+          aria-owns={open ? "mouse-over-popover" : undefined}
+          aria-haspopup="true"
+          onMouseEnter={handlePopoverOpen}
+          onMouseLeave={handlePopoverClose}
+          src={data.nextTeam}
+          alt={data.nextTeam}
+          height={20}
+          width={30}
+        />
+      </div>
       <Popover
         id="mouse-over-popover"
         sx={{
@@ -57,15 +61,26 @@ export const NextTeamInfo: FC<NextTeamInfoProps> = ({ data }) => {
       >
         <div className="flex flex-col items-center justify-center p-2 bg-gray-100">
           <p>Proximo partido</p>
-          <div className="flex  gap-5 items-center justify-center p-6">
-            <Image src={data.escudo} alt={data.escudo} height={30} width={50} />
+          <div className="flex gap-5 items-center justify-center p-6">
+            <div className="flex flex-col items-center">
+              <Image
+                src={data.escudo}
+                alt={data.escudo}
+                height={30}
+                width={50}
+              />
+              <span className="text-xs mt-1">{data.nombreEquipo}</span>
+            </div>
             <p>VS</p>
-            <Image
-              src={data.nextTeam}
-              alt={data.nextTeam}
-              height={30}
-              width={50}
-            />
+            <div className="flex flex-col items-center">
+              <Image
+                src={data.nextTeam}
+                alt={data.nextTeam}
+                height={30}
+                width={50}
+              />
+              <span className="text-xs mt-1">{data.nombreEquipoRival}</span>
+            </div>
           </div>
         </div>
       </Popover>

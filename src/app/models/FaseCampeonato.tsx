@@ -80,7 +80,7 @@ export const getPositionsMapper = (data: any): TablePosition => ({
   gc: data.goalsAgainst,
   dg: data.goalsFor - data.goalsAgainst,
   nextMatch: !!data.nextOpponent
-    ? { name: data.nextOpponent.name, logo: data.nextOpponent.logo }
+    ? { name: data.nextOpponent.name, logo: data.nextOpponent.logoUrl }
     : null,
 });
 

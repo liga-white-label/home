@@ -118,6 +118,10 @@ export const TablaPosiciones: FC<TablaPosicionesProps> = ({
                   data={{
                     escudo: team.escudo,
                     nextTeam: team.nextMatch?.logo || null,
+                    nombreEquipo: abbreviateTeamName(team.equipo),
+                    nombreEquipoRival: abbreviateTeamName(
+                      team.nextMatch?.name || ""
+                    ),
                   }}
                 />
               </td>

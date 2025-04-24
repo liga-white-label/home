@@ -7,8 +7,12 @@ import ErrorPage from "../ErrorPage";
 
 interface FaseGruposWrapperProps {
   faseId: string;
+  fromCategoria?: boolean;
 }
-export const FaseGruposWrapper: FC<FaseGruposWrapperProps> = ({ faseId }) => {
+export const FaseGruposWrapper: FC<FaseGruposWrapperProps> = ({
+  faseId,
+  fromCategoria,
+}) => {
   const { data, isLoading, isError } = useOneFaseCampeonatoQuery(faseId);
 
   if (isLoading) return <LoadingScreen />;
@@ -18,10 +22,9 @@ export const FaseGruposWrapper: FC<FaseGruposWrapperProps> = ({ faseId }) => {
     <>
       <Box key={index}>
         <Box className="flex w-full py-2 bg-gray-200 items-center justify-center">
-          <Typography
-            variant="h6"
-            fontWeight={"bold"}
-          >{`Grupo ${grupo.name}`}</Typography>
+          <Typography variant="h6" fontWeight={"bold"}>{`${
+            fromCategoria ? "" : "Grupo"
+          } ${grupo.name}`}</Typography>
         </Box>
         <TablaPosiciones data={grupo.positions} />
       </Box>
