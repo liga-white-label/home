@@ -216,12 +216,12 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
       <DialogTitle className="flex justify-between items-center text-white bg-[#A60000]">
         <Box className="flex flex-col items-center justify-center gap-2 w-full bg-[#A60000] rounded-sm p-2 text-white">
           <Box className="flex items-center justify-between w-full">
-            <p className="font-extrabold text-md md:text-lg">Cancha:</p>
-            <p className="text-sm md:text-base">{match.field || "A definir"}</p>
+            <p className="font-extrabold text-sm md:text-md">Cancha:</p>
+            <p className="text-xs md:text-sm">{match.field || "A definir"}</p>
           </Box>
 
           <Box className="flex items-center justify-between w-full">
-            <p className="font-extrabold text-md md:text-lg">Planillero:</p>
+            <p className="font-extrabold text-sm md:text-md">Planillero:</p>
             {match.scorer ? (
               <Box className="flex gap-2 items-center justify-between">
                 <Image
@@ -242,7 +242,7 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
             )}
           </Box>
           <Box className="flex items-center justify-between w-full">
-            <p className="font-extrabold text-md md:text-lg">Linea:</p>
+            <p className="font-extrabold text-sm md:text-md">Linea:</p>
             {match.linemenTeam ? (
               <Box className="flex gap-2 items-center justify-between">
                 <Image
