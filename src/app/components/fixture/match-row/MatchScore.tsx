@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import moment from "moment";
 import { FC } from "react";
 import { MatchStatus } from "@/app/models/Match";
@@ -16,16 +16,36 @@ export const MatchScore: FC<MatchScoreProps> = ({
   homeTeamGoals,
   awayTeamGoals,
 }) => {
+  const theme = useTheme();
+  const isSmallDevice = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <Box
       bgcolor={status === MatchStatus.JUGADO ? "black" : "gray"}
-      px={2}
-      py={1}
+      px={isSmallDevice ? 1 : 2}
+      py={isSmallDevice ? 0.5 : 1}
       borderRadius="4px"
       display="flex"
       justifyContent="center"
       alignItems="center"
-      minWidth={70}
+      minWidth={isSmallDevice ? 50 : 70}
+      sx={{
+        transition: "all 0.2s ease",
+        position: "relative",
+        "&:after": isSmallDevice
+          ? {
+              content: "''",
+              position: "absolute",
+              bottom: -2,
+              left: "50%",
+              transform: "translateX(-50%)",
+              width: "30%",
+              height: 2,
+              backgroundColor: "#A60000",
+              borderRadius: 1,
+            }
+          : {},
+      }}
     >
       <Typography
         variant="body2"
@@ -37,7 +57,7 @@ export const MatchScore: FC<MatchScoreProps> = ({
           ? `${homeTeamGoals ?? 0} - ${awayTeamGoals ?? 0}`
           : !!date && moment(date).isValid()
           ? moment(date).format("HH:mm")
-          : "A definir"}
+          : "-"}
       </Typography>
     </Box>
   );

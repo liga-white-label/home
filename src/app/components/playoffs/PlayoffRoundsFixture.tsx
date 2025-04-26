@@ -2,7 +2,7 @@ import {
   useOneFasePlayoffCopaQuery,
   useOnePartidoCopaPlayoffQuery,
 } from "@/repositories/CampeonatoRepository";
-import { TableBody, Table } from "@mui/material";
+import { TableBody, Table, Box, useMediaQuery, useTheme } from "@mui/material";
 import { useRef, useState } from "react";
 import InfoMatchModal from "../InfoMatchModal";
 import { PartidoRow } from "../fixture/PartidoRow";
@@ -28,6 +28,8 @@ const PlayoffRoundsFixture: React.FC<PlayoffRoundsFixtureProps> = ({
   idFase,
   isLeague,
 }) => {
+  const theme = useTheme();
+  const isSmallDevice = useMediaQuery(theme.breakpoints.down("sm"));
   const currentMatchSelected = useRef<any | undefined>();
 
   const { data: faseCopa } = useOneFasePlayoffCopaQuery({
@@ -78,24 +80,29 @@ const PlayoffRoundsFixture: React.FC<PlayoffRoundsFixtureProps> = ({
 
   return (
     <>
-      <Table>
-        <TableBody>
-          <PartidoRow
-            match={partidoIda}
-            handleClickSeeMatch={handleClickSeeMatch}
-            isLoadingMatch={
-              matchLoading &&
-              [
-                currentMatchSelected.current.homeTeam,
-                currentMatchSelected.current.awayTeam,
-              ].join("") ===
-                [partidoIda.homeTeamId, partidoIda.awayTeamId].join("")
-            }
-            index={index}
-          />
-          {partidoVuelta && (
+      <Box
+        sx={{
+          width: "100%",
+          overflowX: "auto",
+          WebkitOverflowScrolling: "touch",
+          msOverflowStyle: "-ms-autohiding-scrollbar",
+          "&::-webkit-scrollbar": {
+            height: "8px",
+          },
+          "&::-webkit-scrollbar-track": {
+            background: "#f1f1f1",
+            borderRadius: "4px",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            background: "#A60000",
+            borderRadius: "4px",
+          },
+        }}
+      >
+        <Table sx={{ minWidth: isSmallDevice ? 500 : "auto" }}>
+          <TableBody>
             <PartidoRow
-              match={partidoVuelta}
+              match={partidoIda}
               handleClickSeeMatch={handleClickSeeMatch}
               isLoadingMatch={
                 matchLoading &&
@@ -103,13 +110,30 @@ const PlayoffRoundsFixture: React.FC<PlayoffRoundsFixtureProps> = ({
                   currentMatchSelected.current.homeTeam,
                   currentMatchSelected.current.awayTeam,
                 ].join("") ===
-                  [partidoVuelta.homeTeamId, partidoVuelta.awayTeamId].join("")
+                  [partidoIda.homeTeamId, partidoIda.awayTeamId].join("")
               }
               index={index}
             />
-          )}
-        </TableBody>
-      </Table>
+            {partidoVuelta && (
+              <PartidoRow
+                match={partidoVuelta}
+                handleClickSeeMatch={handleClickSeeMatch}
+                isLoadingMatch={
+                  matchLoading &&
+                  [
+                    currentMatchSelected.current.homeTeam,
+                    currentMatchSelected.current.awayTeam,
+                  ].join("") ===
+                    [partidoVuelta.homeTeamId, partidoVuelta.awayTeamId].join(
+                      ""
+                    )
+                }
+                index={index}
+              />
+            )}
+          </TableBody>
+        </Table>
+      </Box>
       <InfoMatchModal
         match={match || null}
         openMatchModal={openMatchModal}

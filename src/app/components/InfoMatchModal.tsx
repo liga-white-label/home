@@ -6,8 +6,10 @@ import {
   DialogContent,
   Divider,
   capitalize,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React from "react";
 import { abbreviateTeamName } from "../utils/stringUtils";
 import { Incidencia, IncidenciaByTeam } from "./InferenciaByTeam";
 import Image from "next/image";
@@ -96,9 +98,9 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
       }}
     >
       <DialogTitle className="flex justify-between items-center text-white bg-[#A60000]">
-        <p className="text-2xl">
+        <p className="text-xl md:text-2xl">
           Detalles del Partido{" "}
-          <span className="text-sm">
+          <span className="text-xs md:text-sm">
             {match.status === MatchStatus.JUGADO
               ? "(Resultado sujeto a modificaciones)"
               : ""}
@@ -108,71 +110,75 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
       </DialogTitle>
       <DialogTitle className="flex items-center justify-center gap-10 bg-slate-200">
         <Box className="flex gap-2 items-center">
-          <CalendarMonth />
-          <p className="sm:flex hidden">
+          <CalendarMonth className="text-sm md:text-base" />
+          <p className="sm:flex hidden text-sm md:text-base">
             {match.date
               ? capitalize(match.date.format("dddd")) +
                 " " +
                 match.date.format("LL")
               : "A definir"}
           </p>
-          <p className="sm:hidden flex">
+          <p className="sm:hidden flex text-xs">
             {match.date ? match.date.format("DD/MM/YYYY") : "A definir"}
           </p>
         </Box>
         <Box className="flex gap-2 items-center">
-          <AccessTime />
-          <p>{match.date ? match.date.format("HH:mm ") : "A definir"}</p>
+          <AccessTime className="text-sm md:text-base" />
+          <p className="text-sm md:text-base">
+            {match.date ? match.date.format("HH:mm ") : "A definir"}
+          </p>
         </Box>
       </DialogTitle>
       <DialogContent>
         <Box className="flex items-center justify-between mt-5">
           <Box
-            className="flex items-center gap-2 h-20 flex-shrink-0 overflow-hidden justify-end"
+            className="flex flex-col items-center gap-2 h-20 flex-shrink-0 overflow-hidden"
             sx={{ width: "40%" }}
           >
-            <p className="max-[600px]:hidden flex line-clamp-2 text-center text-ellipsis font-extrabold">
+            <p className="line-clamp-2 text-center text-ellipsis font-extrabold text-xs md:text-base">
               {match.homeTeam?.name || ""}
             </p>
-            <p className="max-[600px]:flex hidden font-extrabold">
-              {abbreviateTeamName(match.homeTeam?.name || "")}
-            </p>
-            <Image
-              src={match.homeTeam?.logoUrl || ""}
-              height={50}
-              width={50}
-              alt={match.homeTeam?.name || ""}
-            />
+            <Box className="flex items-center justify-center overflow-hidden">
+              <Image
+                src={match.homeTeam?.logoUrl || ""}
+                height={50}
+                width={50}
+                alt={match.homeTeam?.name || ""}
+                className="object-contain rounded-full"
+              />
+            </Box>
           </Box>
 
           <Box className="flex-grow-0 flex-shrink-0 mx-auto ">
             {match.status === MatchStatus.JUGADO ? (
               <div className="w-18 bg-[#A60000] px-2 py-1 rounded-md items-center flex justify-center">
-                <p className="text-white font-bold text-2xl">{`${match.homeTeamGoals} - ${match.awayTeamGoals}`}</p>
+                <p className="text-white font-bold text-xl md:text-2xl">{`${match.homeTeamGoals} - ${match.awayTeamGoals}`}</p>
               </div>
             ) : (
               <div className="w-10 bg-gray-500 px-2 py-1 rounded-md items-center flex justify-center">
-                <p className="text-white font-bold">{"-"}</p>
+                <p className="text-white font-bold text-sm md:text-base">
+                  {"-"}
+                </p>
               </div>
             )}
           </Box>
 
           <Box
-            className="flex items-center gap-2 h-20 flex-shrink-0 overflow-hidden justify-start"
+            className="flex flex-col items-center gap-2 h-20 flex-shrink-0 overflow-hidden"
             sx={{ width: "40%" }}
           >
-            <Image
-              src={match.awayTeam?.logoUrl || ""}
-              height={50}
-              width={50}
-              alt={match.awayTeam?.name || ""}
-            />
-            <p className="max-[600px]:hidden flex line-clamp-2 text-center text-ellipsis font-extrabold">
+            <p className="line-clamp-2 text-center text-ellipsis font-extrabold text-xs md:text-base">
               {match.awayTeam?.name || ""}
             </p>
-            <p className="max-[600px]:flex hidden font-extrabold">
-              {abbreviateTeamName(match.awayTeam?.name || "")}
-            </p>
+            <Box className="flex items-center justify-center overflow-hidden ">
+              <Image
+                src={match.awayTeam?.logoUrl || ""}
+                height={50}
+                width={50}
+                alt={match.awayTeam?.name || ""}
+                className="object-contain rounded-full"
+              />
+            </Box>
           </Box>
         </Box>
         <Divider
@@ -210,39 +216,33 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
       <DialogTitle className="flex justify-between items-center text-white bg-[#A60000]">
         <Box className="flex flex-col items-center justify-center gap-2 w-full bg-[#A60000] rounded-sm p-2 text-white">
           <Box className="flex items-center justify-between w-full">
-            <p className="font-extrabold text-xl ">Cancha:</p>
-            <p>{match.field || "A definir"}</p>
+            <p className="font-extrabold text-md md:text-lg">Cancha:</p>
+            <p className="text-sm md:text-base">{match.field || "A definir"}</p>
           </Box>
 
           <Box className="flex items-center justify-between w-full">
-            <p className="font-extrabold text-xl ">Planillero:</p>
+            <p className="font-extrabold text-md md:text-lg">Planillero:</p>
             {match.scorer ? (
               <Box className="flex gap-2 items-center justify-between">
                 <Image
                   src={match.scorer.logoUrl}
-                  height={40}
-                  width={40}
+                  height={30}
+                  width={30}
                   alt={match.scorer.name || ""}
                 />
-                <p className="sm:flex hidden">
+                <p className="text-xs md:text-sm">
                   {match.scorer.name +
-                    " (" +
-                    getGeneroLabel(match.scorer.gender) +
-                    ")"}
-                </p>
-                <p className="sm:hidden flex">
-                  {abbreviateTeamName(match.scorer.name || "") +
                     " (" +
                     getGeneroLabel(match.scorer.gender) +
                     ")"}
                 </p>
               </Box>
             ) : (
-              <p>A definir</p>
+              <p className="text-sm md:text-base">A definir</p>
             )}
           </Box>
           <Box className="flex items-center justify-between w-full">
-            <p className="font-extrabold text-xl">Linea:</p>
+            <p className="font-extrabold text-md md:text-lg">Linea:</p>
             {match.linemenTeam ? (
               <Box className="flex gap-2 items-center justify-between">
                 <Image
@@ -251,29 +251,18 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
                   width={40}
                   alt={match.linemenTeam.name}
                 />
-                <p className="sm:flex hidden">
-                  {match.linemenTeam.name +
-                    " (" +
-                    getGeneroLabel(match.linemenTeam.gender) +
-                    ")"}
-                </p>
-                <p className="sm:hidden flex">
-                  {abbreviateTeamName(match.linemenTeam.name || "") +
-                    " (" +
-                    getGeneroLabel(match.linemenTeam.gender) +
-                    ")"}
-                </p>
+                <p className="text-xs md:text-sm">{match.linemenTeam.name}</p>
               </Box>
             ) : (
-              <p>A definir</p>
+              <p className="text-sm md:text-base">A definir</p>
             )}
           </Box>
           <Box
             sx={{ display: match.comments ? "flex" : "none" }}
             className="flex-col items-center justify-between w-full gap-2"
           >
-            <p className="font-extrabold text-xl">Comentarios:</p>
-            <p>{match.comments || ""}</p>
+            <p className="font-extrabold text-sm md:text-md">Comentarios:</p>
+            <p className="text-xs md:text-base">{match.comments || ""}</p>
           </Box>
         </Box>
       </DialogTitle>

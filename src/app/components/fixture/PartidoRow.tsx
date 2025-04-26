@@ -31,18 +31,61 @@ export const PartidoRow: FC<PartidoRowProps> = ({
 }) => {
   const theme = useTheme();
   const isLessThanMd = useMediaQuery(theme.breakpoints.down("md"));
+  const isSmallDevice = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <TableRow
       style={{ backgroundColor: index % 2 === 0 ? "#f5f5f5" : "white" }}
     >
-      <TableCell width="15%">
+      <TableCell
+        sx={{
+          width: isSmallDevice ? "0%" : "15%",
+          padding: isSmallDevice ? "8px 4px" : undefined,
+        }}
+      >
         <MatchDate date={match.date} isLessThanMd={isLessThanMd} />
       </TableCell>
-      <TableCell width="30%" align="right" sx={{ pr: 3 }}>
+      <TableCell
+        sx={{
+          width: isSmallDevice ? "28%" : "30%",
+          pr: isSmallDevice ? 1 : 3,
+          padding: isSmallDevice ? "8px 4px" : undefined,
+          textAlign: "right",
+        }}
+      >
         <TeamInfo teamName={match.homeTeamName} teamLogo={match.homeTeamLogo} />
       </TableCell>
-      <TableCell width="10%" align="center" sx={{ px: 0 }}>
+      <TableCell
+        sx={{
+          width: isSmallDevice ? "14%" : "10%",
+          px: 0,
+          padding: isSmallDevice ? "8px 2px" : undefined,
+          textAlign: "center",
+        }}
+        onClick={
+          isSmallDevice
+            ? () => {
+                if (
+                  match.homeTeamId !== undefined &&
+                  match.awayTeamId !== undefined
+                ) {
+                  handleClickSeeMatch(match);
+                }
+              }
+            : undefined
+        }
+        style={
+          isSmallDevice
+            ? {
+                cursor:
+                  match.homeTeamId !== undefined &&
+                  match.awayTeamId !== undefined
+                    ? "pointer"
+                    : "default",
+              }
+            : undefined
+        }
+      >
         <MatchScore
           status={match.status}
           date={match.date}
@@ -50,33 +93,59 @@ export const PartidoRow: FC<PartidoRowProps> = ({
           awayTeamGoals={match.awayTeamGoals}
         />
       </TableCell>
-      <TableCell width="30%" align="left" sx={{ pl: 3 }}>
+      <TableCell
+        sx={{
+          width: isSmallDevice ? "28%" : "30%",
+          pl: isSmallDevice ? 1 : 3,
+          padding: isSmallDevice ? "8px 4px" : undefined,
+          textAlign: "left",
+        }}
+      >
         <TeamInfo
           teamName={match.awayTeamName}
           teamLogo={match.awayTeamLogo}
           isReverse
         />
       </TableCell>
-      <TableCell width="10%" align="center">
+      <TableCell
+        sx={{
+          width: isSmallDevice ? "10%" : "10%",
+          padding: isSmallDevice ? "8px 2px" : undefined,
+          textAlign: "center",
+          display: isSmallDevice ? "none" : "table-cell",
+        }}
+      >
         <MatchField field={match.field} isLessThanMd={isLessThanMd} />
       </TableCell>
-      <TableCell width="5%" align="right">
+      <TableCell
+        sx={{
+          width: isSmallDevice ? "5%" : "5%",
+          padding: isSmallDevice ? "8px 2px" : undefined,
+          textAlign: "right",
+          display: isSmallDevice ? "none" : "table-cell",
+        }}
+      >
         <LoadingButton
           onClick={() => handleClickSeeMatch(match)}
           loading={isLoadingMatch}
           startIcon={<VisibilityIcon />}
-          sx={{ color: "black", minWidth: 0 }}
+          sx={{
+            color: "black",
+            minWidth: 0,
+          }}
           disabled={
             match.homeTeamId === undefined || match.awayTeamId === undefined
           }
         >
-          <Typography
-            variant="body2"
-            noWrap
-            display={{ xs: "none", sm: "block" }}
-          >
-            Ver
-          </Typography>
+          {!isSmallDevice && (
+            <Typography
+              variant="body2"
+              noWrap
+              display={{ xs: "none", sm: "block" }}
+            >
+              Ver
+            </Typography>
+          )}
         </LoadingButton>
       </TableCell>
     </TableRow>

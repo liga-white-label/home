@@ -48,9 +48,13 @@ export const TeamInfo: FC<TeamInfoProps> = ({
         noWrap
         sx={{
           display: { xs: "block", sm: "none" },
+          fontSize: { xs: "0.7rem", sm: "0.875rem" },
+          maxWidth: "100%",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
         }}
       >
-        {abbreviateTeamName(teamName || "")}
+        {teamName || "A definir"}
       </Typography>
     </Box>
   );

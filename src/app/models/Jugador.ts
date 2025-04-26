@@ -8,5 +8,5 @@ export interface Jugador {
 }
 
 export const getGeneroLabel = (genero: GeneroEnum) => {
-  return genero === GeneroEnum.MASCULINO ? "Masculino" : "Femenino";
+  return genero === GeneroEnum.MASCULINO ? "MAS" : "FEM";
 };

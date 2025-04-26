@@ -21,17 +21,21 @@ export const IncidenciaByTeam: FC<IncidenciaByTeamProps> = ({ incidencia }) => {
       }`}
     >
       {incidencia.type === "gol" ? (
-        <SportsSoccer className="h-5 w-5" />
+        <SportsSoccer className="h-4 w-4 md:h-5 md:w-5" />
       ) : (
         <Rectangle
-          className="h-5 w-5 rotate-90"
+          className="h-4 w-4 md:h-5 md:w-5 rotate-90"
           sx={{
             color: incidencia.type === "expulsion" ? "red" : "yellow",
           }}
         />
       )}
-      <p className="sm:hidden flex text-lg">{incidencia.playerFullName}</p>
-      <p className="sm:flex hidden text-lg">{incidencia.playerFullName}</p>
+      <p className="sm:hidden flex text-sm md:text-lg">
+        {incidencia.playerFullName}
+      </p>
+      <p className="sm:flex hidden text-sm md:text-lg">
+        {incidencia.playerFullName}
+      </p>
     </div>
   );
 };
