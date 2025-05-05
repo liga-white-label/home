@@ -2,6 +2,7 @@ import { Table, TableBody, Box } from "@mui/material";
 import { PartidoRow } from "./PartidoRow";
 import { SimplifiedMatch } from "@/app/models/Match";
 import { useMediaQuery, useTheme } from "@mui/material";
+import { useRef, useEffect } from "react";
 
 interface PartidosAgrupadosProps {
   matches: SimplifiedMatch[];
@@ -17,9 +18,19 @@ export const PartidosAgrupados: React.FC<PartidosAgrupadosProps> = ({
 }) => {
   const theme = useTheme();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down("sm"));
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      const scrollWidth = scrollContainerRef.current.scrollWidth;
+      scrollContainerRef.current.scrollLeft =
+        scrollWidth / 2 - scrollContainerRef.current.clientWidth / 2;
+    }
+  }, [matches]);
 
   return (
     <Box
+      ref={scrollContainerRef}
       sx={{
         width: "100%",
         overflowX: "auto",

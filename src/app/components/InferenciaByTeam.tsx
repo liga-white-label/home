@@ -1,5 +1,5 @@
 import { SportsSoccer, Rectangle } from "@mui/icons-material";
-import { useTheme } from "@mui/material";
+import { useMediaQuery, useTheme } from "@mui/material";
 import { FC } from "react";
 
 export interface Incidencia {
@@ -14,6 +14,14 @@ interface IncidenciaByTeamProps {
 
 export const IncidenciaByTeam: FC<IncidenciaByTeamProps> = ({ incidencia }) => {
   const theme = useTheme();
+
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const simplifiedName =
+    incidencia.playerFullName.split(" ")[0] +
+    " " +
+    incidencia.playerFullName.split(" ")?.[1]?.charAt(0) +
+    ".";
   return (
     <div
       className={`flex gap-2 items-center ${
@@ -21,20 +29,17 @@ export const IncidenciaByTeam: FC<IncidenciaByTeamProps> = ({ incidencia }) => {
       }`}
     >
       {incidencia.type === "gol" ? (
-        <SportsSoccer className="h-4 w-4 md:h-5 md:w-5" />
+        <SportsSoccer className="h-2 w-2 md:h-4 md:w-4" />
       ) : (
         <Rectangle
-          className="h-4 w-4 md:h-5 md:w-5 rotate-90"
+          className="h-2 w-2 md:h-4 md:w-4 rotate-90"
           sx={{
             color: incidencia.type === "expulsion" ? "red" : "yellow",
           }}
         />
       )}
-      <p className="sm:hidden flex text-sm md:text-lg">
-        {incidencia.playerFullName}
-      </p>
-      <p className="sm:flex hidden text-sm md:text-lg">
-        {incidencia.playerFullName}
+      <p className="text-xs md:text-md line-clamp-1 overflow-hidden whitespace-nowrap">
+        {isMobile ? simplifiedName : incidencia.playerFullName}
       </p>
     </div>
   );

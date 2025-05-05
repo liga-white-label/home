@@ -129,7 +129,7 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
           </p>
         </Box>
       </DialogTitle>
-      <DialogContent>
+      <DialogContent className="w-full">
         <Box className="flex items-center justify-between mt-5">
           <Box
             className="flex flex-col items-center gap-2 h-20 flex-shrink-0 overflow-hidden"
@@ -189,35 +189,33 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
             },
           }}
         />
-        {
-          <Box className="flex justify-center items-start md:gap-24 gap-2 pt-2 w-full">
-            <Box className=" w-full">
-              {incidenciasLocal.map((detail, index) => (
-                <IncidenciaByTeam key={index} incidencia={detail} />
-              ))}
-            </Box>
-            <Divider
-              orientation="vertical"
-              className="text-[#A60000] "
-              sx={{
-                "&::before, &::after": {
-                  borderColor: "#A60000",
-                },
-              }}
-            />
-            <Box className=" w-full">
-              {incidenciasVisitante.map((detail, index) => (
-                <IncidenciaByTeam key={index} incidencia={detail} />
-              ))}
-            </Box>
+        <Box className="flex justify-center items-start gap-2 pt-2 w-full ">
+          <Box className="pl-2 w-full">
+            {incidenciasLocal.map((detail, index) => (
+              <IncidenciaByTeam key={index} incidencia={detail} />
+            ))}
           </Box>
-        }
+          <Divider
+            orientation="vertical"
+            className="text-[#A60000] "
+            sx={{
+              "&::before, &::after": {
+                borderColor: "#A60000",
+              },
+            }}
+          />
+          <Box className="pr-2 w-full">
+            {incidenciasVisitante.map((detail, index) => (
+              <IncidenciaByTeam key={index} incidencia={detail} />
+            ))}
+          </Box>
+        </Box>
       </DialogContent>
       <DialogTitle className="flex justify-between items-center text-white bg-[#A60000]">
         <Box className="flex flex-col items-center justify-center gap-2 w-full bg-[#A60000] rounded-sm p-2 text-white">
           <Box className="flex items-center justify-between w-full">
             <p className="font-extrabold text-sm md:text-md">Cancha:</p>
-            <p className="text-xs md:text-sm">{match.field || "A definir"}</p>
+            <p className="text-sm md:text-base">{match.field || "A definir"}</p>
           </Box>
 
           <Box className="flex items-center justify-between w-full">

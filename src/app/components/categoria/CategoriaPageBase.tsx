@@ -42,7 +42,10 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
   const fasePlayoff =
     fases?.phases.find((f: any) => f.type === "playoff") || null;
 
-  const faseGrupos = fases?.phases.find((f: any) => f.type === "group") || null;
+  const faseGrupos =
+    fases?.phases.find(
+      (f: any) => f.type === "group" || f.type === "intergroup"
+    ) || null;
 
   const faseDescenso =
     fases?.phases.find((f: any) => f.type === "relegated") || null;
