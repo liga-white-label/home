@@ -1,16 +1,9 @@
 import Image from "next/image";
 import { FC } from "react";
 import { abbreviateTeamName } from "../utils/stringUtils";
-
+import { RowEstadisticas } from "../models/FaseCampeonato";
 interface TablaEstadisticasProps {
-  data: {
-    pos: number;
-    jugador: string;
-    equipo: string;
-    escudo: string;
-    goles?: number;
-    tarjetas?: number;
-  }[];
+  data: RowEstadisticas[];
   tipo: "amarillas" | "goleadores";
 }
 
@@ -28,6 +21,14 @@ export const TablaEstadisticas: FC<TablaEstadisticasProps> = ({
     );
   }
 
+  const sortedData = data.sort((a, b) => {
+    if (tipo === "goleadores") {
+      return (b.goles || 0) - (a.goles || 0);
+    } else {
+      return (b.tarjetas || 0) - (a.tarjetas || 0);
+    }
+  });
+
   return (
     <div className="max-w-full overflow-x-hidden flex justify-center">
       <table className="w-full bg-white">
@@ -42,10 +43,10 @@ export const TablaEstadisticas: FC<TablaEstadisticasProps> = ({
           </tr>
         </thead>
         <tbody>
-          {data.map((team, index) => (
+          {sortedData.map((team, index) => (
             <tr key={index} className={`max-w-full border-b border-gray-200`}>
               <td className={`px-2 md:px-4 py-2 font-bold text-center`}>
-                {team.pos}
+                {index + 1}
               </td>
               <td className={`px-2 md:px-4 py-2 text-center`}>
                 {team.jugador}

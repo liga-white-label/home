@@ -84,25 +84,21 @@ export const getPositionsMapper = (data: any): TablePosition => ({
     : null,
 });
 
-export const GoleadoresMapper = (g: any, index: number) => ({
-  pos: index + 1,
+export interface RowEstadisticas {
+  jugador: string;
+  equipo: string;
+  escudo: string;
+  goles?: number;
+  tarjetas?: number;
+}
+export const GoleadoresMapper = (g: any): RowEstadisticas => ({
   jugador: g.playerFullName,
   equipo: g.teamName,
   escudo: g.teamLogo,
   goles: g.goals,
 });
 
-export const AmarillasMapper = (
-  a: any,
-  index: number
-): {
-  pos: number;
-  jugador: string;
-  equipo: string;
-  escudo: string;
-  tarjetas: number;
-} => ({
-  pos: index + 1,
+export const AmarillasMapper = (a: any): RowEstadisticas => ({
   jugador: a.playerFullName,
   equipo: a.teamName,
   escudo: a.teamLogo,

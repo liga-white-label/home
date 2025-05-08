@@ -249,7 +249,12 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
                   width={40}
                   alt={match.linemenTeam.name}
                 />
-                <p className="text-xs md:text-sm">{match.linemenTeam.name}</p>
+                <p className="text-xs md:text-sm">
+                  {match.linemenTeam.name +
+                    " (" +
+                    getGeneroLabel(match.linemenTeam.gender) +
+                    ")"}
+                </p>
               </Box>
             ) : (
               <p className="text-sm md:text-base">A definir</p>
