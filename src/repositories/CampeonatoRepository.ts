@@ -167,7 +167,13 @@ export const useAllFasesByCampeonato = (id: string) =>
     retry: 1,
   });
 
-export const useOneFaseCampeonatoQuery = (id: string, enabled: boolean) =>
+export const useOneFaseCampeonatoQuery = ({
+  id,
+  enabled = true,
+}: {
+  id: string;
+  enabled?: boolean;
+}) =>
   useQuery({
     queryKey: repo.keys.oneFase(id),
     queryFn: () => repo.getOneFase(id),
