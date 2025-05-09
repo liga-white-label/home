@@ -1,4 +1,9 @@
-import { faseCopaMapper, RoundCup } from "@/app/models/FaseCampeonato";
+import {
+  faseCopaMapper,
+  faseCopaMapperOnlyMatches,
+  faseCopaMapperOnlyPositions,
+  RoundCup,
+} from "@/app/models/FaseCampeonato";
 import { httpClient } from "@/app/utils/httpClient";
 import { useQuery } from "@tanstack/react-query";
 import { Copa } from "@/app/models/Campeonato";
@@ -21,6 +26,12 @@ export class CampeonatoRepository {
     partido: (idPartido: string) => [idPartido],
     goleadores: (idFase: string) => ["goleadores", idFase],
     amarillas: (idFase: string) => ["amarillas", idFase],
+    allGroupMatchesByFase: (faseId: string, dateNumber: number) => [
+      "fases-grupos",
+      faseId,
+      dateNumber,
+    ],
+    allPositionsByFase: (faseId: string) => ["fases-grupos", faseId],
   };
 
   getAll = async () => {
@@ -100,6 +111,26 @@ export class CampeonatoRepository {
       `tournament/cup/get-yellow-cards?cupId=${cupId}`
     );
     return data;
+  };
+
+  getAllGroupMatchesByFase = async ({
+    faseId,
+    dateNumber,
+  }: {
+    faseId: string;
+    dateNumber: number;
+  }) => {
+    const { data } = await httpClient.get<any[]>(
+      `tournament/phase/get-all-groups-matches?phaseId=${faseId}&dateNumber=${dateNumber}`
+    );
+    return data.map(faseCopaMapperOnlyMatches);
+  };
+
+  getAllPositionsByFase = async (faseId: string) => {
+    const { data } = await httpClient.get<any[]>(
+      `tournament/phase/get-all-groups-positions?phaseId=${faseId}`
+    );
+    return data.map(faseCopaMapperOnlyPositions);
   };
 }
 
@@ -215,3 +246,21 @@ export const useAmarillasCopaQuery = (id: string) => {
     enabled: id !== "",
   });
 };
+
+export const useGetAllGroupMatchesByFaseQuery = ({
+  faseId,
+  dateNumber,
+}: {
+  faseId: string;
+  dateNumber: number;
+}) =>
+  useQuery({
+    queryKey: repo.keys.allGroupMatchesByFase(faseId, dateNumber),
+    queryFn: () => repo.getAllGroupMatchesByFase({ faseId, dateNumber }),
+  });
+
+export const useGetAllPositionsByFaseQuery = ({ faseId }: { faseId: string }) =>
+  useQuery({
+    queryKey: repo.keys.allPositionsByFase(faseId),
+    queryFn: () => repo.getAllPositionsByFase(faseId),
+  });

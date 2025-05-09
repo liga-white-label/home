@@ -1,7 +1,8 @@
 "use client";
 
 import {
-  useOneFaseCampeonatoQuery,
+  useGetAllPositionsByFaseQuery,
+  useGetAllGroupMatchesByFaseQuery,
   useOnePartidoCopaQuery,
 } from "@/repositories/CampeonatoRepository";
 import {
@@ -12,7 +13,7 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import Box from "@mui/material/Box";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useMemo } from "react";
 import { PartidosAgrupados } from "../fixture/PartidosAgrupados";
 import LoadingScreen from "../loading/Loading";
 import InfoMatchModal from "../InfoMatchModal";
@@ -22,16 +23,38 @@ import ErrorPage from "../ErrorPage";
 interface FixtureCopaPageProps {
   faseId: string;
   fromCategoria?: boolean;
+  extraFechas?: number;
 }
+
+const calcularFechas = (equiposCount: number): number => {
+  return Math.max(1, equiposCount - 1);
+};
 
 const FixtureCopaPage: React.FC<FixtureCopaPageProps> = ({
   faseId,
   fromCategoria = false,
+  extraFechas = 0,
 }) => {
   const currentMatchSelected = useRef<any | undefined>();
-  const [selectedFecha, setSelectedFecha] = useState<number | null>(1);
+  const [selectedFecha, setSelectedFecha] = useState<number>(1);
 
-  const { data, isLoading, isError } = useOneFaseCampeonatoQuery(faseId);
+  const {
+    data: matchesData,
+    isLoading: isLoadingMatches,
+    isError: isErrorMatches,
+  } = useGetAllGroupMatchesByFaseQuery({
+    faseId: faseId,
+    dateNumber: selectedFecha,
+  });
+
+  const {
+    data: faseData,
+    isLoading: isLoadingFase,
+    isError: isErrorFase,
+    refetch: refetchPosiciones,
+  } = useGetAllPositionsByFaseQuery({
+    faseId: faseId,
+  });
 
   const { data: match, isLoading: matchLoading } = useOnePartidoCopaQuery(
     currentMatchSelected.current?.homeTeam,
@@ -39,6 +62,17 @@ const FixtureCopaPage: React.FC<FixtureCopaPageProps> = ({
     currentMatchSelected.current?.phaseId || "",
     !!currentMatchSelected.current
   );
+
+  const fechasDisponibles = useMemo(() => {
+    if (!faseData || faseData.length === 0) return [1];
+
+    const primerGrupo = faseData[0];
+    const cantidadEquipos = primerGrupo.positions?.length || 0;
+
+    const numFechas = calcularFechas(cantidadEquipos) + extraFechas;
+
+    return Array.from({ length: numFechas }, (_, index) => index + 1);
+  }, [faseData, extraFechas]);
 
   const [openMatchModal, setOpenMatchModal] = useState<boolean>(false);
 
@@ -61,24 +95,8 @@ const FixtureCopaPage: React.FC<FixtureCopaPageProps> = ({
     setSelectedFecha(Number(event.target.value));
   };
 
-  if (isLoading) return <LoadingScreen />;
-  if (isError) return <ErrorPage />;
-
-  // Obtener todas las fechas disponibles del conjunto de datos
-  const allDates =
-    data?.flatMap((grupo) => grupo.matches.map((match) => match.dateNumber)) ||
-    [];
-
-  // Eliminar duplicados y ordenar
-  const uniqueDates = Array.from(new Set(allDates)).sort((a, b) => a - b);
-
-  const filteredData = data?.map((grupo) => ({
-    ...grupo,
-    matches:
-      selectedFecha !== null
-        ? grupo.matches.filter((match) => match.dateNumber === selectedFecha)
-        : grupo.matches,
-  }));
+  if (isLoadingFase || isLoadingMatches) return <LoadingScreen />;
+  if (isErrorFase || isErrorMatches) return <ErrorPage />;
 
   return (
     <>
@@ -95,7 +113,7 @@ const FixtureCopaPage: React.FC<FixtureCopaPageProps> = ({
             onChange={handleChangeFecha}
             className="w-56 max-sm:w-full"
           >
-            {uniqueDates.map((date, index) => (
+            {fechasDisponibles.map((date, index) => (
               <MenuItem key={index} value={`${date}`}>
                 {`Fecha ${date}`}
               </MenuItem>
@@ -104,7 +122,7 @@ const FixtureCopaPage: React.FC<FixtureCopaPageProps> = ({
         </FormControl>
       </Box>
 
-      {filteredData?.map((grupo, index) => (
+      {faseData?.map((grupo, index) => (
         <Box key={index}>
           <Box
             style={{
@@ -123,10 +141,12 @@ const FixtureCopaPage: React.FC<FixtureCopaPageProps> = ({
           {
             <PartidosAgrupados
               matches={
-                grupo.matches
-                  .map(convertToSimplifiedMatch)
-                  .sort((m1, m2) => (m1.dateNumber < m2.dateNumber ? -1 : 1)) ||
-                []
+                matchesData
+                  ?.find((g: any) => g.name === grupo.name)
+                  ?.matches.map(convertToSimplifiedMatch)
+                  .sort((m1: any, m2: any) =>
+                    m1.dateNumber < m2.dateNumber ? -1 : 1
+                  ) || []
               }
               handleClickSeeMatch={handleClickSeeMatch}
               isLoadingMatch={matchLoading}

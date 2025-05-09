@@ -14,6 +14,16 @@ export interface FaseGruposCopa {
   positions: TablePosition[];
 }
 
+export interface PositionsGruposCopa {
+  name: string;
+  positions: TablePosition[];
+}
+
+export interface FaseGruposCopaOnlyMatches {
+  matches: Match[];
+  name: string;
+}
+
 export interface TablePosition {
   pos: number;
   equipo: string;
@@ -37,6 +47,18 @@ export const faseCopaMapper = (x: any): FaseGruposCopa => ({
   name: x.name,
   teams: x.teams || [],
   positions: x.positions?.map(getPositionsMapper) || [],
+});
+
+export const faseCopaMapperOnlyPositions = (x: any): PositionsGruposCopa => ({
+  name: x.name,
+  positions: x.positions?.map(getPositionsMapper) || [],
+});
+
+export const faseCopaMapperOnlyMatches = (
+  x: any
+): FaseGruposCopaOnlyMatches => ({
+  matches: x.matches.map((match: any) => partidoMapper(match)),
+  name: x.name,
 });
 
 export const playoffFaseMapper = (data: any): RoundCup => {

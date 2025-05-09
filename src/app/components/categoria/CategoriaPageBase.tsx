@@ -181,7 +181,11 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
           <FaseGruposWrapper faseId={faseGrupos?.id || ""} fromCategoria />
         )}
         {selectedTab === TabsEnum.FIXTURE_ZONAS && !!faseGrupos && (
-          <FixtureCopaPage faseId={faseGrupos?.id || ""} fromCategoria />
+          <FixtureCopaPage
+            faseId={faseGrupos?.id || ""}
+            fromCategoria
+            extraFechas={fases?.categoryName === "C" && !!faseGrupos ? 2 : 0}
+          />
         )}
         {selectedTab === TabsEnum.PLAYOFFS && !!fasePlayoff && (
           <PlayoffsPage faseId={fasePlayoff?.id || ""} />

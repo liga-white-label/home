@@ -3,6 +3,7 @@ import { PartidoRow } from "./PartidoRow";
 import { SimplifiedMatch } from "@/app/models/Match";
 import { useMediaQuery, useTheme } from "@mui/material";
 import { useRef, useEffect } from "react";
+import moment from "moment";
 
 interface PartidosAgrupadosProps {
   matches: SimplifiedMatch[];
@@ -51,18 +52,24 @@ export const PartidosAgrupados: React.FC<PartidosAgrupadosProps> = ({
     >
       <Table sx={{ minWidth: isSmallDevice ? 500 : "auto" }}>
         <TableBody>
-          {matches.map((match, index) => (
-            <PartidoRow
-              key={index}
-              match={match}
-              handleClickSeeMatch={handleClickSeeMatch}
-              isLoadingMatch={
-                isLoadingMatch &&
-                selectedMatch === [match.homeTeamId, match.awayTeamId].join("")
-              }
-              index={index}
-            />
-          ))}
+          {matches
+            .sort((a, b) => {
+              if (!a.date || !b.date) return 0;
+              return moment(a.date).diff(moment(b.date)) > 0 ? 1 : -1;
+            })
+            .map((match, index) => (
+              <PartidoRow
+                key={index}
+                match={match}
+                handleClickSeeMatch={handleClickSeeMatch}
+                isLoadingMatch={
+                  isLoadingMatch &&
+                  selectedMatch ===
+                    [match.homeTeamId, match.awayTeamId].join("")
+                }
+                index={index}
+              />
+            ))}
         </TableBody>
       </Table>
     </Box>
