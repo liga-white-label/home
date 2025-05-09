@@ -167,7 +167,7 @@ export const useAllFasesByCampeonato = (id: string) =>
     retry: 1,
   });
 
-export const useOneFaseCampeonatoQuery = (id: string) =>
+export const useOneFaseCampeonatoQuery = (id: string, enabled: boolean) =>
   useQuery({
     queryKey: repo.keys.oneFase(id),
     queryFn: () => repo.getOneFase(id),
@@ -175,7 +175,7 @@ export const useOneFaseCampeonatoQuery = (id: string) =>
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     retry: 1,
-    enabled: id !== "",
+    enabled: enabled && id !== "",
   });
 
 export const useOnePartidoCopaQuery = (

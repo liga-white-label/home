@@ -31,7 +31,9 @@ const CuadrangularDescensoPage: React.FC<CuadrangularDescensoPageProps> = ({
 }) => {
   const currentMatchSelected = useRef<any | undefined>();
 
-  const { data, isLoading, isError } = useOneFaseCampeonatoQuery(faseId);
+  const { data, isLoading, isError } = useOneFaseCampeonatoQuery({
+    id: faseId,
+  });
 
   const { data: match, isLoading: matchLoading } = useOnePartidoDescensoQuery(
     currentMatchSelected.current?.homeTeam,

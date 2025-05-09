@@ -1,5 +1,8 @@
 import { FC } from "react";
-import { useOneFaseCampeonatoQuery } from "@/repositories/CampeonatoRepository";
+import {
+  useOneFaseCampeonatoQuery,
+  useGetAllPositionsByFaseQuery,
+} from "@/repositories/CampeonatoRepository";
 import { Box, Typography } from "@mui/material";
 import { TablaPosiciones } from "../TablaPosiciones";
 import LoadingScreen from "../loading/Loading";
@@ -13,12 +16,20 @@ export const FaseGruposWrapper: FC<FaseGruposWrapperProps> = ({
   faseId,
   fromCategoria,
 }) => {
-  const { data, isLoading, isError } = useOneFaseCampeonatoQuery(faseId);
+  // const { data, isLoading, isError } = useOneFaseCampeonatoQuery(
+  //   faseId,
+  //   !fromCategoria
+  // );
+  const {
+    data: faseData,
+    isLoading,
+    isError,
+  } = useGetAllPositionsByFaseQuery({ faseId });
 
   if (isLoading) return <LoadingScreen />;
   if (isError) return <ErrorPage />;
 
-  return data?.map((grupo, index) => (
+  return faseData?.map((grupo, index) => (
     <>
       <Box key={index}>
         <Box className="flex w-full py-2 bg-gray-200 items-center justify-center">
