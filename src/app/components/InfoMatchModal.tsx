@@ -34,8 +34,6 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
   }
   moment.locale("es");
 
-  console.log(match);
-
   const golesLocal: Incidencia[] = match.homeTeamPlayerGoals.map(
     (goleador) => ({
       type: "gol",
@@ -88,6 +86,61 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
     ...rojasVisitante,
   ];
 
+  const canchaLabel = match.field || "A definir";
+
+  const getPlanilleroLabel = () => {
+    if (match.status === MatchStatus.JUGADO && !match.scorer) {
+      return <p className="text-sm md:text-base">Subcomisión</p>;
+    }
+
+    if (match.scorer) {
+      return (
+        <Box className="flex gap-2 items-center justify-between">
+          <Image
+            src={match.scorer.logoUrl}
+            height={30}
+            width={30}
+            alt={match.scorer.name || ""}
+          />
+          <p className="text-xs md:text-sm">
+            {match.scorer.name +
+              " (" +
+              getGeneroLabel(match.scorer.gender) +
+              ")"}
+          </p>
+        </Box>
+      );
+    } else {
+      return <p className="text-sm md:text-base">A definir</p>;
+    }
+  };
+
+  const getLineaLabel = () => {
+    if (match.status === MatchStatus.JUGADO && !match.scorer) {
+      return <p className="text-sm md:text-base">Subcomisión</p>;
+    }
+
+    if (match.linemenTeam) {
+      return (
+        <Box className="flex gap-2 items-center justify-between">
+          <Image
+            src={match.linemenTeam.logoUrl}
+            height={40}
+            width={40}
+            alt={match.linemenTeam.name}
+          />
+          <p className="text-xs md:text-sm">
+            {match.linemenTeam.name +
+              " (" +
+              getGeneroLabel(match.linemenTeam.gender) +
+              ")"}
+          </p>
+        </Box>
+      );
+    } else {
+      return <p className="text-sm md:text-base">A definir</p>;
+    }
+  };
   return (
     <Dialog
       open={openMatchModal}
@@ -215,29 +268,12 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
         <Box className="flex flex-col items-center justify-center gap-2 w-full bg-[#A60000] rounded-sm p-2 text-white">
           <Box className="flex items-center justify-between w-full">
             <p className="font-extrabold text-sm md:text-md">Cancha:</p>
-            <p className="text-sm md:text-base">{match.field || "A definir"}</p>
+            <p className="text-sm md:text-base">{canchaLabel}</p>
           </Box>
 
           <Box className="flex items-center justify-between w-full">
             <p className="font-extrabold text-sm md:text-md">Planillero:</p>
-            {match.scorer ? (
-              <Box className="flex gap-2 items-center justify-between">
-                <Image
-                  src={match.scorer.logoUrl}
-                  height={30}
-                  width={30}
-                  alt={match.scorer.name || ""}
-                />
-                <p className="text-xs md:text-sm">
-                  {match.scorer.name +
-                    " (" +
-                    getGeneroLabel(match.scorer.gender) +
-                    ")"}
-                </p>
-              </Box>
-            ) : (
-              <p className="text-sm md:text-base">A definir</p>
-            )}
+            {getPlanilleroLabel()}
           </Box>
           <Box className="flex items-center justify-between w-full">
             <p className="font-extrabold text-sm md:text-md">Linea:</p>
