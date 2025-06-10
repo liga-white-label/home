@@ -15,7 +15,7 @@ body {
   background: rgb(var(--background--rgb));
   min-height: 100vh;
   margin: 0;
-  padding: 0;
+  padding: 0 !important;
 }
 
 @layer utilities {

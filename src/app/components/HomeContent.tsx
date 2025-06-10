@@ -100,7 +100,7 @@ const HomeContent = () => {
 
   if (isLoadingAllCampeonatos || isLoadingCampeonatoActual) {
     return (
-      <div className="flex flex-col w-full items-center justify-center py-10">
+      <div className="flex flex-col w-full items-center justify-center py-10 h-screen">
         <MiniLoading />
       </div>
     );

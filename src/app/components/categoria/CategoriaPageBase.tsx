@@ -10,18 +10,21 @@ import { EstadisticasPage } from "./EstadisticasPage";
 import CuadrangularDescensoPage from "./CuadrangularDescensoPage";
 import { FaseGruposWrapper } from "../copa/FaseGruposWrapper";
 import FixtureCopaPage from "../copa/FixtureCopaPage";
+
 interface CategoriaPageBaseProps {
   id: string;
   title: string;
 }
+
 export enum TabsEnum {
   POSICIONES = 0,
   FIXTURE = 1,
-  FIXTURE_ZONAS = 2,
-  PLAYOFFS = 3,
-  GRUPOS = 4,
-  ESTADISTICAS = 5,
-  DESCENSO = 6,
+  PLAYOFFS = 2,
+  ESTADISTICAS = 3,
+  DESCENSO = 4,
+  // Los tabs dinámicos empezarán desde 100
+  GRUPOS_BASE = 100,
+  FIXTURE_ZONAS_BASE = 200,
 }
 
 export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
@@ -42,20 +45,22 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
   const fasePlayoff =
     fases?.phases.find((f: any) => f.type === "playoff") || null;
 
-  const faseGrupos =
-    fases?.phases.find(
+  const fasesGrupos =
+    fases?.phases.filter(
       (f: any) => f.type === "group" || f.type === "intergroup"
-    ) || null;
+    ) || [];
 
   const faseDescenso =
     fases?.phases.find((f: any) => f.type === "relegated") || null;
 
-  const initialTab = tabParam
-    ? parseInt(tabParam, 10)
-    : faseGrupos
-    ? TabsEnum.GRUPOS
-    : TabsEnum.POSICIONES;
-  const [selectedTab, setSelectedTab] = useState<TabsEnum>(initialTab);
+  const getInitialTab = () => {
+    if (tabParam) {
+      return parseInt(tabParam, 10);
+    }
+    return fasesGrupos.length > 0 ? TabsEnum.GRUPOS_BASE : TabsEnum.POSICIONES;
+  };
+
+  const [selectedTab, setSelectedTab] = useState<number>(getInitialTab());
 
   useEffect(() => {
     if (tabParam) {
@@ -63,10 +68,30 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
     }
   }, [tabParam]);
 
-  const handleChangeTab = (newValue: TabsEnum) => {
+  const handleChangeTab = (newValue: number) => {
     setSelectedTab(newValue);
     router.push(`?tab=${newValue}`, undefined);
   };
+
+  const getSelectedFaseGrupos = () => {
+    if (
+      selectedTab >= TabsEnum.GRUPOS_BASE &&
+      selectedTab < TabsEnum.FIXTURE_ZONAS_BASE
+    ) {
+      const index = selectedTab - TabsEnum.GRUPOS_BASE;
+      return fasesGrupos[index];
+    }
+    if (selectedTab >= TabsEnum.FIXTURE_ZONAS_BASE) {
+      const index = selectedTab - TabsEnum.FIXTURE_ZONAS_BASE;
+      return fasesGrupos[index];
+    }
+    return null;
+  };
+
+  const isGruposTab =
+    selectedTab >= TabsEnum.GRUPOS_BASE &&
+    selectedTab < TabsEnum.FIXTURE_ZONAS_BASE;
+  const isFixtureZonasTab = selectedTab >= TabsEnum.FIXTURE_ZONAS_BASE;
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
@@ -96,30 +121,47 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
                 <p className="line-clamp-1">Posiciones</p>
               </div>
             )}
-            {!!faseGrupos && (
-              <div
-                onClick={() => handleChangeTab(TabsEnum.GRUPOS)}
-                className={` p-2 md:p-4 rounded-t-lg  cursor-pointer ${
-                  selectedTab === TabsEnum.GRUPOS
-                    ? "font-bold bg-white"
-                    : "bg-slate-300 hover:font-bold hover:bg-slate-400"
-                }`}
-              >
-                Fase de zonas
+
+            {fasesGrupos.map((fase: any, index: number) => (
+              <div key={`grupos-${fase.id}`}>
+                <div
+                  onClick={() => handleChangeTab(TabsEnum.GRUPOS_BASE + index)}
+                  className={` p-2 md:p-4 rounded-t-lg  cursor-pointer ${
+                    selectedTab === TabsEnum.GRUPOS_BASE + index
+                      ? "font-bold bg-white"
+                      : "bg-slate-300 hover:font-bold hover:bg-slate-400"
+                  }`}
+                >
+                  <p className="line-clamp-1">
+                    {fasesGrupos.length > 1
+                      ? `Fase de zonas ${index + 1}`
+                      : "Fase de zonas"}
+                  </p>
+                </div>
               </div>
-            )}
-            {!!faseGrupos && (
-              <div
-                onClick={() => handleChangeTab(TabsEnum.FIXTURE_ZONAS)}
-                className={` p-2 md:p-4 rounded-t-lg  cursor-pointer ${
-                  selectedTab === TabsEnum.FIXTURE_ZONAS
-                    ? "font-bold bg-white"
-                    : "bg-slate-300 hover:font-bold hover:bg-slate-400"
-                }`}
-              >
-                <p className="line-clamp-1">Fixture zonas</p>
+            ))}
+
+            {fasesGrupos.map((fase: any, index: number) => (
+              <div key={`fixture-zonas-${fase.id}`}>
+                <div
+                  onClick={() =>
+                    handleChangeTab(TabsEnum.FIXTURE_ZONAS_BASE + index)
+                  }
+                  className={` p-2 md:p-4 rounded-t-lg  cursor-pointer ${
+                    selectedTab === TabsEnum.FIXTURE_ZONAS_BASE + index
+                      ? "font-bold bg-white"
+                      : "bg-slate-300 hover:font-bold hover:bg-slate-400"
+                  }`}
+                >
+                  <p className="line-clamp-1">
+                    {fasesGrupos.length > 1
+                      ? `Fixture zonas ${index + 1}`
+                      : "Fixture zonas"}
+                  </p>
+                </div>
               </div>
-            )}
+            ))}
+
             {!!faseRegular && (
               <div
                 onClick={() => handleChangeTab(TabsEnum.FIXTURE)}
@@ -132,6 +174,7 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
                 <p className="line-clamp-1">Fixture</p>
               </div>
             )}
+
             {!!fasePlayoff && (
               <div
                 onClick={() => handleChangeTab(TabsEnum.PLAYOFFS)}
@@ -157,6 +200,7 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
                 <p className="line-clamp-1">Cuadrangular de descenso</p>
               </div>
             )}
+
             <div
               onClick={() => handleChangeTab(TabsEnum.ESTADISTICAS)}
               className={` p-2 md:p-4 rounded-t-lg  cursor-pointer ${
@@ -170,6 +214,7 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
           </div>
         </div>
       </div>
+
       <div className="h-full w-full min-h-lvh overflow-hidden overflow-x- p-4 md:p-10">
         {selectedTab === TabsEnum.POSICIONES && (
           <TablaDePosicionesWrapper faseId={faseRegular?.id || ""} />
@@ -177,14 +222,19 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
         {selectedTab === TabsEnum.FIXTURE && !!faseRegular && (
           <FixturePage faseId={faseRegular?.id || ""} />
         )}
-        {selectedTab === TabsEnum.GRUPOS && !!faseGrupos && (
-          <FaseGruposWrapper faseId={faseGrupos?.id || ""} fromCategoria />
-        )}
-        {selectedTab === TabsEnum.FIXTURE_ZONAS && !!faseGrupos && (
-          <FixtureCopaPage
-            faseId={faseGrupos?.id || ""}
+        {isGruposTab && getSelectedFaseGrupos() && (
+          <FaseGruposWrapper
+            faseId={getSelectedFaseGrupos()?.id || ""}
             fromCategoria
-            extraFechas={fases?.categoryName === "C" && !!faseGrupos ? 2 : 0}
+          />
+        )}
+        {isFixtureZonasTab && getSelectedFaseGrupos() && (
+          <FixtureCopaPage
+            faseId={getSelectedFaseGrupos()?.id || ""}
+            fromCategoria
+            extraFechas={
+              fases?.categoryName === "C" && !!getSelectedFaseGrupos() ? 2 : 0
+            }
           />
         )}
         {selectedTab === TabsEnum.PLAYOFFS && !!fasePlayoff && (

@@ -4,6 +4,7 @@ import { Box, Typography } from "@mui/material";
 import { useAllNovedadesQuery } from "@/repositories/NovedadRepository";
 import LoadingScreen from "../loading/Loading";
 import NovedadCard from "./NovedadCard";
+import moment from "moment";
 
 const NovedadesContent = () => {
   const { data: novedades, isLoading, isError } = useAllNovedadesQuery();
@@ -24,9 +25,11 @@ const NovedadesContent = () => {
 
         <Box className="flex flex-col gap-4 w-full items-center justify-center px-10 pb-10">
           {novedades && novedades?.length > 0 ? (
-            novedades?.map((novedad) => (
-              <NovedadCard key={novedad.id} novedad={novedad} />
-            ))
+            novedades
+              .sort((a, b) => moment(b.fecha).diff(moment(a.fecha)))
+              .map((novedad) => (
+                <NovedadCard key={novedad.id} novedad={novedad} />
+              ))
           ) : (
             <div className="flex items-center justify-center mt-10 text-center text-gray-500">
               No hay novedades

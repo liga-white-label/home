@@ -277,24 +277,7 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
           </Box>
           <Box className="flex items-center justify-between w-full">
             <p className="font-extrabold text-sm md:text-md">Linea:</p>
-            {match.linemenTeam ? (
-              <Box className="flex gap-2 items-center justify-between">
-                <Image
-                  src={match.linemenTeam.logoUrl}
-                  height={40}
-                  width={40}
-                  alt={match.linemenTeam.name}
-                />
-                <p className="text-xs md:text-sm">
-                  {match.linemenTeam.name +
-                    " (" +
-                    getGeneroLabel(match.linemenTeam.gender) +
-                    ")"}
-                </p>
-              </Box>
-            ) : (
-              <p className="text-sm md:text-base">A definir</p>
-            )}
+            {getLineaLabel()}
           </Box>
           <Box
             sx={{ display: match.comments ? "flex" : "none" }}

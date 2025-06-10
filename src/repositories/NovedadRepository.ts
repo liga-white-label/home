@@ -8,7 +8,7 @@ export const getNovedadMapper = (x: any): Novedad => ({
   titulo: x.title,
   descripcion: x.description,
   imagen: x.imageUrl || "",
-  fecha: moment(x.created_at),
+  fecha: moment(x.date),
 });
 
 export class NovedadRepository {
