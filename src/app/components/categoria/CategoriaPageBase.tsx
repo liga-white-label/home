@@ -126,7 +126,7 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
               <div key={`grupos-${fase.id}`}>
                 <div
                   onClick={() => handleChangeTab(TabsEnum.GRUPOS_BASE + index)}
-                  className={` p-2 md:p-4 rounded-t-lg  cursor-pointer ${
+                  className={`p-2 md:p-4 rounded-t-lg cursor-pointer whitespace-nowrap ${
                     selectedTab === TabsEnum.GRUPOS_BASE + index
                       ? "font-bold bg-white"
                       : "bg-slate-300 hover:font-bold hover:bg-slate-400"
@@ -134,7 +134,9 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
                 >
                   <p className="line-clamp-1">
                     {fasesGrupos.length > 1
-                      ? `Fase de zonas ${index + 1}`
+                      ? index === 0
+                        ? "Fase parte 1"
+                        : "Fase reclasificación"
                       : "Fase de zonas"}
                   </p>
                 </div>
@@ -147,7 +149,7 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
                   onClick={() =>
                     handleChangeTab(TabsEnum.FIXTURE_ZONAS_BASE + index)
                   }
-                  className={` p-2 md:p-4 rounded-t-lg  cursor-pointer ${
+                  className={`p-2 md:p-4 rounded-t-lg  cursor-pointer whitespace-nowrap ${
                     selectedTab === TabsEnum.FIXTURE_ZONAS_BASE + index
                       ? "font-bold bg-white"
                       : "bg-slate-300 hover:font-bold hover:bg-slate-400"
@@ -155,7 +157,9 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
                 >
                   <p className="line-clamp-1">
                     {fasesGrupos.length > 1
-                      ? `Fixture zonas ${index + 1}`
+                      ? index === 0
+                        ? "Fixture parte 1"
+                        : "Fixture reclasificación"
                       : "Fixture zonas"}
                   </p>
                 </div>
