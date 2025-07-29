@@ -1,7 +1,7 @@
 let baseUrl = "https://api.ligacubb.com.ar/";
 
 if (process.env.NODE_ENV === "development") {
-  baseUrl = "https://c2af-190-109-48-252.ngrok-free.app/";
+  baseUrl = "http://localhost:8081/";
 }
 
 export const environment = {

@@ -122,7 +122,7 @@ const CuadroPlayoff: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
                   }
                   resultHomeVuelta={
                     match.awayMatch?.status === MatchStatus.JUGADO
-                      ? match.awayMatch?.homeTeamGoals
+                      ? match.awayMatch?.awayTeamGoals
                       : null
                   }
                   resultAwayIda={
@@ -132,7 +132,7 @@ const CuadroPlayoff: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
                   }
                   resultAwayVuelta={
                     match.awayMatch?.status === MatchStatus.JUGADO
-                      ? match.awayMatch?.awayTeamGoals
+                      ? match.awayMatch?.homeTeamGoals
                       : null
                   }
                   resultHomePenales={match.homeTeamPenalties}

@@ -2,6 +2,7 @@ import { Box, Typography, Divider } from "@mui/material";
 import { LOGO_DEFAULT_TEAM } from "@/app/utils/constants";
 import { Team } from "@/app/models/Equipo";
 import Image from "next/image";
+import { abbreviateTeamName } from "@/app/utils/stringUtils";
 interface ResultBoxProps {
   team?: Team;
   resultIda?: number | null;
@@ -37,7 +38,7 @@ export const ResultBox: React.FC<ResultBoxProps> = ({
         variant="body2"
         className="max-w-24 overflow-hidden text-ellipsis line-clamp-1 w-full font-bold capitalize"
       >
-        {team?.name}
+        {abbreviateTeamName(team?.name ?? "")}
       </Typography>
       <Box className="flex items-center">
         <Typography variant="body2" className="absolute right-8">
@@ -93,9 +94,9 @@ export const InvertedResultBox: React.FC<ResultBoxProps> = ({
     />
     <Typography
       variant="body2"
-      className="max-w-24 overflow-hidden text-ellipsis line-clamp-1 w-full font-bold capitalize"
+      className="max-w-24 overflow-hidden text-ellipsis line-clamp-1 w-full font-bold capitalize text-right"
     >
-      {team?.name}
+      {abbreviateTeamName(team?.name ?? "")}
     </Typography>
     <Box className="flex items-center">
       <Typography variant="body2" className="absolute left-8">

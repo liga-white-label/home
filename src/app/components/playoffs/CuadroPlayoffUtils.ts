@@ -1,8 +1,6 @@
-import { Match, MatchStatus } from "@/app/models/Match";
-
 const vertialSpacing = 110; // It's the spacing used to define the progressive vertical distance between each Teambox
-const horizontalSpacing = 300; // Spacing between rounds
-const initialOffset = 50; // Initial offset from the left
+const horizontalSpacing = 180; // Spacing between rounds
+const initialOffset = 20; // Initial offset from the left
 
 const calculateTotalWidth = (leftRoundsLength: number) => {
   // Calculate total width including both sides and final
@@ -33,7 +31,7 @@ const getFinalLeftOffset = (leftRoundsLength: number) => {
   if (leftRoundsLength === 1) {
     return 600; // Fixed position for final when only semifinals
   }
-  return initialOffset + leftRoundsLength * horizontalSpacing - 50;
+  return initialOffset + leftRoundsLength * horizontalSpacing + 65;
 };
 
 export const calculateRightPosition = (
