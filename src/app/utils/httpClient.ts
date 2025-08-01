@@ -11,10 +11,10 @@ export const httpClient = axios.create({
 
 httpClient.interceptors.request.use(
   (config) => {
-    // const username = "adminLIGA.25";
-    //const password = "25.adminLIGA";
-    const username = "admin";
-    const password = "password";
+    const username = "adminLIGA.25";
+    const password = "25.adminLIGA";
+    // const username = "admin";
+    // const password = "password";
     const token = btoa(`${username}:${password}`);
 
     if (config.headers) {
