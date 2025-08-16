@@ -42,6 +42,7 @@ export class CategoriaRepository {
     lastTeams: (idFase: string) => ["lastTeams", idFase],
     goleadores: (idFase: string) => ["goleadores", idFase],
     amarillas: (idFase: string) => ["amarillas", idFase],
+    currentDate: (idCat: string) => ["currentDate" + idCat],
   };
 
   allFases = async (categoryId: string) => {
@@ -124,6 +125,18 @@ export class CategoriaRepository {
   getAmarillas = async (categoryId: string) => {
     const { data } = await httpClient.get<any>(
       `tournament/league/categories/get-yellow-cards?categoryId=${categoryId}`
+    );
+    return data;
+  };
+
+  getCurrentDate = async (phaseId: string) => {
+    const { data } = await httpClient.get<any>(
+      `tournament/league/categories/phase-general/get-actual-date`,
+      {
+        params: {
+          phaseId: phaseId,
+        },
+      }
     );
     return data;
   };
@@ -219,4 +232,11 @@ export const useOnePartidoDescensoQuery = (
     queryKey: repo.keys.partido(homeTeamId + awayTeamId + faseId),
     queryFn: () => repo.getOnePartidoDescenso(faseId, homeTeamId, awayTeamId),
     enabled: enabled,
+  });
+
+export const useCurrentDateQuery = (phaseId: string) =>
+  useQuery({
+    queryKey: repo.keys.currentDate(phaseId),
+    queryFn: () => repo.getCurrentDate(phaseId),
+    enabled: !!phaseId,
   });

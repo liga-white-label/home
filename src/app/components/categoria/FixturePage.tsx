@@ -7,10 +7,11 @@ import {
   Typography,
 } from "@mui/material";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { PartidosAgrupados } from "../fixture/PartidosAgrupados";
 import {
   useAllMatchesByFaseQuery,
+  useCurrentDateQuery,
   useOnePartidoQuery,
 } from "@/repositories/CategoriaRepository";
 import InfoMatchModal from "../InfoMatchModal";
@@ -22,8 +23,17 @@ interface FixturePageProps {
 }
 
 export const FixturePage: React.FC<FixturePageProps> = ({ faseId }) => {
-  const [selectedFecha, setSelectedFecha] = useState<number>(1);
+  const { data: currentDate, isLoading: isLoadingCurrentDate } =
+    useCurrentDateQuery(faseId);
+
+  const [selectedFecha, setSelectedFecha] = useState<number>(currentDate || 1);
   const currentMatchSelected = useRef<any | undefined>();
+
+  useEffect(() => {
+    if (currentDate && !isLoadingCurrentDate) {
+      setSelectedFecha(currentDate);
+    }
+  }, [currentDate, isLoadingCurrentDate]);
 
   const { data: matchesFechaActual, isLoading } = useAllMatchesByFaseQuery(
     faseId,
@@ -57,7 +67,7 @@ export const FixturePage: React.FC<FixturePageProps> = ({ faseId }) => {
     setSelectedFecha(Number(event.target.value));
   };
 
-  if (isLoading) {
+  if (isLoadingCurrentDate) {
     return <LoadingScreen />;
   }
 
