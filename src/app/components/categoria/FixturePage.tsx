@@ -67,7 +67,7 @@ export const FixturePage: React.FC<FixturePageProps> = ({ faseId }) => {
     setSelectedFecha(Number(event.target.value));
   };
 
-  if (isLoadingCurrentDate) {
+  if (isLoadingCurrentDate || isLoading) {
     return <LoadingScreen />;
   }
 
