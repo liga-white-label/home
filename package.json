@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "start:staging": "next start --port 3001",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "type-check:watch": "tsc --noEmit --watch"
