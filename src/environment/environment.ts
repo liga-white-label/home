@@ -1,34 +1,10 @@
-const environments = {
-  local: {
-    baseUrl: "http://localhost:8081/",
-    production: false,
-  },
-  ngrok: {
-    baseUrl: "https://de92-190-109-48-252.ngrok-free.app/",
-    production: false,
-  },
-  staging: {
-    baseUrl: "https://staging-api.ligacubb.com.ar/",
-    production: false,
-  },
-  prod: {
-    baseUrl: "https://api.ligacubb.com.ar/",
-    production: true,
-  },
-};
+let baseUrl = "https://staging-api.ligacubb.com.ar/";
 
-const urlToEnvMap = {
-  localhost: environments.local,
-  'staging-home.ligacubb.com.ar': environments.staging,
-  'ligacubb.com.ar': environments.prod,
-};
+if (process.env.NODE_ENV === "development") {
+  baseUrl = "http://localhost:8081/";
+}
 
-const { hostname } = window.location;
-
-const defaultEnv = environments.local;
-
-//export const environment = urlToEnvMap[hostname as keyof typeof urlToEnvMap] || defaultEnv;
 export const environment = {
-  production: false,
-  baseUrl: "https://staging-api.ligacubb.com.ar/",
+  production: process.env.NODE_ENV === "production",
+  baseUrl,
 };
