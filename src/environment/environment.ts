@@ -1,4 +1,4 @@
-let baseUrl = "https://staging-api.ligacubb.com.ar/";
+let baseUrl = "https://api.ligacubb.com.ar/";
 
 if (process.env.NODE_ENV === "development") {
   baseUrl = "http://localhost:8081/";
