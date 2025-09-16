@@ -41,7 +41,7 @@ export const ResultBox: React.FC<ResultBoxProps> = ({
         {abbreviateTeamName(team?.name ?? "")}
       </Typography>
       <Box className="flex items-center">
-        <Typography variant="body2" className="absolute right-8">
+        <Typography variant="body2" className="absolute right-12">
           {resultIda ?? "-"}
         </Typography>
         {showVuelta && (
@@ -51,7 +51,7 @@ export const ResultBox: React.FC<ResultBoxProps> = ({
               flexItem
               className="bg-white mx-1"
             />
-            <Typography variant="body2" className="absolute right-2">
+            <Typography variant="body2" className="absolute right-8">
               {resultVuelta ?? "-"}
             </Typography>
           </>
@@ -99,13 +99,13 @@ export const InvertedResultBox: React.FC<ResultBoxProps> = ({
       {abbreviateTeamName(team?.name ?? "")}
     </Typography>
     <Box className="flex items-center">
-      <Typography variant="body2" className="absolute left-8">
+      <Typography variant="body2" className="absolute left-12">
         {resultIda ?? "-"}
       </Typography>
       {showVuelta && (
         <>
           <Divider orientation="vertical" flexItem className="bg-white mx-1" />
-          <Typography variant="body2" className="absolute left-2">
+          <Typography variant="body2" className="absolute left-8">
             {resultVuelta ?? "-"}
           </Typography>
         </>

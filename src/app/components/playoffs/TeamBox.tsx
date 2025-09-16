@@ -27,9 +27,10 @@ const isDrawInMatches = (
   vueltaMatchStatus?: MatchStatus
 ): boolean => {
   if (doubleMatch) {
+    const golesDelLocal = (resultHomeIda || 0) + (resultHomeVuelta || 0);
+    const golesDelVisitante = (resultAwayIda || 0) + (resultAwayVuelta || 0);
     return (
-      resultHomeIda === resultAwayIda &&
-      resultHomeVuelta === resultAwayVuelta &&
+      golesDelLocal === golesDelVisitante &&
       idaMatchStatus === MatchStatus.JUGADO &&
       vueltaMatchStatus === MatchStatus.JUGADO
     );
@@ -60,7 +61,7 @@ export const TeamBox: React.FC<TeamBoxProps> = ({
         resultIda={resultHomeIda}
         resultVuelta={resultHomeVuelta}
         showVuelta={doubleMatch}
-        resultPenales={resultHomePenales}
+        resultPenales={resultAwayPenales}
         showPenales={isDrawInMatches(
           resultHomeIda,
           resultAwayIda,
@@ -77,7 +78,7 @@ export const TeamBox: React.FC<TeamBoxProps> = ({
         resultIda={resultAwayIda}
         resultVuelta={resultAwayVuelta}
         showVuelta={doubleMatch}
-        resultPenales={resultAwayPenales}
+        resultPenales={resultHomePenales}
         showPenales={isDrawInMatches(
           resultAwayIda,
           resultHomeIda,
@@ -111,7 +112,7 @@ export const InvertedTeamBox: React.FC<TeamBoxProps> = ({
         team={homeTeam}
         resultIda={resultHomeIda}
         resultVuelta={resultHomeVuelta}
-        resultPenales={resultHomePenales}
+        resultPenales={resultAwayPenales}
         showVuelta={doubleMatch}
         showPenales={isDrawInMatches(
           resultHomeIda,
@@ -128,7 +129,7 @@ export const InvertedTeamBox: React.FC<TeamBoxProps> = ({
         team={awayTeam}
         resultIda={resultAwayIda}
         resultVuelta={resultAwayVuelta}
-        resultPenales={resultAwayPenales}
+        resultPenales={resultHomePenales}
         showVuelta={doubleMatch}
         showPenales={isDrawInMatches(
           resultAwayIda,
