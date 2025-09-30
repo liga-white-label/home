@@ -1,6 +1,15 @@
 import { Instagram, Email } from "@mui/icons-material";
 
 export const Footer = () => {
+  const developers = [
+    {
+      name: "Joaquin Franciscutti",
+      link: "https://linkedin.com/in/jfranciscutti",
+    },
+    { name: "Julian Acttis", link: "https://linkedin.com/in/jacttis" },
+    { name: "Marco Valla", link: "https://www.instagram.com/marco_valla" },
+  ];
+
   return (
     <footer className="bg-[#A60000] text-white">
       <div className="container mx-auto py-10 px-6">
@@ -24,6 +33,25 @@ export const Footer = () => {
               <a href="mailto:ligacubb@gmail.com" className="text-lg">
                 ligacubb@gmail.com
               </a>
+            </div>
+          </div>
+
+          <div className="py-4 items-center justify-center">
+            <p className="text-xs text-white/60 mb-2 w-full text-center">
+              Desarrollado por
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-3 text-sm text-white/80">
+              {developers.map((developer, index) => (
+                <span
+                  key={developer.name}
+                  onClick={() => window.open(developer.link, "_blank")}
+                >
+                  {developer.name}
+                  {index < developers.length - 1 && (
+                    <span className="ml-3 text-white/40">•</span>
+                  )}
+                </span>
+              ))}
             </div>
           </div>
 
