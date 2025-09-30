@@ -21,7 +21,7 @@ export class CampeonatoRepository {
   keys = {
     all: () => ["campeonatos"],
     one: (id: string) => ["campeonatos", id],
-    fases: () => ["fases-copa"],
+    fases: (id: string) => ["fases-copa", id],
     oneFase: (idFase: string) => ["fases-copa", idFase],
     partido: (idPartido: string) => [idPartido],
     goleadores: (idFase: string) => ["goleadores", idFase],
@@ -159,7 +159,7 @@ export const useCampeonatoQuery = (id: string) =>
 
 export const useAllFasesByCampeonato = (id: string) =>
   useQuery({
-    queryKey: repo.keys.fases(),
+    queryKey: repo.keys.fases(id),
     queryFn: () => repo.allFases(id),
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
