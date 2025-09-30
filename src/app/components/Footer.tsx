@@ -6,8 +6,11 @@ export const Footer = () => {
       name: "Joaquin Franciscutti",
       link: "https://linkedin.com/in/jfranciscutti",
     },
-    { name: "Julian Acttis", link: "https://linkedin.com/in/jacttis" },
-    { name: "Marco Valla", link: "https://www.instagram.com/marco_valla" },
+    { name: "Julian Acttis", link: "https://linkedin.com/in/julian-acttis" },
+    {
+      name: "Marco Valla",
+      link: "https://linkedin.com/in/marco-luis-valla-zanardi",
+    },
   ];
 
   return (
@@ -43,6 +46,7 @@ export const Footer = () => {
             <div className="flex flex-wrap items-center justify-center gap-3 text-sm text-white/80">
               {developers.map((developer, index) => (
                 <span
+                  className="hover:cursor-pointer"
                   key={developer.name}
                   onClick={() => window.open(developer.link, "_blank")}
                 >
