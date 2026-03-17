@@ -61,7 +61,7 @@ export const TeamBox: React.FC<TeamBoxProps> = ({
         resultIda={resultHomeIda}
         resultVuelta={resultHomeVuelta}
         showVuelta={doubleMatch}
-        resultPenales={resultAwayPenales}
+        resultPenales={resultHomePenales}
         showPenales={isDrawInMatches(
           resultHomeIda,
           resultAwayIda,
@@ -78,7 +78,7 @@ export const TeamBox: React.FC<TeamBoxProps> = ({
         resultIda={resultAwayIda}
         resultVuelta={resultAwayVuelta}
         showVuelta={doubleMatch}
-        resultPenales={resultHomePenales}
+        resultPenales={resultAwayPenales}
         showPenales={isDrawInMatches(
           resultAwayIda,
           resultHomeIda,
@@ -112,7 +112,7 @@ export const InvertedTeamBox: React.FC<TeamBoxProps> = ({
         team={homeTeam}
         resultIda={resultHomeIda}
         resultVuelta={resultHomeVuelta}
-        resultPenales={resultAwayPenales}
+        resultPenales={resultHomePenales}
         showVuelta={doubleMatch}
         showPenales={isDrawInMatches(
           resultHomeIda,
@@ -129,7 +129,7 @@ export const InvertedTeamBox: React.FC<TeamBoxProps> = ({
         team={awayTeam}
         resultIda={resultAwayIda}
         resultVuelta={resultAwayVuelta}
-        resultPenales={resultHomePenales}
+        resultPenales={resultAwayPenales}
         showVuelta={doubleMatch}
         showPenales={isDrawInMatches(
           resultAwayIda,
@@ -170,39 +170,39 @@ export const FinalTeamBox: React.FC<{
   idaMatchStatus,
   vueltaMatchStatus,
 }) => (
-  <Box className="flex flex-col bg-[#a60000cd] text-white w-36 relative">
-    <ResultBox
-      team={nameHome}
-      resultIda={resultHomeIda}
-      resultVuelta={resultHomeVuelta}
-      resultPenales={penaltyResultHome}
-      showVuelta={doubleMatch}
-      showPenales={isDrawInMatches(
-        resultHomeIda,
-        resultAwayIda,
-        resultHomeVuelta,
-        resultAwayVuelta,
-        doubleMatch,
-        idaMatchStatus,
-        vueltaMatchStatus
-      )}
-    />
-    <Divider className="bg-white" />
-    <ResultBox
-      team={nameAway}
-      resultIda={resultAwayIda}
-      resultVuelta={resultAwayVuelta}
-      resultPenales={penaltyResultAway}
-      showVuelta={doubleMatch}
-      showPenales={isDrawInMatches(
-        resultAwayIda,
-        resultHomeIda,
-        resultAwayVuelta,
-        resultHomeVuelta,
-        doubleMatch,
-        idaMatchStatus,
-        vueltaMatchStatus
-      )}
-    />
-  </Box>
-);
+    <Box className="flex flex-col bg-[#a60000cd] text-white w-36 relative">
+      <ResultBox
+        team={nameHome}
+        resultIda={resultHomeIda}
+        resultVuelta={resultHomeVuelta}
+        resultPenales={penaltyResultHome}
+        showVuelta={doubleMatch}
+        showPenales={isDrawInMatches(
+          resultHomeIda,
+          resultAwayIda,
+          resultHomeVuelta,
+          resultAwayVuelta,
+          doubleMatch,
+          idaMatchStatus,
+          vueltaMatchStatus
+        )}
+      />
+      <Divider className="bg-white" />
+      <ResultBox
+        team={nameAway}
+        resultIda={resultAwayIda}
+        resultVuelta={resultAwayVuelta}
+        resultPenales={penaltyResultAway}
+        showVuelta={doubleMatch}
+        showPenales={isDrawInMatches(
+          resultAwayIda,
+          resultHomeIda,
+          resultAwayVuelta,
+          resultHomeVuelta,
+          doubleMatch,
+          idaMatchStatus,
+          vueltaMatchStatus
+        )}
+      />
+    </Box>
+  );
