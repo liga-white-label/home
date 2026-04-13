@@ -10,6 +10,7 @@ import { EstadisticasPage } from "./EstadisticasPage";
 import CuadrangularDescensoPage from "./CuadrangularDescensoPage";
 import { FaseGruposWrapper } from "../copa/FaseGruposWrapper";
 import FixtureCopaPage from "../copa/FixtureCopaPage";
+import { tenantConfig } from "@/config/tenant";
 
 interface CategoriaPageBaseProps {
   id: string;
@@ -96,9 +97,9 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
       <div
-        className="w-full max-w-full h-64 flex justify-start  pt-24"
+        className="w-full max-w-full h-64 flex justify-start pt-24 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('/assets/category_banner.jpg')`,
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('${tenantConfig.home.categoryBannerPath}')`,
         }}
       >
         <div className="flex flex-col justify-between max-w-full">

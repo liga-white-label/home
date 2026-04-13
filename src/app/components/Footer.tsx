@@ -1,6 +1,11 @@
 import { Instagram, Email } from "@mui/icons-material";
+import { tenantConfig } from "@/config/tenant";
 
 export const Footer = () => {
+  const { name, subtitle } = tenantConfig.brand;
+  const { instagramHandle, instagramUrl, email } = tenantConfig.contact;
+  const { copyrightYear } = tenantConfig.meta;
+
   const developers = [
     {
       name: "Joaquin Franciscutti",
@@ -14,29 +19,37 @@ export const Footer = () => {
   ];
 
   return (
-    <footer className="bg-[#A60000] text-white">
+    <footer className="text-white" style={{ backgroundColor: "var(--color-primary)" }}>
       <div className="container mx-auto py-10 px-6">
         <div className="flex flex-col items-center">
-          <h2 className="text-3xl font-bold mb-2">Liga CUBB</h2>
-          <p className="text-lg mb-8">Club Universitario de Bahía Blanca</p>
+          <h2 className="text-3xl font-bold mb-2">{name}</h2>
+          {subtitle && <p className="text-lg mb-8">{subtitle}</p>}
 
           <div className="flex flex-col items-center gap-6 mb-8">
-            <a
-              href="https://www.instagram.com/ligacubb"
-              className="hover:bg-red-900 p-4 rounded-full transition-colors duration-300 flex items-center"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Instagram className="h-12 w-12" />
-              <span className="ml-2 text-lg font-medium">@ligacubb</span>
-            </a>
-
-            <div className="flex items-center hover:text-red-200 transition-colors duration-300">
-              <Email className="mr-2 h-6 w-6" />
-              <a href="mailto:ligacubb@gmail.com" className="text-lg">
-                ligacubb@gmail.com
+            {instagramUrl && (
+              <a
+                href={instagramUrl}
+                className="hover:opacity-80 p-4 rounded-full transition-opacity duration-300 flex items-center"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Instagram className="h-12 w-12" />
+                {instagramHandle && (
+                  <span className="ml-2 text-lg font-medium">
+                    @{instagramHandle}
+                  </span>
+                )}
               </a>
-            </div>
+            )}
+
+            {email && (
+              <div className="flex items-center hover:opacity-80 transition-opacity duration-300">
+                <Email className="mr-2 h-6 w-6" />
+                <a href={`mailto:${email}`} className="text-lg">
+                  {email}
+                </a>
+              </div>
+            )}
           </div>
 
           <div className="py-4 items-center justify-center">
@@ -59,8 +72,10 @@ export const Footer = () => {
             </div>
           </div>
 
-          <div className="border-t border-red-800 w-full max-w-md pt-6 text-center">
-            <p>&copy; 2025 Liga CUBB. Todos los derechos reservados.</p>
+          <div className="border-t border-white/20 w-full max-w-md pt-6 text-center">
+            <p>
+              &copy; {copyrightYear} {name}. Todos los derechos reservados.
+            </p>
           </div>
         </div>
       </div>

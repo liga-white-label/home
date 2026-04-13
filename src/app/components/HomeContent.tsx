@@ -7,57 +7,7 @@ import {
 } from "@/repositories/CampeonatoRepository";
 import { Liga } from "@/app/models/Campeonato";
 import MiniLoading from "./loading/MiniLoading";
-
-const SLIDE_DATA = [
-  {
-    title: "Categoria A - Masculina",
-    asset: "/assets/cat_a_mas.jpg",
-    categoria: "A",
-    genero: "Masculina",
-  },
-  {
-    title: "Categoria A - Femenina",
-    asset: "/assets/cat_a_fem.jpg",
-    categoria: "A",
-    genero: "Femenina",
-  },
-  {
-    title: "Categoria B - Masculina",
-    asset: "/assets/cat_b_mas.jpg",
-    categoria: "B",
-    genero: "Masculina",
-  },
-  {
-    title: "Categoria B - Femenina",
-    asset: "/assets/cat_b_fem.jpg",
-    categoria: "B",
-    genero: "Femenina",
-  },
-  {
-    title: "Categoria C - Masculina",
-    asset: "/assets/cat_c_mas.jpg",
-    categoria: "C",
-    genero: "Masculina",
-  },
-  {
-    title: "Categoria C - Femenina",
-    asset: "/assets/cat_c_fem.jpg",
-    categoria: "C",
-    genero: "Femenina",
-  },
-  {
-    title: "Categoria D - Masculina",
-    asset: "/assets/cat_d_mas.jpg",
-    categoria: "D",
-    genero: "Masculina",
-  },
-  {
-    title: "Categoria E - Masculina",
-    asset: "/assets/cat_e_mas.jpg",
-    categoria: "E",
-    genero: "Masculina",
-  },
-];
+import { tenantConfig } from "@/config/tenant";
 
 const HomeContent = () => {
   const { data: allCampeonatos, isLoading: isLoadingAllCampeonatos } =
@@ -71,31 +21,20 @@ const HomeContent = () => {
   const ligaActual = campeonatoActual as Liga;
   const categorias = ligaActual?.categories || [];
 
-  const isCategoriaSoportada = (categoria: string, genero: string) => {
+  const getSlideLink = (categoryName: string, gender: "male" | "female") => {
     const catFound = categorias.find(
       (cat) =>
-        cat.name.toLowerCase() === categoria.toLowerCase() &&
-        cat.gender === (genero === "Masculina" ? "male" : "female")
+        cat.name.toLowerCase() === categoryName.toLowerCase() &&
+        cat.gender === gender
     );
-
-    return catFound;
+    if (!catFound) return "/";
+    return `/campeonatos/${ligaActual.id}/categorias/${catFound.id}`;
   };
 
-  const getSlideLink = (categoria: string, genero: string) => {
-    if (!isCategoriaSoportada(categoria, genero)) return "/";
-
-    const catFound = categorias.find(
-      (cat) =>
-        cat.name.toLowerCase() === categoria.toLowerCase() &&
-        cat.gender === (genero === "Masculina" ? "male" : "female")
-    );
-    return `/campeonatos/${ligaActual.id}/categorias/${catFound!.id}`;
-  };
-
-  const SLIDES = SLIDE_DATA.map((item) => ({
-    title: item.title,
-    asset: item.asset,
-    link: getSlideLink(item.categoria, item.genero),
+  const SLIDES = tenantConfig.home.slides.map((slide) => ({
+    title: slide.title,
+    asset: slide.imagePath,
+    link: getSlideLink(slide.categoryName, slide.gender),
   }));
 
   if (isLoadingAllCampeonatos || isLoadingCampeonatoActual) {

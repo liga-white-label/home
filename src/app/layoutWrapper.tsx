@@ -2,6 +2,8 @@
 import { MainLayout } from "./components/MainLayout";
 import { SidebarProvider } from "./context/SideBarContext";
 import ReactQueryProvider from "./utils/providers/ReactQueryProvider";
+import MuiThemeProvider from "./utils/providers/MuiThemeProvider";
+import { tenantConfig } from "@/config/tenant";
 import { useEffect, useState } from "react";
 
 export default function RootLayoutWrapper({
@@ -21,9 +23,13 @@ export default function RootLayoutWrapper({
 
   return (
     <ReactQueryProvider>
-      <SidebarProvider>
-        <MainLayout>{children}</MainLayout>
-      </SidebarProvider>
+      <MuiThemeProvider>
+        <SidebarProvider>
+          <MainLayout primaryColor={tenantConfig.brand.primaryColor}>
+            {children}
+          </MainLayout>
+        </SidebarProvider>
+      </MuiThemeProvider>
     </ReactQueryProvider>
   );
 }

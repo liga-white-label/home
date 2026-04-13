@@ -86,7 +86,8 @@ export const LinkNavigator = () => {
             open={open}
             onClose={handleClose}
             MenuListProps={{
-              className: "bg-[#A60000] text-white",
+              style: { backgroundColor: "var(--color-primary)" },
+              className: "text-white",
               "aria-labelledby": "basic-button",
             }}
           >
@@ -132,7 +133,8 @@ export const LinkNavigator = () => {
           open={openCopa}
           onClose={handleClose}
           MenuListProps={{
-            className: "bg-[#A60000] text-white",
+            style: { backgroundColor: "var(--color-primary)" },
+            className: "text-white",
             "aria-labelledby": "basic-button",
           }}
         >

@@ -4,6 +4,8 @@
 
 :root {
   --background--rgb: 255,255,255;
+  /* Overridden at runtime via layoutWrapper inline style */
+  --color-primary: #A60000;
 }
 
 html {

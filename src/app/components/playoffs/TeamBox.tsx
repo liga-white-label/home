@@ -55,7 +55,7 @@ export const TeamBox: React.FC<TeamBoxProps> = ({
   vueltaMatchStatus,
 }) => {
   return (
-    <Box className="flex flex-col bg-[#a60000cd] text-white w-36 relative">
+    <Box className="flex flex-col text-white w-36 relative" style={{ backgroundColor: "var(--color-primary)", opacity: 0.85 }}>
       <ResultBox
         team={homeTeam}
         resultIda={resultHomeIda}
@@ -107,7 +107,7 @@ export const InvertedTeamBox: React.FC<TeamBoxProps> = ({
   vueltaMatchStatus,
 }) => {
   return (
-    <Box className="flex flex-col bg-[#a60000cd] text-white w-36 relative">
+    <Box className="flex flex-col text-white w-36 relative" style={{ backgroundColor: "var(--color-primary)", opacity: 0.85 }}>
       <InvertedResultBox
         team={homeTeam}
         resultIda={resultHomeIda}
@@ -170,7 +170,7 @@ export const FinalTeamBox: React.FC<{
   idaMatchStatus,
   vueltaMatchStatus,
 }) => (
-    <Box className="flex flex-col bg-[#a60000cd] text-white w-36 relative">
+    <Box className="flex flex-col text-white w-36 relative" style={{ backgroundColor: "var(--color-primary)", opacity: 0.85 }}>
       <ResultBox
         team={nameHome}
         resultIda={resultHomeIda}

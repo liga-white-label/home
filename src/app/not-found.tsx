@@ -10,7 +10,8 @@ export default function NotFound() {
         </p>
         <Link
           href="/"
-          className="text-white bg-[#a60000] px-4 py-2 rounded hover:bg-[#8a0000] transition-colors"
+          className="text-white px-4 py-2 rounded transition-colors"
+          style={{ backgroundColor: "var(--color-primary)" }}
         >
           Volver al inicio
         </Link>

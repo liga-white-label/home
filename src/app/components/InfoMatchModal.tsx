@@ -150,7 +150,7 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
         sx: { width: { md: "50%", xs: "80%" }, maxWidth: "100%" },
       }}
     >
-      <DialogTitle className="flex justify-between items-center text-white bg-[#A60000]">
+      <DialogTitle className="flex justify-between items-center text-white" style={{ backgroundColor: "var(--color-primary)" }}>
         <p className="text-xl md:text-2xl">
           Detalles del Partido{" "}
           <span className="text-xs md:text-sm">
@@ -204,7 +204,7 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
 
           <Box className="flex-grow-0 flex-shrink-0 mx-auto ">
             {match.status === MatchStatus.JUGADO ? (
-              <div className="w-18 bg-[#A60000] px-2 py-1 rounded-md items-center flex justify-center">
+              <div className="w-18 px-2 py-1 rounded-md items-center flex justify-center" style={{ backgroundColor: "var(--color-primary)" }}>
                 <p className="text-white font-bold text-xl md:text-2xl">{`${match.homeTeamGoals} - ${match.awayTeamGoals}`}</p>
               </div>
             ) : (
@@ -235,10 +235,11 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
           </Box>
         </Box>
         <Divider
-          className="text-[#A60000] py-2"
+          className="py-2"
           sx={{
+            color: "var(--color-primary)",
             "&::before, &::after": {
-              borderColor: "#A60000",
+              borderColor: "var(--color-primary)",
             },
           }}
         />
@@ -250,10 +251,10 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
           </Box>
           <Divider
             orientation="vertical"
-            className="text-[#A60000] "
             sx={{
+              color: "var(--color-primary)",
               "&::before, &::after": {
-                borderColor: "#A60000",
+                borderColor: "var(--color-primary)",
               },
             }}
           />
@@ -264,8 +265,8 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
           </Box>
         </Box>
       </DialogContent>
-      <DialogTitle className="flex justify-between items-center text-white bg-[#A60000]">
-        <Box className="flex flex-col items-center justify-center gap-2 w-full bg-[#A60000] rounded-sm p-2 text-white">
+      <DialogTitle className="flex justify-between items-center text-white" style={{ backgroundColor: "var(--color-primary)" }}>
+        <Box className="flex flex-col items-center justify-center gap-2 w-full rounded-sm p-2 text-white" style={{ backgroundColor: "var(--color-primary)" }}>
           <Box className="flex items-center justify-between w-full">
             <p className="font-extrabold text-sm md:text-md">Cancha:</p>
             <p className="text-sm md:text-base">{canchaLabel}</p>

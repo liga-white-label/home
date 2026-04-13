@@ -55,7 +55,7 @@ export const CustomDrawer = () => {
       </ListItem>
       {categorias.length > 0 && (
         <ListItem disablePadding>
-          <Accordion className="!bg-[#A60000] !w-full !shadow-none">
+          <Accordion className="!bg-[var(--color-primary)] !w-full !shadow-none">
             <AccordionSummary
               className="!m-0"
               aria-controls="categorias-content"
@@ -161,7 +161,7 @@ export const CustomDrawer = () => {
         </Link>
       </ListItem>
       <ListItem disablePadding>
-        <Accordion className="!bg-[#A60000] !w-full !shadow-none">
+        <Accordion className="!bg-[var(--color-primary)] !w-full !shadow-none">
           <AccordionSummary
             className="!m-0"
             aria-controls="copas-content"
@@ -220,7 +220,7 @@ export const CustomDrawer = () => {
       open={sidebarOpen}
       onClose={handleClose}
       className="!z-0"
-      PaperProps={{ className: "!pt-24 !pl-2 !bg-[#A60000]" }}
+      PaperProps={{ className: "!pt-24 !pl-2 !bg-[var(--color-primary)]" }}
       anchor="right"
     >
       {isLoading ? <MiniLoading /> : DrawerList}

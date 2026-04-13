@@ -41,7 +41,7 @@ export const MatchScore: FC<MatchScoreProps> = ({
               transform: "translateX(-50%)",
               width: "30%",
               height: 2,
-              backgroundColor: "#A60000",
+              backgroundColor: "var(--color-primary)",
               borderRadius: 1,
             }
           : {},

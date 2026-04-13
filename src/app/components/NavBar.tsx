@@ -1,23 +1,26 @@
 "use client";
 import Image from "next/image";
 import { LinkNavigator } from "./LinkNavigator";
-import { Icon } from "@mui/material";
 import { Menu } from "@mui/icons-material";
 import Link from "next/link";
 import { useSidebar } from "../context/SideBarContext";
+import { tenantConfig } from "@/config/tenant";
 
 export const NavBar = () => {
   const { switchSidebar } = useSidebar();
+  const { logoPath, logoWidth, logoHeight, name } = tenantConfig.brand;
+
   return (
     <div
-      className={`h-20 bg-[#a60000] w-full z-50 flex items-center justify-center`}
+      className="h-20 w-full z-50 flex items-center justify-center"
+      style={{ backgroundColor: "var(--color-primary)" }}
     >
       <Link href="/" className="md:absolute md:left-10">
         <Image
-          src={"/assets/logo_2025.png"}
-          alt={"LIGA CUBB 2025"}
-          width={200}
-          height={100}
+          src={logoPath}
+          alt={name}
+          width={logoWidth}
+          height={logoHeight}
         />
       </Link>
       <LinkNavigator />

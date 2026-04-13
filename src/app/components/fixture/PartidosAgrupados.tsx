@@ -45,7 +45,7 @@ export const PartidosAgrupados: React.FC<PartidosAgrupadosProps> = ({
           borderRadius: "4px",
         },
         "&::-webkit-scrollbar-thumb": {
-          background: "#A60000",
+          background: "var(--color-primary)",
           borderRadius: "4px",
         },
       }}

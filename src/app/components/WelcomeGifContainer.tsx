@@ -1,9 +1,11 @@
 import { ArrowDropDown } from "@mui/icons-material";
-import Image from "next/image";
+import { tenantConfig } from "@/config/tenant";
 
 export const WelcomeGifContainer = () => {
+  const { heroVideoPath } = tenantConfig.home;
+
   return (
-    <div className="flex flex-col items-center h-[100svh] bg-[#220a0a] relative">
+    <div className="flex flex-col items-center h-[100svh] bg-black relative">
       <video
         className="w-full h-screen object-cover"
         autoPlay
@@ -12,7 +14,7 @@ export const WelcomeGifContainer = () => {
         playsInline
         preload="auto"
       >
-        <source src="/assets/video-home.mp4" type="video/mp4" />
+        <source src={heroVideoPath} type="video/mp4" />
         Tu navegador no soporta la etiqueta de video.
       </video>
       <div className="absolute bottom-4 animate-bounce">

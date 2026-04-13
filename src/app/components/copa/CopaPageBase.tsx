@@ -7,6 +7,7 @@ import { FaseGruposWrapper } from "./FaseGruposWrapper";
 import FixtureCopaPage from "./FixtureCopaPage";
 import PlayoffsCopaPage from "../playoffs/PlayoffsCopaPage";
 import { EstadisticasCopaPage } from "./EstadisticasCopaPage";
+import { tenantConfig } from "@/config/tenant";
 
 interface CopaPageBaseProps {
   id: string;
@@ -60,9 +61,9 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
   return (
     <div className="w-full">
       <div
-        className="w-full h-64 flex justify-start pt-24 bg-cover bg-center"
+        className="w-full h-64 flex justify-start pt-24 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('/assets/category_banner.jpg')`,
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('${tenantConfig.home.categoryBannerPath}')`,
         }}
       >
         <div className="flex flex-col justify-between w-full">
@@ -71,11 +72,10 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
             {!!faseGrupos && (
               <div
                 onClick={() => handleChangeTab(TabsEnum.GRUPOS)}
-                className={`p-2 md:p-4 rounded-t-lg cursor-pointer whitespace-nowrap ${
-                  selectedTab === TabsEnum.GRUPOS
+                className={`p-2 md:p-4 rounded-t-lg cursor-pointer whitespace-nowrap ${selectedTab === TabsEnum.GRUPOS
                     ? "font-bold bg-white"
                     : "bg-slate-300 hover:font-bold hover:bg-slate-400"
-                }`}
+                  }`}
               >
                 <p className="line-clamp-1">Fase de Grupos</p>
               </div>
@@ -83,11 +83,10 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
             {!!faseGrupos && (
               <div
                 onClick={() => handleChangeTab(TabsEnum.FIXTURE)}
-                className={`p-2 md:p-4 rounded-t-lg cursor-pointer whitespace-nowrap ${
-                  selectedTab === TabsEnum.FIXTURE
+                className={`p-2 md:p-4 rounded-t-lg cursor-pointer whitespace-nowrap ${selectedTab === TabsEnum.FIXTURE
                     ? "font-bold bg-white"
                     : "bg-slate-300 hover:font-bold hover:bg-slate-400"
-                }`}
+                  }`}
               >
                 <p className="line-clamp-1">Fixture</p>
               </div>
@@ -95,22 +94,20 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
             {!!fasesPlayoff && (
               <div
                 onClick={() => handleChangeTab(TabsEnum.PLAYOFFS)}
-                className={`p-2 md:p-4 rounded-t-lg cursor-pointer whitespace-nowrap ${
-                  selectedTab === TabsEnum.PLAYOFFS
+                className={`p-2 md:p-4 rounded-t-lg cursor-pointer whitespace-nowrap ${selectedTab === TabsEnum.PLAYOFFS
                     ? "font-bold bg-white"
                     : "bg-slate-300 hover:font-bold hover:bg-slate-400"
-                }`}
+                  }`}
               >
                 <p className="line-clamp-1">Playoffs</p>
               </div>
             )}
             <div
               onClick={() => handleChangeTab(TabsEnum.ESTADISTICAS)}
-              className={`p-2 md:p-4 rounded-t-lg cursor-pointer whitespace-nowrap ${
-                selectedTab === TabsEnum.ESTADISTICAS
+              className={`p-2 md:p-4 rounded-t-lg cursor-pointer whitespace-nowrap ${selectedTab === TabsEnum.ESTADISTICAS
                   ? "font-bold bg-white"
                   : "bg-slate-300 hover:font-bold hover:bg-slate-400"
-              }`}
+                }`}
             >
               <p className="line-clamp-1">Estadísticas</p>
             </div>

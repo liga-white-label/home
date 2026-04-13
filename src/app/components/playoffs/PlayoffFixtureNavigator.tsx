@@ -49,7 +49,7 @@ const PlayoffFixtureNavigator: React.FC<PlayoffFixtureNavigatorProps> = ({
 
   return (
     <>
-      <Box className="flex w-full p-4 justify-between items-center bg-[#A60000]">
+      <Box className="flex w-full p-4 justify-between items-center" style={{ backgroundColor: "var(--color-primary)" }}>
         <IconButton
           disabled={
             selectedPhase === FASE_MINIMA ||

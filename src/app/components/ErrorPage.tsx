@@ -20,7 +20,7 @@ const ErrorPage = () => {
       </Typography>
       <Button
         variant="outlined"
-        style={{ color: "#a60000", borderColor: "#a60000" }}
+        style={{ color: "var(--color-primary)", borderColor: "var(--color-primary)" }}
         onClick={handleRetry}
       >
         Reintentar
