@@ -240,3 +240,27 @@ export const useCurrentDateQuery = (phaseId: string) =>
     queryFn: () => repo.getCurrentDate(phaseId),
     enabled: !!phaseId,
   });
+
+// Non-suspense versions used by the home page summary section
+export const useAllFasesByCategoryQuery = (id: string) =>
+  useQuery({
+    queryKey: repo.keys.fases(id),
+    queryFn: () => repo.allFases(id),
+    enabled: !!id,
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+
+export const useLeagueMatchesQuery = (
+  id: string,
+  fecha: number | undefined
+) =>
+  useQuery({
+    queryKey: repo.keys.oneFase(id, fecha),
+    queryFn: () => repo.getAllLeagueMatches(id, fecha!),
+    enabled: !!id && !!fecha,
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
