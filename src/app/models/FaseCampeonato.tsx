@@ -43,7 +43,7 @@ export interface TablePosition {
 }
 
 export const faseCopaMapper = (x: any): FaseGruposCopa => ({
-  matches: x.matches,
+  matches: (x.matches || []).map((match: any) => partidoMapper(match)),
   name: x.name,
   teams: x.teams || [],
   positions: x.positions?.map(getPositionsMapper) || [],

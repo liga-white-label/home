@@ -1,5 +1,43 @@
+import moment from "moment";
+import "moment/locale/es";
 import { MatchStatus, SimplifiedMatch, convertToSimplifiedMatch } from "@/app/models/Match";
 import { RoundCup } from "@/app/models/FaseCampeonato";
+
+export interface DayGroup {
+  /** YYYY-MM-DD — used for stable sort */
+  dayKey: string;
+  /** e.g. "Sábado 18 de abril" */
+  dayLabel: string;
+  matches: SimplifiedMatch[];
+}
+
+/**
+ * Groups matches by calendar day, sorted chronologically.
+ * Matches without a date are collected under a single trailing group.
+ */
+export const groupMatchesByDay = (matches: SimplifiedMatch[]): DayGroup[] => {
+  const map = new Map<string, DayGroup>();
+
+  for (const match of matches) {
+    const d = match.date ? moment(match.date) : null;
+    const key = d?.isValid() ? d.format("YYYY-MM-DD") : "9999-99-99";
+    if (!map.has(key)) {
+      const label = d?.isValid()
+        ? d.locale("es").format("dddd D [de] MMMM")
+        : "Fecha a confirmar";
+      map.set(key, {
+        dayKey: key,
+        dayLabel: label.charAt(0).toUpperCase() + label.slice(1),
+        matches: [],
+      });
+    }
+    map.get(key)!.matches.push(match);
+  }
+
+  return Array.from(map.values()).sort((a, b) =>
+    a.dayKey.localeCompare(b.dayKey)
+  );
+};
 
 export const getRoundLabel = (roundNumber: number): string => {
   switch (roundNumber) {

@@ -25,7 +25,10 @@ export default function RootLayoutWrapper({
     <ReactQueryProvider>
       <MuiThemeProvider>
         <SidebarProvider>
-          <MainLayout primaryColor={tenantConfig.brand.primaryColor}>
+          <MainLayout
+            primaryColor={tenantConfig.brand.primaryColor}
+            secondaryColor={tenantConfig.brand.secondaryColor}
+          >
             {children}
           </MainLayout>
         </SidebarProvider>

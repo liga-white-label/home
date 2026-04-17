@@ -6,12 +6,20 @@ import { CustomDrawer } from "./CustomDrawer";
 export const MainLayout = ({
   children,
   primaryColor,
+  secondaryColor,
 }: Readonly<{
   children: React.ReactNode;
   primaryColor: string;
+  secondaryColor: string;
 }>) => {
   return (
-    <html lang="en" style={{ ["--color-primary" as string]: primaryColor }}>
+    <html
+      lang="en"
+      style={{
+        ["--color-primary" as string]: primaryColor,
+        ["--color-secondary" as string]: secondaryColor,
+      }}
+    >
       <body>
         <div className="flex flex-col">
           <NavBar />

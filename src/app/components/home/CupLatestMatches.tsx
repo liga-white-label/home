@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   useAllFasesByCampeonato,
   useOneFaseCampeonatoQuery,
@@ -7,6 +8,7 @@ import {
 } from "@/repositories/CampeonatoRepository";
 import {
   convertToSimplifiedMatch,
+  Match,
   MatchStatus,
   SimplifiedMatch,
 } from "@/app/models/Match";
@@ -14,10 +16,12 @@ import { FaseGruposCopa } from "@/app/models/FaseCampeonato";
 import Link from "next/link";
 import MiniLoading from "../loading/MiniLoading";
 import MatchResultRow from "./MatchResultRow";
+import InfoMatchModal from "../InfoMatchModal";
 import {
   findMostAdvancedRound,
   getRoundLabel,
   roundToSimplifiedMatches,
+  groupMatchesByDay,
 } from "./playoffUtils";
 
 interface CupLatestMatchesProps {
@@ -25,6 +29,8 @@ interface CupLatestMatchesProps {
 }
 
 const CupLatestMatches = ({ cupId }: CupLatestMatchesProps) => {
+  const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
+
   const { data: fases = [], isLoading: isLoadingFases } =
     useAllFasesByCampeonato(cupId);
 
@@ -69,25 +75,45 @@ const CupLatestMatches = ({ cupId }: CupLatestMatchesProps) => {
     const toShow = [...played, ...upcoming];
 
     return (
-      <div className="px-4 md:px-8 py-4">
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-sm font-medium" style={{ color: "var(--color-primary)" }}>
-            Playoffs — {getRoundLabel(activeRound.roundNumber)}
-          </span>
-          <Link
-            href={`/campeonatos/${cupId}?tab=2`}
-            className="text-sm font-medium hover:underline"
-            style={{ color: "var(--color-primary)" }}
-          >
-            Ver playoffs →
-          </Link>
+      <>
+        <div className="px-4 md:px-8 py-4">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-sm font-medium" style={{ color: "var(--color-primary)" }}>
+              Playoffs — {getRoundLabel(activeRound.roundNumber)}
+            </span>
+            <Link
+              href={`/campeonatos/${cupId}?tab=2`}
+              className="text-sm font-medium hover:underline"
+              style={{ color: "var(--color-primary)" }}
+            >
+              Ver playoffs →
+            </Link>
+          </div>
+          <div className="flex flex-col gap-4">
+            {groupMatchesByDay(toShow).map((group) => (
+              <div key={group.dayKey}>
+                <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2">
+                  {group.dayLabel}
+                </p>
+                <div className="flex flex-col gap-2">
+                  {group.matches.map((match, i) => (
+                    <MatchResultRow
+                      key={i}
+                      match={match}
+                      onClick={match.matchDetail ? () => setSelectedMatch(match.matchDetail!) : undefined}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="flex flex-col gap-2">
-          {toShow.map((match, i) => (
-            <MatchResultRow key={i} match={match} />
-          ))}
-        </div>
-      </div>
+        <InfoMatchModal
+          openMatchModal={selectedMatch !== null}
+          handleCloseModal={() => setSelectedMatch(null)}
+          match={selectedMatch}
+        />
+      </>
     );
   }
 
@@ -118,29 +144,49 @@ const CupLatestMatches = ({ cupId }: CupLatestMatchesProps) => {
   const label = played.length > 0 ? "Últimos resultados" : "Próximos partidos";
 
   return (
-    <div className="px-4 md:px-8 py-4">
-      <div className="flex items-center justify-between mb-3">
-        <span className="text-sm text-gray-400 font-medium">{label}</span>
-        <Link
-          href={`/campeonatos/${cupId}`}
-          className="text-sm font-medium hover:underline"
-          style={{ color: "var(--color-primary)" }}
-        >
-          Ver copa →
-        </Link>
-      </div>
-      {toShow.length === 0 ? (
-        <p className="text-center text-gray-400 py-6 text-sm">
-          No hay partidos disponibles.
-        </p>
-      ) : (
-        <div className="flex flex-col gap-2">
-          {toShow.map((match, i) => (
-            <MatchResultRow key={i} match={match} />
-          ))}
+    <>
+      <div className="px-4 md:px-8 py-4">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-sm text-gray-400 font-medium">{label}</span>
+          <Link
+            href={`/campeonatos/${cupId}`}
+            className="text-sm font-medium hover:underline"
+            style={{ color: "var(--color-primary)" }}
+          >
+            Ver copa →
+          </Link>
         </div>
-      )}
-    </div>
+        {toShow.length === 0 ? (
+          <p className="text-center text-gray-400 py-6 text-sm">
+            No hay partidos disponibles.
+          </p>
+        ) : (
+          <div className="flex flex-col gap-4">
+            {groupMatchesByDay(toShow).map((group) => (
+              <div key={group.dayKey}>
+                <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2">
+                  {group.dayLabel}
+                </p>
+                <div className="flex flex-col gap-2">
+                  {group.matches.map((match, i) => (
+                    <MatchResultRow
+                      key={i}
+                      match={match}
+                      onClick={match.matchDetail ? () => setSelectedMatch(match.matchDetail!) : undefined}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      <InfoMatchModal
+        openMatchModal={selectedMatch !== null}
+        handleCloseModal={() => setSelectedMatch(null)}
+        match={selectedMatch}
+      />
+    </>
   );
 };
 

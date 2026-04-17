@@ -9,6 +9,7 @@ import { Liga } from "@/app/models/Campeonato";
 import MiniLoading from "./loading/MiniLoading";
 import { tenantConfig } from "@/config/tenant";
 import LatestResultsSection from "./home/LatestResultsSection";
+import NewsCarousel from "./home/NewsCarousel";
 
 const HomeContent = () => {
   const { data: allCampeonatos, isLoading: isLoadingAllCampeonatos } =
@@ -58,6 +59,7 @@ const HomeContent = () => {
           cups={copasActivas}
         />
       )}
+      <NewsCarousel />
       <WelcomeGifContainer />
       <section className="w-full bg-red-100">
         <EmblaCarousel slides={SLIDES} options={{ align: "start" }} />

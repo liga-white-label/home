@@ -9,6 +9,9 @@ const theme = createTheme({
     primary: {
       main: tenantConfig.brand.primaryColor,
     },
+    secondary: {
+      main: tenantConfig.brand.secondaryColor,
+    },
   },
 });
 

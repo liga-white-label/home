@@ -4,6 +4,8 @@ import { tenantConfig } from "@/config/tenant";
 export const WelcomeGifContainer = () => {
   const { heroVideoPath } = tenantConfig.home;
 
+  if (!heroVideoPath) return null;
+
   return (
     <div className="flex flex-col items-center h-[100svh] bg-black relative">
       <video

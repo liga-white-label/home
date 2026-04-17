@@ -5,7 +5,7 @@ import {
 } from "@/repositories/CampeonatoRepository";
 import { Menu, MenuItem } from "@mui/material";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { Liga } from "@/app/models/Campeonato";
 import MiniLoading from "./loading/MiniLoading";
@@ -22,6 +22,8 @@ export const LinkNavigator = () => {
     useCampeonatoQuery(campeonatoActualVacio?.id || "");
 
   const ligaActual = campeonatoActual as Liga;
+
+  const router = useRouter();
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [anchorElCopa, setAnchorElCopa] = useState<HTMLButtonElement | null>(
@@ -92,12 +94,16 @@ export const LinkNavigator = () => {
             }}
           >
             {categorias.map((c, index) => (
-              <MenuItem key={index} onClick={handleClose}>
-                <Link href={`/campeonatos/${ligaActual.id}/categorias/${c.id}`}>
-                  <p className="text-lg">{`Categoria ${c.name} - ${
-                    c.gender === "male" ? "Masculina" : "Femenina"
-                  }`}</p>
-                </Link>
+              <MenuItem
+                key={index}
+                onClick={() => {
+                  handleClose();
+                  router.push(`/campeonatos/${ligaActual.id}/categorias/${c.id}`);
+                }}
+              >
+                <p className="text-lg">{`Categoria ${c.name} - ${
+                  c.gender === "male" ? "Masculina" : "Femenina"
+                }`}</p>
               </MenuItem>
             ))}
           </Menu>
@@ -140,10 +146,14 @@ export const LinkNavigator = () => {
         >
           {allCopas?.length > 0 ? (
             allCopas?.map((c, index) => (
-              <MenuItem key={index} onClick={handleClose}>
-                <Link href={`/campeonatos/${c.id}`}>
-                  <p className="text-lg">{c.name}</p>
-                </Link>
+              <MenuItem
+                key={index}
+                onClick={() => {
+                  handleClose();
+                  router.push(`/campeonatos/${c.id}`);
+                }}
+              >
+                <p className="text-lg">{c.name}</p>
               </MenuItem>
             ))
           ) : (

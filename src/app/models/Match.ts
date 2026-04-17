@@ -84,6 +84,7 @@ export interface SimplifiedMatch {
   date: Moment | null;
   dateNumber: number;
   field: string | null;
+  matchDetail?: Match;
 }
 
 export const convertToSimplifiedMatch = (match: Match): SimplifiedMatch => ({
@@ -99,4 +100,5 @@ export const convertToSimplifiedMatch = (match: Match): SimplifiedMatch => ({
   date: match?.date || null,
   dateNumber: match?.dateNumber || 0,
   field: match?.field || null,
+  matchDetail: match,
 });

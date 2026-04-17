@@ -5,6 +5,7 @@ export const tenantConfig = {
       process.env.NEXT_PUBLIC_BRAND_SUBTITLE ??
       "Club Universitario de Bahía Blanca",
     primaryColor: process.env.NEXT_PUBLIC_PRIMARY_COLOR ?? "#A60000",
+    secondaryColor: process.env.NEXT_PUBLIC_SECONDARY_COLOR ?? "#0C0C0C",
     logoPath:
       process.env.NEXT_PUBLIC_LOGO_PATH ?? "/assets/logo_2025.png",
     logoWidth: Number(process.env.NEXT_PUBLIC_LOGO_WIDTH ?? 200),
@@ -19,7 +20,7 @@ export const tenantConfig = {
   },
   home: {
     heroVideoPath:
-      process.env.NEXT_PUBLIC_HERO_VIDEO_PATH ?? "/assets/video-home.mp4",
+      process.env.NEXT_PUBLIC_HERO_VIDEO_PATH ?? null,
     categoryBannerPath:
       process.env.NEXT_PUBLIC_CATEGORY_BANNER_PATH ??
       "/assets/category_banner.jpg",

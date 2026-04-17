@@ -6,4 +6,5 @@ export interface Novedad {
   descripcion: string;
   fecha: Moment;
   imagen: string;
+  categoria?: string;
 }

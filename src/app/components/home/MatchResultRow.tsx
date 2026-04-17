@@ -7,11 +7,20 @@ export const resolveLogoUrl = (url: string | null): string => {
   return url.startsWith("https://") ? url : "https://" + url;
 };
 
-const MatchResultRow = ({ match }: { match: SimplifiedMatch }) => {
+const MatchResultRow = ({
+  match,
+  onClick,
+}: {
+  match: SimplifiedMatch;
+  onClick?: () => void;
+}) => {
   const isPlayed = match.status === MatchStatus.JUGADO;
 
   return (
-    <div className="flex items-center justify-between gap-2 py-2 px-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+    <div
+      className={`flex items-center justify-between gap-2 py-2 px-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors ${onClick ? "cursor-pointer" : ""}`}
+      onClick={onClick}
+    >
       {/* Home team */}
       <div className="flex items-center gap-2 flex-1 justify-end min-w-0">
         <span
