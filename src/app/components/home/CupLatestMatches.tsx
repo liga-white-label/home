@@ -61,6 +61,57 @@ const CupLatestMatches = ({ cupId }: CupLatestMatchesProps) => {
 
   const isLoading = isLoadingFases || isLoadingGrupos || isLoadingPlayoff;
 
+  const activeRound = findMostAdvancedRound(playoffRounds);
+
+  const allMatches: SimplifiedMatch[] = useMemo(
+    () =>
+      activeRound
+        ? []
+        : (gruposData as FaseGruposCopa[]).flatMap((grupo) =>
+            grupo.matches.map(convertToSimplifiedMatch)
+          ),
+    [activeRound, gruposData]
+  );
+
+  const sortByDate = (a: SimplifiedMatch, b: SimplifiedMatch) => {
+    if (!a.date && !b.date) return 0;
+    if (!a.date) return 1;
+    if (!b.date) return -1;
+    return moment(a.date).valueOf() - moment(b.date).valueOf();
+  };
+
+  const groupToShow = useMemo(() => {
+    if (activeRound) return [];
+    const played = allMatches
+      .filter((m) => m.status === MatchStatus.JUGADO)
+      .sort(sortByDate)
+      .slice(0, 6);
+    const upcoming = allMatches
+      .filter((m) => m.status !== MatchStatus.JUGADO)
+      .sort(sortByDate)
+      .slice(0, 4);
+    return played.length > 0 ? played : upcoming;
+  }, [activeRound, allMatches]);
+
+  const groupLabel = useMemo(() => {
+    if (activeRound) return "";
+    const played = allMatches.filter((m) => m.status === MatchStatus.JUGADO);
+    return played.length > 0 ? "Últimos resultados" : "Próximos partidos";
+  }, [activeRound, allMatches]);
+
+  const availableCanchas = useMemo(() => {
+    const fields = Array.from(new Set(groupToShow.map((m) => m.field).filter(Boolean) as string[]));
+    return fields.sort((a, b) => {
+      const [ta, na] = parseFieldOrder(a);
+      const [tb, nb] = parseFieldOrder(b);
+      return ta !== tb ? ta - tb : na - nb;
+    });
+  }, [groupToShow]);
+
+  const filteredMatches = selectedCancha
+    ? groupToShow.filter((m) => m.field === selectedCancha)
+    : groupToShow;
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center py-8">
@@ -68,8 +119,6 @@ const CupLatestMatches = ({ cupId }: CupLatestMatchesProps) => {
       </div>
     );
   }
-
-  const activeRound = findMostAdvancedRound(playoffRounds);
 
   if (activeRound) {
     const playoffMatches = roundToSimplifiedMatches(activeRound);
@@ -119,43 +168,6 @@ const CupLatestMatches = ({ cupId }: CupLatestMatchesProps) => {
     );
   }
 
-  const allMatches: SimplifiedMatch[] = (gruposData as FaseGruposCopa[]).flatMap(
-    (grupo) => grupo.matches.map(convertToSimplifiedMatch)
-  );
-
-  const sortByDate = (a: SimplifiedMatch, b: SimplifiedMatch) => {
-    if (!a.date && !b.date) return 0;
-    if (!a.date) return 1;
-    if (!b.date) return -1;
-    return moment(a.date).valueOf() - moment(b.date).valueOf();
-  };
-
-  const played = allMatches
-    .filter((m) => m.status === MatchStatus.JUGADO)
-    .sort(sortByDate)
-    .slice(0, 6);
-
-  const upcoming = allMatches
-    .filter((m) => m.status !== MatchStatus.JUGADO)
-    .sort(sortByDate)
-    .slice(0, 4);
-
-  const toShow = played.length > 0 ? played : upcoming;
-  const label = played.length > 0 ? "Últimos resultados" : "Próximos partidos";
-
-  const availableCanchas = useMemo(() => {
-    const fields = Array.from(new Set(toShow.map((m) => m.field).filter(Boolean) as string[]));
-    return fields.sort((a, b) => {
-      const [ta, na] = parseFieldOrder(a);
-      const [tb, nb] = parseFieldOrder(b);
-      return ta !== tb ? ta - tb : na - nb;
-    });
-  }, [toShow]);
-
-  const filteredMatches = selectedCancha
-    ? toShow.filter((m) => m.field === selectedCancha)
-    : toShow;
-
   return (
     <>
       {availableCanchas.length > 0 && (
@@ -193,7 +205,7 @@ const CupLatestMatches = ({ cupId }: CupLatestMatchesProps) => {
       )}
       <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid #1a1a1a" }}>
         <span className="text-xs font-semibold uppercase tracking-widest text-gray-500">
-          {label}
+          {groupLabel}
         </span>
         <Link
           href={`/campeonatos/${cupId}`}
