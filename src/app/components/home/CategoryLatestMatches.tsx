@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   useAllFasesByCategoryQuery,
   useCurrentDateQuery,
   useLeagueMatchesQuery,
   useOneFasePlayoffQuery,
 } from "@/repositories/CategoriaRepository";
+import moment from "moment";
 import { Match, MatchStatus, SimplifiedMatch } from "@/app/models/Match";
 import Link from "next/link";
 import MiniLoading from "../loading/MiniLoading";
@@ -35,11 +36,18 @@ const DayHeader = ({ label }: { label: string }) => (
   </div>
 );
 
+const parseFieldOrder = (s: string): [number, number] => {
+  const m = s.match(/^(Cancha|Sint[eé]tico)\s+(\d+)$/i);
+  if (!m) return [2, 0];
+  return [m[1].toLowerCase() === "cancha" ? 0 : 1, parseInt(m[2])];
+};
+
 const CategoryLatestMatches = ({
   categoryId,
   ligaId,
 }: CategoryLatestMatchesProps) => {
   const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
+  const [selectedCancha, setSelectedCancha] = useState<string | null>(null);
 
   const { data: fases, isLoading: isLoadingFases } =
     useAllFasesByCategoryQuery(categoryId);
@@ -60,6 +68,32 @@ const CategoryLatestMatches = ({
 
   const isLoading =
     isLoadingFases || isLoadingDate || isLoadingMatches || isLoadingPlayoff;
+
+  const sorted: SimplifiedMatch[] = [...(generalMatches as SimplifiedMatch[])].sort(
+    (a, b) => {
+      if (!a.date && !b.date) return 0;
+      if (!a.date) return 1;
+      if (!b.date) return -1;
+      return moment(a.date).valueOf() - moment(b.date).valueOf();
+    }
+  );
+
+  const availableCanchas = useMemo(() => {
+    const fields = Array.from(new Set(sorted.map((m) => m.field).filter(Boolean) as string[]));
+    return fields.sort((a, b) => {
+      const [ta, na] = parseFieldOrder(a);
+      const [tb, nb] = parseFieldOrder(b);
+      return ta !== tb ? ta - tb : na - nb;
+    });
+  }, [sorted]);
+
+  const filteredMatches = selectedCancha
+    ? sorted.filter((m) => m.field === selectedCancha)
+    : sorted;
+
+  const canchaLabel = selectedCancha
+    ? selectedCancha.toUpperCase()
+    : "TODAS LAS CANCHAS";
 
   if (isLoading) {
     return (
@@ -85,8 +119,7 @@ const CategoryLatestMatches = ({
           </span>
           <Link
             href={`/campeonatos/${ligaId}/categorias/${categoryId}?tab=2`}
-            className="text-xs font-semibold hover:opacity-80 transition-opacity"
-            style={{ color: "var(--color-primary)" }}
+            className="text-xs font-semibold hover:opacity-80 transition-opacity text-gray-500"
           >
             Ver playoffs →
           </Link>
@@ -120,31 +153,58 @@ const CategoryLatestMatches = ({
     );
   }
 
-  const sorted: SimplifiedMatch[] = [
-    ...(generalMatches as SimplifiedMatch[]).filter((m) => m.status === MatchStatus.JUGADO),
-    ...(generalMatches as SimplifiedMatch[]).filter((m) => m.status !== MatchStatus.JUGADO),
-  ];
-
   return (
     <>
+      {availableCanchas.length > 0 && (
+        <div className="flex gap-2 overflow-x-auto px-4 pt-3 pb-1 flex-wrap">
+          <button
+            onClick={() => setSelectedCancha(null)}
+            className="whitespace-nowrap px-3 py-1.5 rounded text-sm font-medium transition-colors flex-shrink-0"
+            style={{
+              backgroundColor: selectedCancha === null ? "white" : "#1a1a1a",
+              color: selectedCancha === null ? "#0a0a0a" : "#9ca3af",
+              border: "1px solid",
+              borderColor: selectedCancha === null ? "white" : "#2a2a2a",
+              fontWeight: selectedCancha === null ? 700 : 500,
+            }}
+          >
+            Todas
+          </button>
+          {availableCanchas.map((cancha) => (
+            <button
+              key={cancha}
+              onClick={() => setSelectedCancha(cancha)}
+              className="whitespace-nowrap px-3 py-1.5 rounded text-sm font-medium transition-colors flex-shrink-0"
+              style={{
+                backgroundColor: selectedCancha === cancha ? "white" : "#1a1a1a",
+                color: selectedCancha === cancha ? "#0a0a0a" : "#9ca3af",
+                border: "1px solid",
+                borderColor: selectedCancha === cancha ? "white" : "#2a2a2a",
+                fontWeight: selectedCancha === cancha ? 700 : 500,
+              }}
+            >
+              {cancha}
+            </button>
+          ))}
+        </div>
+      )}
       <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid #1a1a1a" }}>
         <span className="text-xs font-semibold uppercase tracking-widest text-gray-500">
-          Fase Regular — Fecha {currentDate}
+          Fase Regular — Fecha {currentDate} — {canchaLabel}
         </span>
         <Link
           href={`/campeonatos/${ligaId}/categorias/${categoryId}?tab=1`}
-          className="text-xs font-semibold hover:opacity-80 transition-opacity"
-          style={{ color: "var(--color-primary)" }}
+          className="text-xs font-semibold hover:opacity-80 transition-opacity text-gray-500"
         >
           Ver fixture completo →
         </Link>
       </div>
-      {sorted.length === 0 ? (
+      {filteredMatches.length === 0 ? (
         <p className="text-center text-gray-500 py-8 text-sm">
           No hay partidos para esta fecha.
         </p>
       ) : (
-        groupMatchesByDay(sorted).map((group) => (
+        groupMatchesByDay(filteredMatches).map((group) => (
           <div key={group.dayKey}>
             <DayHeader label={group.dayLabel} />
             {group.matches.map((match, i) => (

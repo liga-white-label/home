@@ -2,12 +2,14 @@ import moment from "moment";
 import "moment/locale/es";
 import { MatchStatus, SimplifiedMatch, convertToSimplifiedMatch } from "@/app/models/Match";
 import { RoundCup } from "@/app/models/FaseCampeonato";
+import { Moment } from "moment";
 
 export interface DayGroup {
   /** YYYY-MM-DD — used for stable sort */
   dayKey: string;
   /** e.g. "Sábado 18 de abril" */
   dayLabel: string;
+  datetime: Moment;
   matches: SimplifiedMatch[];
 }
 
@@ -17,6 +19,7 @@ export interface DayGroup {
  */
 export const groupMatchesByDay = (matches: SimplifiedMatch[]): DayGroup[] => {
   const map = new Map<string, DayGroup>();
+
 
   for (const match of matches) {
     const d = match.date ? moment(match.date) : null;
@@ -28,25 +31,34 @@ export const groupMatchesByDay = (matches: SimplifiedMatch[]): DayGroup[] => {
       map.set(key, {
         dayKey: key,
         dayLabel: label.charAt(0).toUpperCase() + label.slice(1),
+        datetime: d?.isValid() ? moment(d.format("YYYY-MM-DDTHH:mm")) : moment(),
         matches: [],
       });
     }
     map.get(key)!.matches.push(match);
   }
 
-  return Array.from(map.values()).sort((a, b) =>
-    a.dayKey.localeCompare(b.dayKey)
-  );
+  return Array.from(map.values())
+    .sort((a, b) => moment(a.dayKey).valueOf() - moment(b.dayKey).valueOf())
+    .map((group) => ({
+      ...group,
+      matches: group.matches.slice().sort((a, b) => {
+        if (!a.date && !b.date) return 0;
+        if (!a.date) return 1;
+        if (!b.date) return -1;
+        return moment(a.date).valueOf() - moment(b.date).valueOf();
+      }),
+    }));
 };
 
 export const getRoundLabel = (roundNumber: number): string => {
   switch (roundNumber) {
     case 32: return "32avos de final";
     case 16: return "16avos de final";
-    case 8:  return "Octavos de final";
-    case 4:  return "Cuartos de final";
-    case 2:  return "Semifinal";
-    case 1:  return "Final";
+    case 8: return "Octavos de final";
+    case 4: return "Cuartos de final";
+    case 2: return "Semifinal";
+    case 1: return "Final";
     default: return `Ronda de ${roundNumber}`;
   }
 };

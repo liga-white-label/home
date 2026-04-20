@@ -11,12 +11,6 @@ interface NextTeamInfoProps {
   };
 }
 
-function getInitials(name: string): string {
-  const words = name?.trim().split(/\s+/) || [];
-  if (words.length === 1) return name.slice(0, 2).toUpperCase();
-  return (words[0][0] + words[1][0]).toUpperCase();
-}
-
 export const NextTeamInfo: FC<NextTeamInfoProps> = ({ data }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -40,7 +34,7 @@ export const NextTeamInfo: FC<NextTeamInfoProps> = ({ data }) => {
         onMouseEnter={handlePopoverOpen}
         onMouseLeave={handlePopoverClose}
       >
-        {getInitials(data.nombreEquipoRival)}
+        <Image src={data.nextTeam} alt={data.nombreEquipoRival} height={32} width={48} className="object-contain" />
       </div>
       <Popover
         id="next-team-popover"
