@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
-import Image from "next/image";
 import { Popover } from "@mui/material";
+import Image from "next/image";
 
 interface NextTeamInfoProps {
   data: {
@@ -10,76 +10,62 @@ interface NextTeamInfoProps {
     nombreEquipoRival: string;
   };
 }
+
+function getInitials(name: string): string {
+  const words = name?.trim().split(/\s+/) || [];
+  if (words.length === 1) return name.slice(0, 2).toUpperCase();
+  return (words[0][0] + words[1][0]).toUpperCase();
+}
+
 export const NextTeamInfo: FC<NextTeamInfoProps> = ({ data }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
-
-  const handlePopoverClose = () => {
-    setAnchorEl(null);
-  };
-
+  const handlePopoverClose = () => setAnchorEl(null);
   const open = Boolean(anchorEl);
 
-  if (data.nextTeam === null) {
-    return <> - </>;
+  if (!data.nextTeam) {
+    return <span className="text-gray-600 text-sm">—</span>;
   }
 
   return (
     <>
-      <div className="flex flex-col items-center">
-        <Image
-          aria-owns={open ? "mouse-over-popover" : undefined}
-          aria-haspopup="true"
-          onMouseEnter={handlePopoverOpen}
-          onMouseLeave={handlePopoverClose}
-          src={data.nextTeam}
-          alt={data.nextTeam}
-          height={20}
-          width={30}
-        />
+      <div
+        className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white cursor-pointer hover:opacity-80 transition-opacity"
+        style={{ backgroundColor: "#2a2a2a" }}
+        aria-owns={open ? "next-team-popover" : undefined}
+        aria-haspopup="true"
+        onMouseEnter={handlePopoverOpen}
+        onMouseLeave={handlePopoverClose}
+      >
+        {getInitials(data.nombreEquipoRival)}
       </div>
       <Popover
-        id="mouse-over-popover"
-        sx={{
-          pointerEvents: "none",
-        }}
+        id="next-team-popover"
+        sx={{ pointerEvents: "none" }}
         open={open}
         anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        transformOrigin={{ vertical: "top", horizontal: "center" }}
         onClose={handlePopoverClose}
         disableRestoreFocus
       >
-        <div className="flex flex-col items-center justify-center p-2 bg-gray-100">
-          <p>Proximo partido</p>
-          <div className="flex gap-5 items-center justify-center p-6">
-            <div className="flex flex-col items-center">
-              <Image
-                src={data.escudo}
-                alt={data.escudo}
-                height={30}
-                width={50}
-              />
-              <span className="text-xs mt-1">{data.nombreEquipo}</span>
+        <div
+          className="flex flex-col items-center justify-center p-4 gap-3"
+          style={{ backgroundColor: "#1a1a1a" }}
+        >
+          <p className="text-xs text-gray-400 uppercase tracking-wider">Próximo partido</p>
+          <div className="flex gap-6 items-center justify-center">
+            <div className="flex flex-col items-center gap-1">
+              <Image src={data.escudo} alt={data.nombreEquipo} height={32} width={48} className="object-contain" />
+              <span className="text-xs text-white mt-1">{data.nombreEquipo}</span>
             </div>
-            <p>VS</p>
-            <div className="flex flex-col items-center">
-              <Image
-                src={data.nextTeam}
-                alt={data.nextTeam}
-                height={30}
-                width={50}
-              />
-              <span className="text-xs mt-1">{data.nombreEquipoRival}</span>
+            <span className="text-gray-400 text-sm font-bold">VS</span>
+            <div className="flex flex-col items-center gap-1">
+              <Image src={data.nextTeam} alt={data.nombreEquipoRival} height={32} width={48} className="object-contain" />
+              <span className="text-xs text-white mt-1">{data.nombreEquipoRival}</span>
             </div>
           </div>
         </div>

@@ -43,7 +43,10 @@ const HomeContent = () => {
 
   if (isLoadingAllCampeonatos || isLoadingCampeonatoActual) {
     return (
-      <div className="flex flex-col w-full items-center justify-center py-10 h-screen">
+      <div
+        className="flex flex-col w-full items-center justify-center py-10 h-screen"
+        style={{ backgroundColor: "#0a0a0a" }}
+      >
         <MiniLoading />
       </div>
     );
@@ -52,16 +55,41 @@ const HomeContent = () => {
   const isLiga = !!ligaActual?.categories?.length;
 
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full" style={{ backgroundColor: "#0a0a0a" }}>
+      {/* Hero masthead */}
+      <div
+        className="w-full pt-24 pb-10 px-6 md:px-10"
+        style={{
+          background:
+            "radial-gradient(ellipse at 80% 0%, rgba(180,0,0,0.35) 0%, transparent 60%), #0a0a0a",
+        }}
+      >
+        <p
+          className="text-xs font-semibold uppercase tracking-widest mb-2"
+          style={{ color: "var(--color-primary)" }}
+        >
+          {tenantConfig.home.seasonLabel ?? "Temporada"}
+        </p>
+        <h1 className="text-white text-4xl md:text-6xl font-extrabold uppercase tracking-tight leading-none mb-3">
+          {tenantConfig.brand.name}
+        </h1>
+        <p className="text-gray-400 text-sm md:text-base">
+          {tenantConfig.brand.subtitle}
+        </p>
+      </div>
+
+      {/* Latest results */}
       {(isLiga || copasActivas.length > 0) && (
         <LatestResultsSection
           liga={isLiga ? ligaActual : null}
           cups={copasActivas}
         />
       )}
+
       <NewsCarousel />
       <WelcomeGifContainer />
-      <section className="w-full bg-red-100">
+
+      <section className="w-full" style={{ backgroundColor: "#0a0a0a" }}>
         <EmblaCarousel slides={SLIDES} options={{ align: "start" }} />
       </section>
     </div>

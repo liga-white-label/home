@@ -94,126 +94,117 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
     selectedTab < TabsEnum.FIXTURE_ZONAS_BASE;
   const isFixtureZonasTab = selectedTab >= TabsEnum.FIXTURE_ZONAS_BASE;
 
+  const tabClass = (active: boolean) =>
+    `cursor-pointer pb-3 text-sm font-medium whitespace-nowrap transition-colors ${
+      active
+        ? "text-white border-b-2"
+        : "text-gray-400 hover:text-white border-b-2 border-transparent"
+    }`;
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between">
+    <main className="flex min-h-screen flex-col" style={{ backgroundColor: "#0a0a0a" }}>
+      {/* Header */}
       <div
-        className="w-full max-w-full h-64 flex justify-start  pt-24"
+        className="w-full pt-24 pb-8 px-6 md:px-10"
         style={{
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('${tenantConfig.home.categoryBannerPath}')`,
+          background: "radial-gradient(ellipse at 80% 0%, rgba(180,0,0,0.35) 0%, transparent 60%), #0a0a0a",
         }}
       >
-        <div className="flex flex-col justify-between max-w-full">
-          <p className="text-white text-4xl px-10">{title}</p>
-          <div
-            style={{
-              display: hasFases ? "flex" : "none",
-            }}
-            className="flex gap-2 px-0 md:px-10 max-w-full overflow-x-auto"
-          >
-            {!!faseRegular && (
-              <div
-                onClick={() => handleChangeTab(TabsEnum.POSICIONES)}
-                className={`p-2 md:p-4 rounded-t-lg  cursor-pointer ${selectedTab === TabsEnum.POSICIONES
-                  ? "font-bold bg-white"
-                  : "bg-slate-300 hover:font-bold hover:bg-slate-400"
-                  }`}
-              >
-                <p className="line-clamp-1">Posiciones</p>
-              </div>
-            )}
+        <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "var(--color-primary)" }}>
+          {tenantConfig.home.seasonLabel ?? "Temporada"}
+        </p>
+        <h1 className="text-white text-3xl md:text-5xl font-extrabold uppercase tracking-tight">
+          {title}
+        </h1>
+      </div>
 
-            {fasesGrupos.map((fase: any, index: number) => (
-              <div key={`grupos-${fase.id}`}>
-                <div
-                  onClick={() => handleChangeTab(TabsEnum.GRUPOS_BASE + index)}
-                  className={`p-2 md:p-4 rounded-t-lg cursor-pointer whitespace-nowrap ${selectedTab === TabsEnum.GRUPOS_BASE + index
-                    ? "font-bold bg-white"
-                    : "bg-slate-300 hover:font-bold hover:bg-slate-400"
-                    }`}
-                >
-                  <p className="line-clamp-1">
-                    {fasesGrupos.length > 1
-                      ? index === 0
-                        ? "Fase parte 1"
-                        : "Fase reclasificación"
-                      : "Fase de zonas"}
-                  </p>
-                </div>
-              </div>
-            ))}
-
-            {fasesGrupos.map((fase: any, index: number) => (
-              <div key={`fixture-zonas-${fase.id}`}>
-                <div
-                  onClick={() =>
-                    handleChangeTab(TabsEnum.FIXTURE_ZONAS_BASE + index)
-                  }
-                  className={`p-2 md:p-4 rounded-t-lg  cursor-pointer whitespace-nowrap ${selectedTab === TabsEnum.FIXTURE_ZONAS_BASE + index
-                    ? "font-bold bg-white"
-                    : "bg-slate-300 hover:font-bold hover:bg-slate-400"
-                    }`}
-                >
-                  <p className="line-clamp-1">
-                    {fasesGrupos.length > 1
-                      ? index === 0
-                        ? "Fixture parte 1"
-                        : "Fixture reclasificación"
-                      : "Fixture zonas"}
-                  </p>
-                </div>
-              </div>
-            ))}
-
-            {!!faseRegular && (
-              <div
-                onClick={() => handleChangeTab(TabsEnum.FIXTURE)}
-                className={` p-2 md:p-4 rounded-t-lg  cursor-pointer ${selectedTab === TabsEnum.FIXTURE
-                  ? "font-bold bg-white"
-                  : "bg-slate-300 hover:font-bold hover:bg-slate-400"
-                  }`}
-              >
-                <p className="line-clamp-1">Fixture</p>
-              </div>
-            )}
-
-            {!!fasePlayoff && (
-              <div
-                onClick={() => handleChangeTab(TabsEnum.PLAYOFFS)}
-                className={` p-2 md:p-4 rounded-t-lg  cursor-pointer ${selectedTab === TabsEnum.PLAYOFFS
-                  ? "font-bold bg-white"
-                  : "bg-slate-300 hover:font-bold hover:bg-slate-400"
-                  }`}
-              >
-                <p className="line-clamp-1">Playoffs</p>
-              </div>
-            )}
-
-            {!!faseDescenso && (
-              <div
-                onClick={() => handleChangeTab(TabsEnum.DESCENSO)}
-                className={` p-2 md:p-4 rounded-t-lg  cursor-pointer ${selectedTab === TabsEnum.DESCENSO
-                  ? "font-bold bg-white"
-                  : "bg-slate-300 hover:font-bold hover:bg-slate-400"
-                  }`}
-              >
-                <p className="line-clamp-1">Cuadrangular de descenso</p>
-              </div>
-            )}
-
-            <div
-              onClick={() => handleChangeTab(TabsEnum.ESTADISTICAS)}
-              className={` p-2 md:p-4 rounded-t-lg  cursor-pointer ${selectedTab === TabsEnum.ESTADISTICAS
-                ? "font-bold bg-white"
-                : "bg-slate-300 hover:font-bold hover:bg-slate-400"
-                }`}
+      {/* Tab bar */}
+      <div className="w-full border-b border-gray-800" style={{ backgroundColor: "#0a0a0a" }}>
+        <div
+          style={{ display: hasFases ? "flex" : "none" }}
+          className="flex gap-6 px-6 md:px-10 max-w-full overflow-x-auto"
+        >
+          {!!faseRegular && (
+            <button
+              onClick={() => handleChangeTab(TabsEnum.POSICIONES)}
+              className={tabClass(selectedTab === TabsEnum.POSICIONES)}
+              style={selectedTab === TabsEnum.POSICIONES ? { borderColor: "var(--color-primary)" } : {}}
             >
-              <p className="line-clamp-1">Estadísticas</p>
-            </div>
-          </div>
+              Posiciones
+            </button>
+          )}
+
+          {fasesGrupos.map((fase: any, index: number) => (
+            <button
+              key={`grupos-${fase.id}`}
+              onClick={() => handleChangeTab(TabsEnum.GRUPOS_BASE + index)}
+              className={tabClass(selectedTab === TabsEnum.GRUPOS_BASE + index)}
+              style={selectedTab === TabsEnum.GRUPOS_BASE + index ? { borderColor: "var(--color-primary)" } : {}}
+            >
+              {fasesGrupos.length > 1
+                ? index === 0
+                  ? "Fase parte 1"
+                  : "Fase reclasificación"
+                : "Fase de zonas"}
+            </button>
+          ))}
+
+          {fasesGrupos.map((fase: any, index: number) => (
+            <button
+              key={`fixture-zonas-${fase.id}`}
+              onClick={() => handleChangeTab(TabsEnum.FIXTURE_ZONAS_BASE + index)}
+              className={tabClass(selectedTab === TabsEnum.FIXTURE_ZONAS_BASE + index)}
+              style={selectedTab === TabsEnum.FIXTURE_ZONAS_BASE + index ? { borderColor: "var(--color-primary)" } : {}}
+            >
+              {fasesGrupos.length > 1
+                ? index === 0
+                  ? "Fixture parte 1"
+                  : "Fixture reclasificación"
+                : "Fixture zonas"}
+            </button>
+          ))}
+
+          {!!faseRegular && (
+            <button
+              onClick={() => handleChangeTab(TabsEnum.FIXTURE)}
+              className={tabClass(selectedTab === TabsEnum.FIXTURE)}
+              style={selectedTab === TabsEnum.FIXTURE ? { borderColor: "var(--color-primary)" } : {}}
+            >
+              Fixture
+            </button>
+          )}
+
+          {!!fasePlayoff && (
+            <button
+              onClick={() => handleChangeTab(TabsEnum.PLAYOFFS)}
+              className={tabClass(selectedTab === TabsEnum.PLAYOFFS)}
+              style={selectedTab === TabsEnum.PLAYOFFS ? { borderColor: "var(--color-primary)" } : {}}
+            >
+              Playoffs
+            </button>
+          )}
+
+          {!!faseDescenso && (
+            <button
+              onClick={() => handleChangeTab(TabsEnum.DESCENSO)}
+              className={tabClass(selectedTab === TabsEnum.DESCENSO)}
+              style={selectedTab === TabsEnum.DESCENSO ? { borderColor: "var(--color-primary)" } : {}}
+            >
+              Cuadrangular de descenso
+            </button>
+          )}
+
+          <button
+            onClick={() => handleChangeTab(TabsEnum.ESTADISTICAS)}
+            className={tabClass(selectedTab === TabsEnum.ESTADISTICAS)}
+            style={selectedTab === TabsEnum.ESTADISTICAS ? { borderColor: "var(--color-primary)" } : {}}
+          >
+            Estadísticas
+          </button>
         </div>
       </div>
 
-      <div className="h-full w-full min-h-lvh overflow-hidden overflow-x- p-4 md:p-10">
+      <div className="h-full w-full min-h-lvh overflow-hidden p-4 md:p-10" style={{ backgroundColor: "#0a0a0a" }}>
         {selectedTab === TabsEnum.POSICIONES && (
           <TablaDePosicionesWrapper faseId={faseRegular?.id || ""} />
         )}
@@ -254,4 +245,5 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
       </div>
     </main>
   );
+
 };

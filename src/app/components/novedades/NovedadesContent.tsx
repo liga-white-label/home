@@ -1,7 +1,7 @@
 "use client";
 
-import { Pagination } from "@mui/material";
 import NovedadCard from "./NovedadCard";
+import { tenantConfig } from "@/config/tenant";
 import moment from "moment";
 import { useState, useEffect, useCallback, useMemo, memo, useRef } from "react";
 import { Novedad } from "@/app/models/Novedad";
@@ -226,7 +226,7 @@ const NovedadesContent = () => {
   const [featured, ...rest] = paginated;
 
   return (
-    <div className="flex flex-col w-full min-h-screen" style={{ backgroundColor: "#f4f4f5" }}>
+    <div className="flex flex-col w-full min-h-screen" style={{ backgroundColor: "#0a0a0a" }}>
       {/* Invisible fetchers */}
       {!isLoadingTop &&
         categorias.map((cat) => (
@@ -249,18 +249,21 @@ const NovedadesContent = () => {
 
       {/* Masthead */}
       <div
-        className="w-full py-10 px-6"
-        style={{ backgroundColor: "var(--color-primary)" }}
+        className="w-full pt-24 pb-8 px-6 md:px-10"
+        style={{
+          background:
+            "radial-gradient(ellipse at 80% 0%, rgba(180,0,0,0.35) 0%, transparent 60%), #0a0a0a",
+        }}
       >
-        <div className="max-w-5xl mx-auto">
-          <p className="text-white/60 text-xs uppercase tracking-widest mb-1">
-            Liga CUBB
-          </p>
-          <h1 className="text-white text-4xl md:text-5xl font-black uppercase tracking-tight leading-none">
-            Novedades
-          </h1>
-          <div className="w-16 h-1 bg-white/40 rounded-full mt-3" />
-        </div>
+        <p
+          className="text-xs font-semibold uppercase tracking-widest mb-2"
+          style={{ color: "var(--color-primary)" }}
+        >
+          {tenantConfig.brand.name}
+        </p>
+        <h1 className="text-white text-4xl md:text-5xl font-black uppercase tracking-tight leading-none">
+          Novedades
+        </h1>
       </div>
 
       {/* Content */}
@@ -270,40 +273,56 @@ const NovedadesContent = () => {
             <MiniLoading />
           </div>
         ) : novedades.length === 0 ? (
-          <p className="text-center text-gray-400 py-20">
+          <p className="text-center text-gray-500 py-20">
             No hay novedades disponibles.
           </p>
         ) : (
           <>
             {/* Featured article */}
             {featured && (
-              <div className="mb-6">
+              <div className="mb-10">
                 <NovedadCard novedad={featured} featured />
               </div>
             )}
 
             {/* Grid */}
             {rest.length > 0 && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
-                {rest.map((novedad) => (
-                  <NovedadCard key={novedad.id} novedad={novedad} />
-                ))}
-              </div>
+              <>
+                <div className="flex items-center gap-4 mb-5">
+                  <span className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+                    Más noticias
+                  </span>
+                  <div className="flex-1 h-px" style={{ backgroundColor: "#1f1f1f" }} />
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                  {rest.map((novedad) => (
+                    <NovedadCard key={novedad.id} novedad={novedad} />
+                  ))}
+                </div>
+              </>
             )}
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="flex justify-center pt-4 pb-10">
-                <Pagination
-                  count={totalPages}
-                  page={page}
-                  onChange={(_, value) => {
-                    setPage(value);
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                  }}
-                  color="primary"
-                  size="large"
-                />
+              <div className="flex justify-center gap-2 pt-4 pb-10">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                  <button
+                    key={p}
+                    onClick={() => {
+                      setPage(p);
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
+                    className="w-9 h-9 rounded text-sm font-medium transition-colors"
+                    style={{
+                      backgroundColor: page === p ? "var(--color-primary)" : "#1a1a1a",
+                      color: page === p ? "white" : "#9ca3af",
+                      border: "1px solid",
+                      borderColor: page === p ? "var(--color-primary)" : "#2a2a2a",
+                    }}
+                  >
+                    {p}
+                  </button>
+                ))}
               </div>
             )}
           </>

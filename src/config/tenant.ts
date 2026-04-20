@@ -24,6 +24,8 @@ export const tenantConfig = {
     categoryBannerPath:
       process.env.NEXT_PUBLIC_CATEGORY_BANNER_PATH ??
       "/assets/category_banner.jpg",
+    seasonLabel:
+      process.env.NEXT_PUBLIC_SEASON_LABEL ?? "Temporada",
     /**
      * Slides shown on the home page carousel.
      * Each entry maps to a category by name + gender as they come from the API.

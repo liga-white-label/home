@@ -36,21 +36,20 @@ export const PartidosAgrupados: React.FC<PartidosAgrupadosProps> = ({
         width: "100%",
         overflowX: "auto",
         WebkitOverflowScrolling: "touch",
+        borderRadius: "8px",
+        backgroundColor: "#111",
         msOverflowStyle: "-ms-autohiding-scrollbar",
-        "&::-webkit-scrollbar": {
-          height: "8px",
-        },
-        "&::-webkit-scrollbar-track": {
-          background: "#f1f1f1",
-          borderRadius: "4px",
-        },
-        "&::-webkit-scrollbar-thumb": {
-          background: "var(--color-primary)",
-          borderRadius: "4px",
-        },
+        "&::-webkit-scrollbar": { height: "6px" },
+        "&::-webkit-scrollbar-track": { background: "#1a1a1a", borderRadius: "4px" },
+        "&::-webkit-scrollbar-thumb": { background: "#333", borderRadius: "4px" },
       }}
     >
-      <Table sx={{ minWidth: isSmallDevice ? 500 : "auto" }}>
+      <Table
+        sx={{
+          minWidth: isSmallDevice ? 500 : "auto",
+          backgroundColor: "#111",
+        }}
+      >
         <TableBody>
           {matches
             .sort((a, b) => {
@@ -64,8 +63,7 @@ export const PartidosAgrupados: React.FC<PartidosAgrupadosProps> = ({
                 handleClickSeeMatch={handleClickSeeMatch}
                 isLoadingMatch={
                   isLoadingMatch &&
-                  selectedMatch ===
-                    [match.homeTeamId, match.awayTeamId].join("")
+                  selectedMatch === [match.homeTeamId, match.awayTeamId].join("")
                 }
                 index={index}
               />

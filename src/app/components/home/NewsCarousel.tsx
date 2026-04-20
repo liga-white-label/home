@@ -4,7 +4,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import Link from "next/link";
 import { useAllNovedadesQuery } from "@/repositories/NovedadRepository";
-import NovedadCard from "../novedades/NovedadCard";
+import NovedadCardHome from "./novedad-card.home";
 import { usePrevNextButtons } from "../carousel/EmblaCarousel";
 
 const NewsCarousel = () => {
@@ -20,7 +20,7 @@ const NewsCarousel = () => {
   return (
     <section className="w-full px-4 md:px-10 py-8">
       <div className="flex items-center justify-between mb-5">
-        <h2 className="text-xl font-bold uppercase tracking-wide text-gray-900">
+        <h2 className="text-xl font-bold uppercase tracking-wide text-white">
           Novedades
         </h2>
         <Link
@@ -41,7 +41,7 @@ const NewsCarousel = () => {
                 key={novedad.id}
                 className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] pl-4 min-w-0"
               >
-                <NovedadCard novedad={novedad} />
+                <NovedadCardHome novedad={novedad} />
               </div>
             ))}
           </div>

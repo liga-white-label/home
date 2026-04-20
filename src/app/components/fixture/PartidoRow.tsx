@@ -1,13 +1,6 @@
 "use client";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import {
-  Box,
-  TableCell,
-  TableRow,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
+import { TableCell, TableRow, useMediaQuery, useTheme } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { FC } from "react";
 import { MatchDate } from "./match-row/MatchDate";
@@ -33,14 +26,21 @@ export const PartidoRow: FC<PartidoRowProps> = ({
   const isLessThanMd = useMediaQuery(theme.breakpoints.down("md"));
   const isSmallDevice = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const rowBg = index % 2 === 0 ? "#111" : "#151515";
+
   return (
     <TableRow
-      style={{ backgroundColor: index % 2 === 0 ? "#f5f5f5" : "white" }}
+      style={{ backgroundColor: rowBg }}
+      sx={{
+        "&:hover": { backgroundColor: "#1a1a1a" },
+        transition: "background-color 0.15s ease",
+      }}
     >
       <TableCell
         sx={{
           width: isSmallDevice ? "0%" : "15%",
           padding: isSmallDevice ? "8px 4px" : undefined,
+          borderBottom: "1px solid #1f1f1f",
         }}
       >
         <MatchDate date={match.date} isLessThanMd={isLessThanMd} />
@@ -51,6 +51,7 @@ export const PartidoRow: FC<PartidoRowProps> = ({
           pr: isSmallDevice ? 1 : 3,
           padding: isSmallDevice ? "8px 4px" : undefined,
           textAlign: "right",
+          borderBottom: "1px solid #1f1f1f",
         }}
       >
         <TeamInfo teamName={match.homeTeamName} teamLogo={match.homeTeamLogo} />
@@ -61,14 +62,12 @@ export const PartidoRow: FC<PartidoRowProps> = ({
           px: 0,
           padding: isSmallDevice ? "8px 2px" : undefined,
           textAlign: "center",
+          borderBottom: "1px solid #1f1f1f",
         }}
         onClick={
           isSmallDevice
             ? () => {
-                if (
-                  match.homeTeamId !== undefined &&
-                  match.awayTeamId !== undefined
-                ) {
+                if (match.homeTeamId !== undefined && match.awayTeamId !== undefined) {
                   handleClickSeeMatch(match);
                 }
               }
@@ -78,8 +77,7 @@ export const PartidoRow: FC<PartidoRowProps> = ({
           isSmallDevice
             ? {
                 cursor:
-                  match.homeTeamId !== undefined &&
-                  match.awayTeamId !== undefined
+                  match.homeTeamId !== undefined && match.awayTeamId !== undefined
                     ? "pointer"
                     : "default",
               }
@@ -99,6 +97,7 @@ export const PartidoRow: FC<PartidoRowProps> = ({
           pl: isSmallDevice ? 1 : 3,
           padding: isSmallDevice ? "8px 4px" : undefined,
           textAlign: "left",
+          borderBottom: "1px solid #1f1f1f",
         }}
       >
         <TeamInfo
@@ -113,6 +112,7 @@ export const PartidoRow: FC<PartidoRowProps> = ({
           padding: isSmallDevice ? "8px 2px" : undefined,
           textAlign: "center",
           display: isSmallDevice ? "none" : "table-cell",
+          borderBottom: "1px solid #1f1f1f",
         }}
       >
         <MatchField field={match.field} isLessThanMd={isLessThanMd} />
@@ -123,6 +123,7 @@ export const PartidoRow: FC<PartidoRowProps> = ({
           padding: isSmallDevice ? "8px 2px" : undefined,
           textAlign: "right",
           display: isSmallDevice ? "none" : "table-cell",
+          borderBottom: "1px solid #1f1f1f",
         }}
       >
         <LoadingButton
@@ -130,21 +131,16 @@ export const PartidoRow: FC<PartidoRowProps> = ({
           loading={isLoadingMatch}
           startIcon={<VisibilityIcon />}
           sx={{
-            color: "black",
+            color: "#9ca3af",
             minWidth: 0,
+            "&:hover": { color: "white" },
           }}
-          disabled={
-            match.homeTeamId === undefined || match.awayTeamId === undefined
-          }
+          disabled={match.homeTeamId === undefined || match.awayTeamId === undefined}
         >
           {!isSmallDevice && (
-            <Typography
-              variant="body2"
-              noWrap
-              display={{ xs: "none", sm: "block" }}
-            >
+            <span style={{ fontSize: "0.875rem", display: isSmallDevice ? "none" : "block" }}>
               Ver
-            </Typography>
+            </span>
           )}
         </LoadingButton>
       </TableCell>

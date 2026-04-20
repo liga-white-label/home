@@ -24,6 +24,17 @@ interface CategoryLatestMatchesProps {
   ligaId: string;
 }
 
+const DayHeader = ({ label }: { label: string }) => (
+  <div
+    className="px-4 py-2"
+    style={{ backgroundColor: "#1a1a1a" }}
+  >
+    <span className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+      {label}
+    </span>
+  </div>
+);
+
 const CategoryLatestMatches = ({
   categoryId,
   ligaId,
@@ -58,53 +69,40 @@ const CategoryLatestMatches = ({
     );
   }
 
-  // Determine what to show: playoff takes priority if any match has been played
   const activeRound = findMostAdvancedRound(playoffRounds);
 
   if (activeRound) {
     const playoffMatches = roundToSimplifiedMatches(activeRound);
-    const played = playoffMatches.filter(
-      (m) => m.status === MatchStatus.JUGADO
-    );
-    const upcoming = playoffMatches.filter(
-      (m) => m.status !== MatchStatus.JUGADO
-    );
+    const played = playoffMatches.filter((m) => m.status === MatchStatus.JUGADO);
+    const upcoming = playoffMatches.filter((m) => m.status !== MatchStatus.JUGADO);
     const toShow = [...played, ...upcoming];
 
     return (
       <>
-        <div className="px-4 md:px-8 py-4">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-sm font-medium" style={{ color: "var(--color-primary)" }}>
-              Playoffs — {getRoundLabel(activeRound.roundNumber)}
-            </span>
-            <Link
-              href={`/campeonatos/${ligaId}/categorias/${categoryId}?tab=2`}
-              className="text-sm font-medium hover:underline"
-              style={{ color: "var(--color-primary)" }}
-            >
-              Ver playoffs →
-            </Link>
-          </div>
-          <div className="flex flex-col gap-4">
-            {groupMatchesByDay(toShow).map((group) => (
-              <div key={group.dayKey}>
-                <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2">
-                  {group.dayLabel}
-                </p>
-                <div className="flex flex-col gap-2">
-                  {group.matches.map((match, i) => (
-                    <MatchResultRow
-                      key={i}
-                      match={match}
-                      onClick={match.matchDetail ? () => setSelectedMatch(match.matchDetail!) : undefined}
-                    />
-                  ))}
-                </div>
-              </div>
+        <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid #1a1a1a" }}>
+          <span className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+            Playoffs — {getRoundLabel(activeRound.roundNumber)}
+          </span>
+          <Link
+            href={`/campeonatos/${ligaId}/categorias/${categoryId}?tab=2`}
+            className="text-xs font-semibold hover:opacity-80 transition-opacity"
+            style={{ color: "var(--color-primary)" }}
+          >
+            Ver playoffs →
+          </Link>
+        </div>
+        {groupMatchesByDay(toShow).map((group) => (
+          <div key={group.dayKey}>
+            <DayHeader label={group.dayLabel} />
+            {group.matches.map((match, i) => (
+              <MatchResultRow
+                key={i}
+                match={match}
+                onClick={match.matchDetail ? () => setSelectedMatch(match.matchDetail!) : undefined}
+              />
             ))}
           </div>
-        </div>
+        ))}
         <InfoMatchModal
           openMatchModal={selectedMatch !== null}
           handleCloseModal={() => setSelectedMatch(null)}
@@ -114,64 +112,51 @@ const CategoryLatestMatches = ({
     );
   }
 
-  // Fallback: show general phase current-date matches
   if (!faseRegular) {
     return (
-      <p className="text-center text-gray-400 py-8 text-sm">
+      <p className="text-center text-gray-500 py-8 text-sm">
         No hay información disponible para esta categoría.
       </p>
     );
   }
 
   const sorted: SimplifiedMatch[] = [
-    ...(generalMatches as SimplifiedMatch[]).filter(
-      (m) => m.status === MatchStatus.JUGADO
-    ),
-    ...(generalMatches as SimplifiedMatch[]).filter(
-      (m) => m.status !== MatchStatus.JUGADO
-    ),
+    ...(generalMatches as SimplifiedMatch[]).filter((m) => m.status === MatchStatus.JUGADO),
+    ...(generalMatches as SimplifiedMatch[]).filter((m) => m.status !== MatchStatus.JUGADO),
   ];
 
   return (
     <>
-      <div className="px-4 md:px-8 py-4">
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-sm text-gray-400 font-medium">
-            Fase Regular — Fecha {currentDate}
-          </span>
-          <Link
-            href={`/campeonatos/${ligaId}/categorias/${categoryId}?tab=1`}
-            className="text-sm font-medium hover:underline"
-            style={{ color: "var(--color-primary)" }}
-          >
-            Ver fixture completo →
-          </Link>
-        </div>
-        {sorted.length === 0 ? (
-          <p className="text-center text-gray-400 py-6 text-sm">
-            No hay partidos para esta fecha.
-          </p>
-        ) : (
-          <div className="flex flex-col gap-4">
-            {groupMatchesByDay(sorted).map((group) => (
-              <div key={group.dayKey}>
-                <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2">
-                  {group.dayLabel}
-                </p>
-                <div className="flex flex-col gap-2">
-                  {group.matches.map((match, i) => (
-                    <MatchResultRow
-                      key={i}
-                      match={match}
-                      onClick={match.matchDetail ? () => setSelectedMatch(match.matchDetail!) : undefined}
-                    />
-                  ))}
-                </div>
-              </div>
+      <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid #1a1a1a" }}>
+        <span className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+          Fase Regular — Fecha {currentDate}
+        </span>
+        <Link
+          href={`/campeonatos/${ligaId}/categorias/${categoryId}?tab=1`}
+          className="text-xs font-semibold hover:opacity-80 transition-opacity"
+          style={{ color: "var(--color-primary)" }}
+        >
+          Ver fixture completo →
+        </Link>
+      </div>
+      {sorted.length === 0 ? (
+        <p className="text-center text-gray-500 py-8 text-sm">
+          No hay partidos para esta fecha.
+        </p>
+      ) : (
+        groupMatchesByDay(sorted).map((group) => (
+          <div key={group.dayKey}>
+            <DayHeader label={group.dayLabel} />
+            {group.matches.map((match, i) => (
+              <MatchResultRow
+                key={i}
+                match={match}
+                onClick={match.matchDetail ? () => setSelectedMatch(match.matchDetail!) : undefined}
+              />
             ))}
           </div>
-        )}
-      </div>
+        ))
+      )}
       <InfoMatchModal
         openMatchModal={selectedMatch !== null}
         handleCloseModal={() => setSelectedMatch(null)}

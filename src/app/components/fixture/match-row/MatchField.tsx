@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import StadiumOutlinedIcon from "@mui/icons-material/StadiumOutlined";
 import { FC } from "react";
 
@@ -11,9 +11,11 @@ export const MatchField: FC<MatchFieldProps> = ({ field, isLessThanMd }) => {
   if (isLessThanMd) return null;
 
   return (
-    <Box display="flex" alignItems="center" gap="10px" width="20%">
-      <StadiumOutlinedIcon />
-      <Typography variant="body2">{field || "A definir"}</Typography>
+    <Box display="flex" alignItems="center" gap="8px">
+      <StadiumOutlinedIcon sx={{ color: "#6b7280", fontSize: 18 }} />
+      <Box component="span" sx={{ color: "#9ca3af", fontSize: "0.85rem" }}>
+        {field || "A definir"}
+      </Box>
     </Box>
   );
 };

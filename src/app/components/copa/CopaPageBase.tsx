@@ -58,63 +58,71 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
     }
   }, [faseGrupos, fasesPlayoff, tabParam]);
 
+  const tabClass = (active: boolean) =>
+    `cursor-pointer pb-3 text-sm font-medium whitespace-nowrap transition-colors ${
+      active
+        ? "text-white border-b-2"
+        : "text-gray-400 hover:text-white border-b-2 border-transparent"
+    }`;
+
   return (
-    <div className="w-full">
+    <div className="w-full" style={{ backgroundColor: "#0a0a0a" }}>
+      {/* Header */}
       <div
-        className="w-full h-64 flex justify-start pt-24 bg-cover bg-center bg-no-repeat"
+        className="w-full pt-24 pb-8 px-6 md:px-10"
         style={{
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('${tenantConfig.home.categoryBannerPath}')`,
+          background: "radial-gradient(ellipse at 80% 0%, rgba(180,0,0,0.35) 0%, transparent 60%), #0a0a0a",
         }}
       >
-        <div className="flex flex-col justify-between w-full">
-          <p className="text-white text-4xl px-10">{title}</p>
-          <div className="flex gap-2 px-0 md:px-10 overflow-x-auto">
-            {!!faseGrupos && (
-              <div
-                onClick={() => handleChangeTab(TabsEnum.GRUPOS)}
-                className={`p-2 md:p-4 rounded-t-lg cursor-pointer whitespace-nowrap ${selectedTab === TabsEnum.GRUPOS
-                    ? "font-bold bg-white"
-                    : "bg-slate-300 hover:font-bold hover:bg-slate-400"
-                  }`}
-              >
-                <p className="line-clamp-1">Fase de Grupos</p>
-              </div>
-            )}
-            {!!faseGrupos && (
-              <div
-                onClick={() => handleChangeTab(TabsEnum.FIXTURE)}
-                className={`p-2 md:p-4 rounded-t-lg cursor-pointer whitespace-nowrap ${selectedTab === TabsEnum.FIXTURE
-                    ? "font-bold bg-white"
-                    : "bg-slate-300 hover:font-bold hover:bg-slate-400"
-                  }`}
-              >
-                <p className="line-clamp-1">Fixture</p>
-              </div>
-            )}
-            {!!fasesPlayoff && (
-              <div
-                onClick={() => handleChangeTab(TabsEnum.PLAYOFFS)}
-                className={`p-2 md:p-4 rounded-t-lg cursor-pointer whitespace-nowrap ${selectedTab === TabsEnum.PLAYOFFS
-                    ? "font-bold bg-white"
-                    : "bg-slate-300 hover:font-bold hover:bg-slate-400"
-                  }`}
-              >
-                <p className="line-clamp-1">Playoffs</p>
-              </div>
-            )}
-            <div
-              onClick={() => handleChangeTab(TabsEnum.ESTADISTICAS)}
-              className={`p-2 md:p-4 rounded-t-lg cursor-pointer whitespace-nowrap ${selectedTab === TabsEnum.ESTADISTICAS
-                  ? "font-bold bg-white"
-                  : "bg-slate-300 hover:font-bold hover:bg-slate-400"
-                }`}
+        <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "var(--color-primary)" }}>
+          {tenantConfig.home.seasonLabel ?? "Temporada"}
+        </p>
+        <h1 className="text-white text-3xl md:text-5xl font-extrabold uppercase tracking-tight">
+          {title}
+        </h1>
+      </div>
+
+      {/* Tab bar */}
+      <div className="w-full border-b border-gray-800" style={{ backgroundColor: "#0a0a0a" }}>
+        <div className="flex gap-6 px-6 md:px-10 overflow-x-auto">
+          {!!faseGrupos && (
+            <button
+              onClick={() => handleChangeTab(TabsEnum.GRUPOS)}
+              className={tabClass(selectedTab === TabsEnum.GRUPOS)}
+              style={selectedTab === TabsEnum.GRUPOS ? { borderColor: "var(--color-primary)" } : {}}
             >
-              <p className="line-clamp-1">Estadísticas</p>
-            </div>
-          </div>
+              Fase de Grupos
+            </button>
+          )}
+          {!!faseGrupos && (
+            <button
+              onClick={() => handleChangeTab(TabsEnum.FIXTURE)}
+              className={tabClass(selectedTab === TabsEnum.FIXTURE)}
+              style={selectedTab === TabsEnum.FIXTURE ? { borderColor: "var(--color-primary)" } : {}}
+            >
+              Fixture
+            </button>
+          )}
+          {!!fasesPlayoff && (
+            <button
+              onClick={() => handleChangeTab(TabsEnum.PLAYOFFS)}
+              className={tabClass(selectedTab === TabsEnum.PLAYOFFS)}
+              style={selectedTab === TabsEnum.PLAYOFFS ? { borderColor: "var(--color-primary)" } : {}}
+            >
+              Playoffs
+            </button>
+          )}
+          <button
+            onClick={() => handleChangeTab(TabsEnum.ESTADISTICAS)}
+            className={tabClass(selectedTab === TabsEnum.ESTADISTICAS)}
+            style={selectedTab === TabsEnum.ESTADISTICAS ? { borderColor: "var(--color-primary)" } : {}}
+          >
+            Estadísticas
+          </button>
         </div>
       </div>
-      <div className="w-full p-4 md:p-10">
+
+      <div className="w-full p-4 md:p-10" style={{ backgroundColor: "#0a0a0a" }}>
         {selectedTab === TabsEnum.GRUPOS && (
           <FaseGruposWrapper faseId={faseGrupos?.id || ""} />
         )}

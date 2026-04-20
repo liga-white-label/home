@@ -1,13 +1,6 @@
 "use client";
 import { TablaEstadisticas } from "../TablaEstadisticas";
 import { useState } from "react";
-import {
-  FormControl,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Typography,
-} from "@mui/material";
 import LoadingScreen from "../loading/Loading";
 import {
   useAmarillasCopaQuery,
@@ -18,6 +11,11 @@ import { GoleadoresMapper, AmarillasMapper } from "@/app/models/FaseCampeonato";
 interface EstadisticasCopaPageProps {
   cupId: string;
 }
+
+const OPTIONS = [
+  { value: "0", label: "Goleadores" },
+  { value: "1", label: "Amarillas" },
+];
 
 export const EstadisticasCopaPage: React.FC<EstadisticasCopaPageProps> = ({
   cupId = "",
@@ -30,31 +28,36 @@ export const EstadisticasCopaPage: React.FC<EstadisticasCopaPageProps> = ({
 
   const [selectedOption, setSelectedOption] = useState<string>("0");
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setSelectedOption(event.target.value as string);
-  };
-
   if (goleadoresLoading || amarillasLoading) {
     return <LoadingScreen />;
   }
+
   return (
-    <div className="flex flex-col h-full w-full gap-5 ">
-      <FormControl
-        fullWidth
-        className="flex flex-col gap-4 max-sm:items-center w-full "
-      >
-        <Typography variant="h5" fontWeight={"bold"}>
+    <div className="flex flex-col h-full w-full gap-5">
+      <div className="flex flex-col gap-2">
+        <label className="text-xs font-semibold uppercase tracking-widest text-gray-400">
           Tipo de estadística
-        </Typography>
-        <Select
-          value={selectedOption}
-          onChange={handleChange}
-          className="w-56 max-sm:w-full"
-        >
-          <MenuItem value={"0"}>Goleadores</MenuItem>
-          <MenuItem value={"1"}>Amarillas</MenuItem>
-        </Select>
-      </FormControl>
+        </label>
+        <div className="flex gap-2">
+          {OPTIONS.map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => setSelectedOption(opt.value)}
+              className="px-4 py-2 rounded text-sm font-medium transition-colors"
+              style={{
+                backgroundColor:
+                  selectedOption === opt.value ? "var(--color-primary)" : "#1a1a1a",
+                color: selectedOption === opt.value ? "white" : "#9ca3af",
+                border: "1px solid",
+                borderColor:
+                  selectedOption === opt.value ? "var(--color-primary)" : "#2a2a2a",
+              }}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      </div>
 
       <TablaEstadisticas
         data={

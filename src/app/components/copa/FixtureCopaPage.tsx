@@ -5,13 +5,6 @@ import {
   useGetAllGroupMatchesByFaseQuery,
   useOnePartidoCopaQuery,
 } from "@/repositories/CampeonatoRepository";
-import {
-  Typography,
-  FormControl,
-  Select,
-  MenuItem,
-  SelectChangeEvent,
-} from "@mui/material";
 import Box from "@mui/material/Box";
 import React, { useRef, useState, useMemo } from "react";
 import { PartidosAgrupados } from "../fixture/PartidosAgrupados";
@@ -91,53 +84,51 @@ const FixtureCopaPage: React.FC<FixtureCopaPageProps> = ({
     setOpenMatchModal(false);
   };
 
-  const handleChangeFecha = (event: SelectChangeEvent) => {
-    setSelectedFecha(Number(event.target.value));
-  };
-
   if (isLoadingFase || isLoadingMatches) return <LoadingScreen />;
   if (isErrorFase || isErrorMatches) return <ErrorPage />;
 
   return (
     <>
-      <Box className="flex flex-col h-full w-full gap-5 mb-4">
-        <FormControl
-          fullWidth
-          className="flex flex-col gap-4 max-sm:items-center w-full"
-        >
-          <Typography variant="h5" fontWeight="bold">
-            Fecha
-          </Typography>
-          <Select
-            value={selectedFecha?.toString()}
-            onChange={handleChangeFecha}
-            className="w-56 max-sm:w-full"
-          >
-            {fechasDisponibles.map((date, index) => (
-              <MenuItem key={index} value={`${date}`}>
-                {`Fecha ${date}`}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Box>
+      <div className="flex flex-col gap-2 mb-5">
+        <label className="text-xs font-semibold uppercase tracking-widest text-gray-400">
+          Fecha
+        </label>
+        <div className="flex gap-2 flex-wrap">
+          {fechasDisponibles.map((date) => (
+            <button
+              key={date}
+              onClick={() => setSelectedFecha(date)}
+              className="px-3 py-1.5 rounded text-sm font-medium transition-colors"
+              style={{
+                backgroundColor: selectedFecha === date ? "var(--color-primary)" : "#1a1a1a",
+                color: selectedFecha === date ? "white" : "#9ca3af",
+                border: "1px solid",
+                borderColor: selectedFecha === date ? "var(--color-primary)" : "#2a2a2a",
+              }}
+            >
+              {date}
+            </button>
+          ))}
+        </div>
+      </div>
 
       {faseData?.map((grupo, index) => (
         <Box key={index}>
-          <Box
+          <div
             style={{
               display: "flex",
               width: "100%",
-              padding: "0.5rem 0",
-              backgroundColor: "#e5e7eb",
+              padding: "0.5rem 1rem",
+              backgroundColor: "#1a1a1a",
               alignItems: "center",
               justifyContent: "center",
+              marginBottom: "1px",
             }}
           >
-            <Typography variant="h6" style={{ fontWeight: "bold" }}>
+            <span style={{ color: "white", fontWeight: "bold", fontSize: "1rem" }}>
               {`${fromCategoria ? "" : "Grupo"} ${grupo.name}`}
-            </Typography>
-          </Box>
+            </span>
+          </div>
           {
             <PartidosAgrupados
               matches={

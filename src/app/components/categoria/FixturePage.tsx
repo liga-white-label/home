@@ -1,11 +1,4 @@
 "use client";
-import {
-  FormControl,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Typography,
-} from "@mui/material";
 
 import { useRef, useState, useEffect } from "react";
 import { PartidosAgrupados } from "../fixture/PartidosAgrupados";
@@ -54,7 +47,6 @@ export const FixturePage: React.FC<FixturePageProps> = ({ faseId }) => {
       awayTeam: match.awayTeamId,
       phaseId: faseId || "",
     };
-
     setOpenMatchModal(true);
   };
 
@@ -63,39 +55,38 @@ export const FixturePage: React.FC<FixturePageProps> = ({ faseId }) => {
     setOpenMatchModal(false);
   };
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setSelectedFecha(Number(event.target.value));
-  };
-
   if (isLoadingCurrentDate || isLoading) {
     return <LoadingScreen />;
   }
 
   return (
     <>
-      <div className="flex flex-col h-full w-full gap-5 ">
-        <FormControl
-          fullWidth
-          className="flex flex-col gap-4 max-sm:items-center w-full "
-        >
-          <Typography variant="h5" fontWeight={"bold"}>
+      <div className="flex flex-col h-full w-full gap-5">
+        {/* Fecha selector */}
+        <div className="flex flex-col gap-2">
+          <label className="text-xs font-semibold uppercase tracking-widest text-gray-400">
             Fecha
-          </Typography>
-          <Select
-            value={selectedFecha.toString()}
-            onChange={handleChange}
-            className="w-56 max-sm:w-full"
-          >
-            {Array.from({ length: 15 }, (_, index) => index + 1).map(
-              (item, index) => (
-                <MenuItem
-                  key={index}
-                  value={`${item}`}
-                >{`Fecha ${item}`}</MenuItem>
-              )
-            )}
-          </Select>
-        </FormControl>
+          </label>
+          <div className="flex gap-2 flex-wrap">
+            {Array.from({ length: 15 }, (_, i) => i + 1).map((item) => (
+              <button
+                key={item}
+                onClick={() => setSelectedFecha(item)}
+                className="px-3 py-1.5 rounded text-sm font-medium transition-colors"
+                style={{
+                  backgroundColor:
+                    selectedFecha === item ? "var(--color-primary)" : "#1a1a1a",
+                  color: selectedFecha === item ? "white" : "#9ca3af",
+                  border: "1px solid",
+                  borderColor: selectedFecha === item ? "var(--color-primary)" : "#2a2a2a",
+                }}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <PartidosAgrupados
           matches={matchesFechaActual || []}
           handleClickSeeMatch={handleClickSeeMatch}

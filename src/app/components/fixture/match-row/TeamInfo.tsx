@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import Image from "next/image";
 import { FC } from "react";
 import { LOGO_DEFAULT_TEAM } from "@/app/utils/constants";
@@ -34,28 +34,35 @@ export const TeamInfo: FC<TeamInfoProps> = ({
         width={30}
         alt={teamName || "Team Logo"}
       />
-      <Typography
-        variant="body1"
-        noWrap
+      <Box
+        component="span"
         sx={{
           display: { xs: "none", sm: "block" },
-        }}
-      >
-        {teamName || "A definir"}
-      </Typography>
-      <Typography
-        variant="body2"
-        noWrap
-        sx={{
-          display: { xs: "block", sm: "none" },
-          fontSize: { xs: "0.7rem", sm: "0.875rem" },
-          maxWidth: "100%",
+          color: "white",
+          fontSize: "0.95rem",
+          fontWeight: 500,
+          whiteSpace: "nowrap",
           overflow: "hidden",
           textOverflow: "ellipsis",
+          maxWidth: 160,
         }}
       >
         {teamName || "A definir"}
-      </Typography>
+      </Box>
+      <Box
+        component="span"
+        sx={{
+          display: { xs: "block", sm: "none" },
+          color: "#d1d5db",
+          fontSize: "0.7rem",
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          maxWidth: 80,
+        }}
+      >
+        {abbreviateTeamName(teamName || "A definir")}
+      </Box>
     </Box>
   );
 };
