@@ -59,10 +59,9 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
   }, [faseGrupos, fasesPlayoff, tabParam]);
 
   const tabClass = (active: boolean) =>
-    `cursor-pointer pb-3 text-sm font-medium whitespace-nowrap transition-colors ${
-      active
-        ? "text-white border-b-2"
-        : "text-gray-400 hover:text-white border-b-2 border-transparent"
+    `cursor-pointer pb-3 text-sm font-medium whitespace-nowrap transition-colors ${active
+      ? "text-white border-b-2"
+      : "text-gray-400 hover:text-white border-b-2 border-transparent"
     }`;
 
   return (
@@ -74,7 +73,7 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
           background: "radial-gradient(ellipse at 80% 0%, rgba(180,0,0,0.35) 0%, transparent 60%), #0a0a0a",
         }}
       >
-        <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "var(--color-primary)" }}>
+        <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "#FFFFFF" }}>
           {tenantConfig.home.seasonLabel ?? "Temporada"}
         </p>
         <h1 className="text-white text-3xl md:text-5xl font-extrabold uppercase tracking-tight">

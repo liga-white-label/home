@@ -66,7 +66,7 @@ const HomeContent = () => {
       >
         <p
           className="text-xs font-semibold uppercase tracking-widest mb-2"
-          style={{ color: "var(--color-primary)" }}
+          style={{ color: "#FFFFFF" }}
         >
           {tenantConfig.home.seasonLabel ?? "Temporada"}
         </p>

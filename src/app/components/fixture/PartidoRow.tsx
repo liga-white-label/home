@@ -67,20 +67,20 @@ export const PartidoRow: FC<PartidoRowProps> = ({
         onClick={
           isSmallDevice
             ? () => {
-                if (match.homeTeamId !== undefined && match.awayTeamId !== undefined) {
-                  handleClickSeeMatch(match);
-                }
+              if (match.homeTeamId !== undefined && match.awayTeamId !== undefined) {
+                handleClickSeeMatch(match);
               }
+            }
             : undefined
         }
         style={
           isSmallDevice
             ? {
-                cursor:
-                  match.homeTeamId !== undefined && match.awayTeamId !== undefined
-                    ? "pointer"
-                    : "default",
-              }
+              cursor:
+                match.homeTeamId !== undefined && match.awayTeamId !== undefined
+                  ? "pointer"
+                  : "default",
+            }
             : undefined
         }
       >
