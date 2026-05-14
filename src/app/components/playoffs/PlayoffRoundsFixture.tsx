@@ -1,16 +1,14 @@
 import {
   useOneFasePlayoffCopaQuery,
-  useOnePartidoCopaPlayoffQuery,
 } from "@/repositories/CampeonatoRepository";
 import { TableBody, Table, Box, useMediaQuery, useTheme } from "@mui/material";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import InfoMatchModal from "../InfoMatchModal";
 import { PartidoRow } from "../fixture/PartidoRow";
 import { RoundMatch } from "@/app/models/FaseCampeonato";
 import {
   SimplifiedMatch,
   Match,
-  MatchStatus,
   convertToSimplifiedMatch,
 } from "@/app/models/Match";
 import { useOneFasePlayoffQuery } from "@/repositories/CategoriaRepository";
@@ -30,7 +28,6 @@ const PlayoffRoundsFixture: React.FC<PlayoffRoundsFixtureProps> = ({
 }) => {
   const theme = useTheme();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down("sm"));
-  const currentMatchSelected = useRef<any | undefined>();
 
   const { data: faseCopa } = useOneFasePlayoffCopaQuery({
     id: idFase || "",
@@ -43,32 +40,19 @@ const PlayoffRoundsFixture: React.FC<PlayoffRoundsFixtureProps> = ({
   });
 
   const fase = isLeague ? faseLeague : faseCopa;
-  const { data: match, isLoading: matchLoading } =
-    useOnePartidoCopaPlayoffQuery(
-      currentMatchSelected.current?.homeTeam,
-      currentMatchSelected.current?.awayTeam,
-      currentMatchSelected.current?.roundId || "",
-      currentMatchSelected.current?.phaseId || "",
-      !!currentMatchSelected.current
-    );
 
+  const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
   const [openMatchModal, setOpenMatchModal] = useState<boolean>(false);
 
-  const isDoubleMatch = fase![0]?.doubleMatch || false;
+  const isDoubleMatch = fase?.[0]?.doubleMatch || false;
 
   const handleClickSeeMatch = (match: SimplifiedMatch) => {
-    currentMatchSelected.current = {
-      homeTeam: match.homeTeamId,
-      awayTeam: match.awayTeamId,
-      roundId: cruce.id,
-      phaseId: idFase || "",
-    };
-
+    setSelectedMatch(match.matchDetail || null);
     setOpenMatchModal(true);
   };
 
   const handleCloseModal = () => {
-    currentMatchSelected.current = undefined;
+    setSelectedMatch(null);
     setOpenMatchModal(false);
   };
 
@@ -104,30 +88,14 @@ const PlayoffRoundsFixture: React.FC<PlayoffRoundsFixtureProps> = ({
             <PartidoRow
               match={partidoIda}
               handleClickSeeMatch={handleClickSeeMatch}
-              isLoadingMatch={
-                matchLoading &&
-                [
-                  currentMatchSelected.current.homeTeam,
-                  currentMatchSelected.current.awayTeam,
-                ].join("") ===
-                  [partidoIda.homeTeamId, partidoIda.awayTeamId].join("")
-              }
+              isLoadingMatch={false}
               index={index}
             />
             {partidoVuelta && (
               <PartidoRow
                 match={partidoVuelta}
                 handleClickSeeMatch={handleClickSeeMatch}
-                isLoadingMatch={
-                  matchLoading &&
-                  [
-                    currentMatchSelected.current.homeTeam,
-                    currentMatchSelected.current.awayTeam,
-                  ].join("") ===
-                    [partidoVuelta.homeTeamId, partidoVuelta.awayTeamId].join(
-                      ""
-                    )
-                }
+                isLoadingMatch={false}
                 index={index}
               />
             )}
@@ -135,7 +103,7 @@ const PlayoffRoundsFixture: React.FC<PlayoffRoundsFixtureProps> = ({
         </Table>
       </Box>
       <InfoMatchModal
-        match={match || null}
+        match={selectedMatch}
         openMatchModal={openMatchModal}
         handleCloseModal={handleCloseModal}
       />

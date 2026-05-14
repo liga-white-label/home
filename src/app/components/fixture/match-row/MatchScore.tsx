@@ -18,6 +18,7 @@ export const MatchScore: FC<MatchScoreProps> = ({
 }) => {
   const theme = useTheme();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down("sm"));
+  console.log(status);
 
   return (
     <Box
@@ -34,16 +35,16 @@ export const MatchScore: FC<MatchScoreProps> = ({
         position: "relative",
         "&:after": isSmallDevice
           ? {
-              content: "''",
-              position: "absolute",
-              bottom: -2,
-              left: "50%",
-              transform: "translateX(-50%)",
-              width: "30%",
-              height: 2,
-              backgroundColor: "var(--color-primary)",
-              borderRadius: 1,
-            }
+            content: "''",
+            position: "absolute",
+            bottom: -2,
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "30%",
+            height: 2,
+            backgroundColor: "var(--color-primary)",
+            borderRadius: 1,
+          }
           : {},
       }}
     >
@@ -56,8 +57,8 @@ export const MatchScore: FC<MatchScoreProps> = ({
         {status === MatchStatus.JUGADO
           ? `${homeTeamGoals ?? 0} - ${awayTeamGoals ?? 0}`
           : !!date && moment(date).isValid()
-          ? moment(date).format("HH:mm")
-          : "-"}
+            ? moment(date).format("HH:mm")
+            : "-"}
       </Typography>
     </Box>
   );

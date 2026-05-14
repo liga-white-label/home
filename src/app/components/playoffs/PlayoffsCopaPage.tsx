@@ -20,10 +20,10 @@ const PlayoffCopaPage: React.FC<CuadroPlayoffProps> = ({ faseId }) => {
   if (!fase)
     return (
       <div className="flex flex-col items-center h-[70svh] pt-5 gap-5">
-        <Typography variant="h3" color="text.primary">
+        <Typography variant="h3" color="white">
           Proximamente
         </Typography>
-        <Typography variant="body1" color="text.secondary" textAlign="center">
+        <Typography variant="body1" className="text-gray-500" textAlign="center">
           Todavía no se ha creado el cuadro de playoffs.
         </Typography>
       </div>

@@ -61,15 +61,20 @@ export interface MatchData {
 export const partidoMapper = (x: any): Match => ({
   ...x,
   date: !!x?.date ? moment(x?.date) : null,
-  homeTeamPlayerGoals: x?.homeTeamPlayerGoals || [],
-  awayTeamPlayerGoals: x?.awayTeamPlayerGoals || [],
-  homeTeamYellowCards: x?.homeTeamYellowCards || [],
-  awayTeamYellowCards: x?.awayTeamYellowCards || [],
-  homeTeamRedCards: x?.homeTeamRedCards || [],
-  awayTeamRedCards: x?.awayTeamRedCards || [],
+  homeTeamPlayerGoals: x?.homeGoalScorers || x?.homeTeamPlayerGoals || [],
+  awayTeamPlayerGoals: x?.awayGoalScorers || x?.awayTeamPlayerGoals || [],
+  homeTeamYellowCards: x?.homeYellowCards || x?.homeTeamYellowCards || [],
+  awayTeamYellowCards: x?.awayYellowCards || x?.awayTeamYellowCards || [],
+  homeTeamRedCards: x?.homeRedCards || x?.homeTeamRedCards || [],
+  awayTeamRedCards: x?.awayRedCards || x?.awayTeamRedCards || [],
   homeTeamPenalties: x?.homeTeamPenalties || null,
   awayTeamPenalties: x?.awayTeamPenalties || null,
 });
+
+export const matchResponseToSimplified = (m: any): SimplifiedMatch => {
+  const match = partidoMapper(m);
+  return { ...convertToSimplifiedMatch(match), matchDetail: match };
+};
 
 export interface SimplifiedMatch {
   homeTeamId: string;

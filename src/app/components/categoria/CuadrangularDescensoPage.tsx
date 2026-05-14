@@ -1,25 +1,13 @@
 import { useState } from "react";
-
-import {
-  useAllMatchesByFaseQuery,
-  useOnePartidoDescensoQuery,
-  useOnePartidoQuery,
-} from "@/repositories/CategoriaRepository";
-import { useRef } from "react";
 import LoadingScreen from "../loading/Loading";
 import {
   Box,
-  FormControl,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
   Typography,
 } from "@mui/material";
-import { convertToSimplifiedMatch, SimplifiedMatch } from "@/app/models/Match";
+import { convertToSimplifiedMatch, Match, SimplifiedMatch } from "@/app/models/Match";
 import { PartidosAgrupados } from "../fixture/PartidosAgrupados";
 import InfoMatchModal from "../InfoMatchModal";
 import { useOneFaseCampeonatoQuery } from "@/repositories/CampeonatoRepository";
-import { useOnePartidoCopaQuery } from "@/repositories/CampeonatoRepository";
 import { TablaPosiciones } from "../TablaPosiciones";
 
 interface CuadrangularDescensoPageProps {
@@ -29,33 +17,20 @@ interface CuadrangularDescensoPageProps {
 const CuadrangularDescensoPage: React.FC<CuadrangularDescensoPageProps> = ({
   faseId,
 }) => {
-  const currentMatchSelected = useRef<any | undefined>();
+  const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
+  const [openMatchModal, setOpenMatchModal] = useState<boolean>(false);
 
   const { data, isLoading, isError } = useOneFaseCampeonatoQuery({
     id: faseId,
   });
 
-  const { data: match, isLoading: matchLoading } = useOnePartidoDescensoQuery(
-    currentMatchSelected.current?.homeTeam,
-    currentMatchSelected.current?.awayTeam,
-    currentMatchSelected.current?.phaseId || "",
-    !!currentMatchSelected.current
-  );
-
-  const [openMatchModal, setOpenMatchModal] = useState<boolean>(false);
-
   const handleClickSeeMatch = (match: SimplifiedMatch) => {
-    currentMatchSelected.current = {
-      homeTeam: match.homeTeamId,
-      awayTeam: match.awayTeamId,
-      phaseId: faseId || "",
-    };
-
+    setSelectedMatch(match.matchDetail || null);
     setOpenMatchModal(true);
   };
 
   const handleCloseModal = () => {
-    currentMatchSelected.current = undefined;
+    setSelectedMatch(null);
     setOpenMatchModal(false);
   };
 
@@ -63,7 +38,7 @@ const CuadrangularDescensoPage: React.FC<CuadrangularDescensoPageProps> = ({
     return <LoadingScreen />;
   }
 
-  return data?.map((grupo, index) => (
+  return data?.map((grupo: any, index: number) => (
     <>
       <Box key={index}>
         <Box className="flex w-full py-2 bg-gray-200 items-center justify-center">
@@ -78,22 +53,17 @@ const CuadrangularDescensoPage: React.FC<CuadrangularDescensoPageProps> = ({
             matches={
               grupo.matches
                 .map(convertToSimplifiedMatch)
-                .sort((m1, m2) => (m1.dateNumber < m2.dateNumber ? -1 : 1)) ||
+                .sort((m1: any, m2: any) => (m1.dateNumber < m2.dateNumber ? -1 : 1)) ||
               []
             }
             handleClickSeeMatch={handleClickSeeMatch}
-            isLoadingMatch={matchLoading}
-            selectedMatch={
-              [
-                currentMatchSelected.current?.homeTeam,
-                currentMatchSelected.current?.awayTeam,
-              ].join("") || ""
-            }
+            isLoadingMatch={false}
+            selectedMatch=""
           />
         }
       </Box>
       <InfoMatchModal
-        match={match || null}
+        match={selectedMatch}
         openMatchModal={openMatchModal}
         handleCloseModal={handleCloseModal}
       />

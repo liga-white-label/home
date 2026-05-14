@@ -2,251 +2,22 @@
 
 import NovedadCard from "./NovedadCard";
 import { tenantConfig } from "@/config/tenant";
-import moment from "moment";
-import { useState, useEffect, useCallback, useMemo, memo, useRef } from "react";
-import { Novedad } from "@/app/models/Novedad";
-import {
-  useAllCampeonatosQuery,
-  useCampeonatoQuery,
-  useAllFasesByCampeonato,
-  useOneFaseCampeonatoQuery,
-  useOneFasePlayoffCopaQuery,
-} from "@/repositories/CampeonatoRepository";
-import {
-  useAllFasesByCategoryQuery,
-  useCurrentDateQuery,
-  useLeagueMatchesQuery,
-  useOneFasePlayoffQuery,
-} from "@/repositories/CategoriaRepository";
-import { Liga } from "@/app/models/Campeonato";
-import {
-  MatchStatus,
-  SimplifiedMatch,
-  convertToSimplifiedMatch,
-} from "@/app/models/Match";
-import { FaseGruposCopa } from "@/app/models/FaseCampeonato";
-import {
-  findMostAdvancedRound,
-  roundToSimplifiedMatches,
-} from "../home/playoffUtils";
+import { useState } from "react";
+import { useAllNovedadesQuery } from "@/repositories/NovedadRepository";
 import MiniLoading from "../loading/MiniLoading";
 
 const PAGE_SIZE = 4;
 
-// ── Helpers ───────────────────────────────────────────────────────────────
-
-const matchToNovedad = (
-  match: SimplifiedMatch,
-  sourceLabel: string,
-  idPrefix: string
-): Novedad => {
-  const homeGoals = match.homeTeamGoals ?? 0;
-  const awayGoals = match.awayTeamGoals ?? 0;
-  const homeWon = homeGoals > awayGoals;
-  const draw = homeGoals === awayGoals;
-
-  let titulo: string;
-  let descripcion: string;
-
-  if (draw) {
-    titulo = `Empate ${homeGoals}-${awayGoals}: ${match.homeTeamName} y ${match.awayTeamName} se repartieron los puntos`;
-    descripcion = `${match.homeTeamName} y ${match.awayTeamName} no pudieron sacarse ventaja y empataron ${homeGoals}-${awayGoals} en un parejo encuentro de ${sourceLabel}, correspondiente a la fecha ${match.dateNumber}. Ambos equipos suman un punto en la tabla de posiciones.`;
-  } else {
-    const winner = homeWon ? match.homeTeamName : match.awayTeamName;
-    const loser = homeWon ? match.awayTeamName : match.homeTeamName;
-    const winGoals = homeWon ? homeGoals : awayGoals;
-    const loseGoals = homeWon ? awayGoals : homeGoals;
-    titulo = `${winner} venció ${winGoals}-${loseGoals} a ${loser} y suma tres puntos clave`;
-    descripcion = `${winner} se impuso ante ${loser} con un contundente marcador de ${winGoals}-${loseGoals} en ${sourceLabel}, fecha ${match.dateNumber}. El triunfo le permite al equipo consolidar su posición en la tabla y continuar en la lucha por los primeros puestos de la competencia.`;
-  }
-
-  const rawLogo = homeWon || draw ? match.homeTeamLogo : match.awayTeamLogo;
-  const imagen =
-    rawLogo || `https://picsum.photos/seed/${idPrefix}-${match.homeTeamId}/600/400`;
-
-  return {
-    id: `${idPrefix}-${match.homeTeamId}-${match.awayTeamId}`,
-    titulo,
-    descripcion,
-    fecha: match.date ?? moment(),
-    imagen,
-    categoria: sourceLabel,
-  };
-};
-
-// ── Headless fetchers — render null, report data via callback ──────────────
-
-interface CategoryFetcherProps {
-  categoryId: string;
-  categoryLabel: string;
-  onResult: (sourceId: string, novedades: Novedad[]) => void;
-}
-
-const CategoryFetcher = memo(
-  ({ categoryId, categoryLabel, onResult }: CategoryFetcherProps) => {
-    const { data: fases } = useAllFasesByCategoryQuery(categoryId);
-    const faseRegular =
-      fases?.phases?.find((f: any) => f.type === "general") ?? null;
-    const fasePlayoff =
-      fases?.phases?.find((f: any) => f.type === "playoff") ?? null;
-
-    const { data: currentDate } = useCurrentDateQuery(faseRegular?.id ?? "");
-    const { data: generalMatches = [] } = useLeagueMatchesQuery(
-      faseRegular?.id ?? "",
-      currentDate
-    );
-    const { data: playoffRounds = [] } = useOneFasePlayoffQuery({
-      id: fasePlayoff?.id ?? "",
-      enabled: !!fasePlayoff?.id,
-    });
-
-    const activeRound = useMemo(
-      () => findMostAdvancedRound(playoffRounds as any),
-      [playoffRounds]
-    );
-
-    const novedades = useMemo(() => {
-      let matches: SimplifiedMatch[];
-      if (activeRound) {
-        matches = roundToSimplifiedMatches(activeRound).filter(
-          (m) => m.status === MatchStatus.JUGADO
-        );
-      } else {
-        matches = (generalMatches as SimplifiedMatch[]).filter(
-          (m) => m.status === MatchStatus.JUGADO
-        );
-      }
-      return matches.map((m) =>
-        matchToNovedad(m, categoryLabel, `cat-${categoryId}`)
-      );
-    }, [activeRound, generalMatches, categoryId, categoryLabel]);
-
-    const onResultRef = useRef(onResult);
-    useEffect(() => {
-      onResultRef.current = onResult;
-    });
-
-    useEffect(() => {
-      onResultRef.current(categoryId, novedades);
-    }, [novedades, categoryId]);
-
-    return null;
-  }
-);
-CategoryFetcher.displayName = "CategoryFetcher";
-
-interface CupFetcherProps {
-  cupId: string;
-  cupName: string;
-  onResult: (sourceId: string, novedades: Novedad[]) => void;
-}
-
-const CupFetcher = memo(({ cupId, cupName, onResult }: CupFetcherProps) => {
-  const { data: fases = [] } = useAllFasesByCampeonato(cupId);
-  const groupPhase = (fases as any[]).find((f) => f.type === "group") ?? null;
-  const playoffPhase =
-    (fases as any[]).find((f) => f.type === "playoff") ?? null;
-
-  const { data: gruposData = [] } = useOneFaseCampeonatoQuery({
-    id: groupPhase?.id ?? "",
-    enabled: !!groupPhase?.id,
-  });
-  const { data: playoffRounds = [] } = useOneFasePlayoffCopaQuery({
-    id: playoffPhase?.id ?? "",
-    enabled: !!playoffPhase?.id,
-  });
-
-  const activeRound = useMemo(
-    () => findMostAdvancedRound(playoffRounds as any),
-    [playoffRounds]
-  );
-
-  const novedades = useMemo(() => {
-    let matches: SimplifiedMatch[];
-    if (activeRound) {
-      matches = roundToSimplifiedMatches(activeRound).filter(
-        (m) => m.status === MatchStatus.JUGADO
-      );
-    } else {
-      matches = (gruposData as FaseGruposCopa[])
-        .flatMap((g) => g.matches.map(convertToSimplifiedMatch))
-        .filter((m) => m.status === MatchStatus.JUGADO)
-        .sort((a, b) => (b.dateNumber ?? 0) - (a.dateNumber ?? 0))
-        .slice(0, 6);
-    }
-    return matches.map((m) => matchToNovedad(m, cupName, `cup-${cupId}`));
-  }, [activeRound, gruposData, cupId, cupName]);
-
-  const onResultRef = useRef(onResult);
-  useEffect(() => {
-    onResultRef.current = onResult;
-  });
-
-  useEffect(() => {
-    onResultRef.current(cupId, novedades);
-  }, [novedades, cupId]);
-
-  return null;
-});
-CupFetcher.displayName = "CupFetcher";
-
-// ── Main component ────────────────────────────────────────────────────────
-
 const NovedadesContent = () => {
-  const { data: allCampeonatos, isLoading: isLoadingAll } =
-    useAllCampeonatosQuery();
-  const campeonatoBase = allCampeonatos?.find((c) => c.current);
-  const { data: campeonatoActual, isLoading: isLoadingLiga } =
-    useCampeonatoQuery(campeonatoBase?.id ?? "");
-
-  const liga = campeonatoActual as Liga | undefined;
-  const categorias = liga?.categories ?? [];
-  const copas =
-    allCampeonatos?.filter((c) => c.type === "cup" && c.enabled) ?? [];
-
-  const [collected, setCollected] = useState<Record<string, Novedad[]>>({});
+  const { data: novedades = [], isLoading } = useAllNovedadesQuery();
   const [page, setPage] = useState(1);
 
-  const handleResult = useCallback(
-    (sourceId: string, novs: Novedad[]) => {
-      setCollected((prev) => ({ ...prev, [sourceId]: novs }));
-    },
-    []
-  );
-
-  const novedades = useMemo(() => {
-    const all = Object.values(collected).flat();
-    return all.sort((a, b) => moment(b.fecha).diff(moment(a.fecha)));
-  }, [collected]);
-
-  const isLoadingTop = isLoadingAll || isLoadingLiga;
   const totalPages = Math.ceil(novedades.length / PAGE_SIZE);
   const paginated = novedades.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-
   const [featured, ...rest] = paginated;
 
   return (
     <div className="flex flex-col w-full min-h-screen" style={{ backgroundColor: "#0a0a0a" }}>
-      {/* Invisible fetchers */}
-      {!isLoadingTop &&
-        categorias.map((cat) => (
-          <CategoryFetcher
-            key={cat.id}
-            categoryId={cat.id}
-            categoryLabel={`Cat. ${cat.name} ${cat.gender === "male" ? "Masculina" : "Femenina"}`}
-            onResult={handleResult}
-          />
-        ))}
-      {!isLoadingTop &&
-        copas.map((cup) => (
-          <CupFetcher
-            key={cup.id}
-            cupId={cup.id}
-            cupName={cup.name}
-            onResult={handleResult}
-          />
-        ))}
-
       {/* Masthead */}
       <div
         className="w-full pt-24 pb-8 px-6 md:px-10"
@@ -268,7 +39,7 @@ const NovedadesContent = () => {
 
       {/* Content */}
       <div className="flex-1 max-w-5xl mx-auto w-full px-4 md:px-6 py-8">
-        {isLoadingTop ? (
+        {isLoading ? (
           <div className="flex justify-center py-20">
             <MiniLoading />
           </div>
@@ -278,14 +49,12 @@ const NovedadesContent = () => {
           </p>
         ) : (
           <>
-            {/* Featured article */}
             {featured && (
               <div className="mb-10">
                 <NovedadCard novedad={featured} featured />
               </div>
             )}
 
-            {/* Grid */}
             {rest.length > 0 && (
               <>
                 <div className="flex items-center gap-4 mb-5">
@@ -302,7 +71,6 @@ const NovedadesContent = () => {
               </>
             )}
 
-            {/* Pagination */}
             {totalPages > 1 && (
               <div className="flex justify-center gap-2 pt-4 pb-10">
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (

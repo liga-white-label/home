@@ -10,7 +10,7 @@ export class JugadoresRepository {
   };
 
   getAll = async () => {
-    const { data } = await httpClient.get<Jugador[]>("players/get-all-players");
+    const { data } = await httpClient.get<Jugador[]>("players/");
     return data;
   };
 

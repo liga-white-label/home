@@ -5,7 +5,8 @@ import { Team } from "@/app/models/Equipo";
 
 export const getEquipoMapper = (x: any): Team => ({
   ...x,
-  genero: x.gender === "male" ? GeneroEnum.MASCULINO : GeneroEnum.FEMENINO,
+  genero:
+    x.gender?.toLowerCase() === "male" ? GeneroEnum.MASCULINO : GeneroEnum.FEMENINO,
   jugadores: x.players,
 });
 
@@ -13,31 +14,29 @@ export class EquipoRepository {
   keys = {
     all: () => ["equipos"],
     oneById: (id: string) => ["one-equipo", id],
-    allByCategoria: (id: string) => ["equipos-by-cat", id],
+    allByCategoria: (leagueId: string, id: string) => ["equipos-by-cat", leagueId, id],
     allByCopa: (id: string) => ["equipos-by-copa", id],
   };
 
   getAll = async () => {
-    const { data } = await httpClient.get<any[]>("teams");
+    const { data } = await httpClient.get<any[]>("teams/");
     return data.map(getEquipoMapper);
   };
 
   get = async (id: string) => {
-    const { data } = await httpClient.get(`teams/get-team-by-id?teamId=${id}`);
+    const { data } = await httpClient.get(`teams/${id}`);
     return getEquipoMapper(data);
   };
 
-  getAllByCategoryId = async (id: string) => {
+  getAllByCategoryId = async (leagueId: string, categoryId: string) => {
     const { data } = await httpClient.get<any>(
-      `tournament/league/categories/get-teams-by-id?categoryId=${id}`
+      `leagues/${leagueId}/categories/${categoryId}/teams`
     );
     return data;
   };
 
   getAllByCopaId = async (id: string) => {
-    const { data } = await httpClient.get<any>(
-      `tournament/cup/get-teams-by-id?cupId=${id}`
-    );
+    const { data } = await httpClient.get<any>(`cups/${id}/teams`);
     return data;
   };
 }
@@ -50,10 +49,10 @@ export const useAllEquiposQuery = () =>
 export const useEquipoQuery = (id: string) =>
   useQuery({ queryKey: repo.keys.oneById(id), queryFn: () => repo.get(id) });
 
-export const useAllEquiposByCategory = (id: string) =>
+export const useAllEquiposByCategory = (leagueId: string, id: string) =>
   useQuery({
-    queryKey: repo.keys.allByCategoria(id),
-    queryFn: () => repo.getAllByCategoryId(id),
+    queryKey: repo.keys.allByCategoria(leagueId, id),
+    queryFn: () => repo.getAllByCategoryId(leagueId, id),
   });
 
 export const useAllEquiposByCopa = (id: string) =>

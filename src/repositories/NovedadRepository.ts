@@ -17,9 +17,7 @@ export class NovedadRepository {
   };
 
   getAll = async () => {
-    const { data } = await httpClient.get<any[]>(
-      "announcements/get-all-announcements"
-    );
+    const { data } = await httpClient.get<any[]>("announcements/");
     return data.filter((x) => x.enabled).map(getNovedadMapper);
   };
 }

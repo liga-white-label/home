@@ -50,7 +50,7 @@ const CategoryLatestMatches = ({
   const [selectedCancha, setSelectedCancha] = useState<string | null>(null);
 
   const { data: fases, isLoading: isLoadingFases } =
-    useAllFasesByCategoryQuery(categoryId);
+    useAllFasesByCategoryQuery(ligaId, categoryId);
 
   const faseRegular =
     fases?.phases?.find((f: any) => f.type === "general") ?? null;
@@ -61,7 +61,7 @@ const CategoryLatestMatches = ({
     faseRegular?.id ?? ""
   );
   const { data: generalMatches = [], isLoading: isLoadingMatches } =
-    useLeagueMatchesQuery(faseRegular?.id ?? "", currentDate);
+    useLeagueMatchesQuery(ligaId, categoryId, faseRegular?.id ?? "", currentDate);
 
   const { data: playoffRounds = [], isLoading: isLoadingPlayoff } =
     useOneFasePlayoffQuery({ id: fasePlayoff?.id ?? "", enabled: !!fasePlayoff?.id });

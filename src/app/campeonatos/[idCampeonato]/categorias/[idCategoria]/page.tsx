@@ -35,6 +35,7 @@ export default function Home() {
         categoria?.gender === "male" ? "Masculina" : "Femenina"
       }`}
       id={idCategoria.toString()}
+      leagueId={idCampeonato.toString()}
     />
   );
 }

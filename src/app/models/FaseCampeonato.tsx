@@ -92,7 +92,7 @@ export interface RoundMatch {
 export const getPositionsMapper = (data: any): TablePosition => ({
   pos: 0,
   equipo: data.teamName,
-  escudo: data.teamLogo,
+  escudo: data.logoUrl || data.teamLogo || "",
   pts: data.totalPoints,
   pj: data.matchDraw + data.matchLoss + data.matchWin,
   pg: data.matchWin,
@@ -101,7 +101,7 @@ export const getPositionsMapper = (data: any): TablePosition => ({
   gf: data.goalsFor,
   gc: data.goalsAgainst,
   dg: data.goalsFor - data.goalsAgainst,
-  nextMatch: !!data.nextOpponent
+  nextMatch: data.nextOpponent
     ? { name: data.nextOpponent.name, logo: data.nextOpponent.logoUrl }
     : null,
 });
@@ -116,13 +116,13 @@ export interface RowEstadisticas {
 export const GoleadoresMapper = (g: any): RowEstadisticas => ({
   jugador: g.playerFullName,
   equipo: g.teamName,
-  escudo: g.teamLogo,
+  escudo: g.teamLogo || g.logoUrl || "",
   goles: g.goals,
 });
 
 export const AmarillasMapper = (a: any): RowEstadisticas => ({
   jugador: a.playerFullName,
   equipo: a.teamName,
-  escudo: a.teamLogo,
+  escudo: a.teamLogo || a.logoUrl || "",
   tarjetas: a.yellowCards,
 });

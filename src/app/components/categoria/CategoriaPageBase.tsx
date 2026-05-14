@@ -14,6 +14,7 @@ import { tenantConfig } from "@/config/tenant";
 
 interface CategoriaPageBaseProps {
   id: string;
+  leagueId: string;
   title: string;
 }
 
@@ -30,29 +31,30 @@ export enum TabsEnum {
 
 export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
   id,
+  leagueId,
   title,
 }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const tabParam = searchParams.get("tab");
 
-  const { data: fases } = useAllFasesByCategory(id);
+  const { data: fases } = useAllFasesByCategory(leagueId, id);
 
-  const hasFases = fases?.phases.length > 0;
+  const hasFases = (fases?.phases?.length ?? 0) > 0;
 
   const faseRegular =
-    fases?.phases.find((f: any) => f.type === "general") || null;
+    fases?.phases?.find((f: any) => f.type === "general") || null;
 
   const fasePlayoff =
-    fases?.phases.find((f: any) => f.type === "playoff") || null;
+    fases?.phases?.find((f: any) => f.type === "playoff") || null;
 
   const fasesGrupos =
-    fases?.phases.filter(
+    fases?.phases?.filter(
       (f: any) => f.type === "group" || f.type === "intergroup"
     ) || [];
 
   const faseDescenso =
-    fases?.phases.find((f: any) => f.type === "relegated") || null;
+    fases?.phases?.find((f: any) => f.type === "relegated") || null;
 
   const getInitialTab = () => {
     if (tabParam) {
@@ -208,7 +210,11 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
           <TablaDePosicionesWrapper faseId={faseRegular?.id || ""} />
         )}
         {selectedTab === TabsEnum.FIXTURE && !!faseRegular && (
-          <FixturePage faseId={faseRegular?.id || ""} />
+          <FixturePage
+            faseId={faseRegular?.id || ""}
+            tournamentId={leagueId}
+            categoryId={id}
+          />
         )}
         {isGruposTab && getSelectedFaseGrupos() && (
           <FaseGruposWrapper
@@ -220,9 +226,6 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
           <FixtureCopaPage
             faseId={getSelectedFaseGrupos()?.id || ""}
             fromCategoria
-            extraFechas={
-              fases?.categoryName === "C" && !!getSelectedFaseGrupos() ? 2 : 0
-            }
           />
         )}
         {selectedTab === TabsEnum.PLAYOFFS && !!fasePlayoff && (
@@ -232,7 +235,7 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
           <CuadrangularDescensoPage faseId={faseDescenso?.id || ""} />
         )}
         {selectedTab === TabsEnum.ESTADISTICAS && (
-          <EstadisticasPage categoryId={id} />
+          <EstadisticasPage categoryId={id} leagueId={leagueId} />
         )}
         {!hasFases && (
           <div className="flex justify-center items-center h-full">

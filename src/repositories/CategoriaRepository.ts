@@ -2,141 +2,118 @@ import { Categoria } from "@/app/models/Categoria";
 import { GeneroEnum } from "@/app/utils/enums/GeneroEnum";
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { httpClient } from "@/app/utils/httpClient";
-import { partidoMapper, SimplifiedMatch } from "@/app/models/Match";
-import { Team } from "@/app/models/Equipo";
+import { matchResponseToSimplified, partidoMapper } from "@/app/models/Match";
 import {
-  playoffFaseMapper,
   getPositionsMapper,
   RoundCup,
 } from "@/app/models/FaseCampeonato";
 
 export const getCategoriaMapper = (x: any): Categoria => ({
   ...x,
-  gender: x.gender as GeneroEnum,
+  gender: x.gender?.toLowerCase() as GeneroEnum,
 });
 
-export const faseMapper = (data: any) => {
-  return {
-    equipoLocal: {
-      id: data.homeTeamId,
-      name: data.homeTeamName,
-      logoUrl: data.homeTeamLogo,
-      gender: GeneroEnum.MASCULINO,
-    },
-    equipoVisitante: {
-      id: data.awayTeamId,
-      name: data.awayTeamName,
-      logoUrl: data.awayTeamLogo,
-      gender: GeneroEnum.MASCULINO,
-    },
-  };
+const playoffResponseToRounds = (data: any): RoundCup[] => {
+  const isDouble = data.doubleMatch || false;
+  return (data.rounds || []).map((round: any) => ({
+    matchesPlayoff: (round.matches || []).map((match: any) => ({
+      id: match.id,
+      homeMatch: partidoMapper(match.homeMatch),
+      awayMatch: partidoMapper(match.awayMatch),
+      teamWinner: match.teamWinnerId
+        ? {
+            id: match.teamWinnerId,
+            name: "",
+            logoUrl: "",
+            gender: GeneroEnum.MASCULINO,
+            categoryName: null,
+            leagueName: null,
+            players: [],
+          }
+        : null,
+      nextMatchId: "",
+      homeTeamPenalties: match.penalties?.homeTeam ?? null,
+      awayTeamPenalties: match.penalties?.awayTeam ?? null,
+    })),
+    roundNumber: round.roundNumber,
+    doubleMatch: isDouble,
+  }));
 };
 
 export class CategoriaRepository {
   keys = {
     all: () => ["categorias"],
     one: (idCat: string) => ["categorias", idCat],
-    fases: (idCat: string) => ["fases", idCat],
+    fases: (leagueId: string, idCat: string) => ["fases", leagueId, idCat],
     oneFase: (idFase: string, fecha?: number) => ["fases", idFase + fecha],
     partido: (idPartido: string) => [idPartido],
     lastTeams: (idFase: string) => ["lastTeams", idFase],
-    goleadores: (idFase: string) => ["goleadores", idFase],
-    amarillas: (idFase: string) => ["amarillas", idFase],
+    goleadores: (leagueId: string, idCat: string) => ["goleadores", leagueId, idCat],
+    amarillas: (leagueId: string, idCat: string) => ["amarillas", leagueId, idCat],
     currentDate: (idCat: string) => ["currentDate" + idCat],
+    allMatches: (tournamentId: string, categoryId: string, faseId: string, fecha: number) => [
+      "matches",
+      tournamentId,
+      categoryId,
+      faseId,
+      fecha,
+    ],
   };
 
-  allFases = async (categoryId: string) => {
-    const { data } = await httpClient.get<any>(
-      `tournament/league/categories/get-phases?categoryId=${categoryId}`
+  allFases = async (leagueId: string, categoryId: string) => {
+    const { data } = await httpClient.get<any[]>(
+      `leagues/${leagueId}/categories/${categoryId}/phases`
     );
-    return data;
+    return {
+      phases: data.map((p: any) => ({ ...p, type: p.type?.toLowerCase() })),
+    };
   };
 
-  getAllLeagueMatches = async (faseId: string, fecha: number) => {
-    const { data } = await httpClient.get<SimplifiedMatch[]>(
-      `tournament/league/categories/phase-general/get-all-matches?phaseId=${faseId}&dateNumber=${
-        fecha || 1
-      }`
-    );
-    return data;
-  };
-
-  getOnePartido = async ({
-    homeTeamId,
-    awayTeamId,
-    faseId,
-  }: {
-    homeTeamId: string;
-    awayTeamId: string;
-    faseId: string;
-  }) => {
-    const { data } = await httpClient.get<any>(
-      `tournament/league/categories/phase-general/get-match?phaseId=${faseId}&homeTeamId=${homeTeamId}&awayTeamId=${awayTeamId}`
-    );
-    return partidoMapper(data);
-  };
-
-  getOnePartidoDescenso = async (
+  getAllLeagueMatches = async (
+    tournamentId: string,
+    categoryId: string,
     faseId: string,
-    homeTeamId: string,
-    awayTeamId: string
+    fecha: number
   ) => {
-    const { data } = await httpClient.get<any>(
-      `tournament/league/categories/phase-relegated/get-match?phaseId=${faseId}&homeTeamId=${homeTeamId}&awayTeamId=${awayTeamId}`
+    const { data } = await httpClient.get<any[]>(
+      `phases/${tournamentId}/${faseId}/matches`,
+      { params: { date: fecha || 1, categoryId } }
     );
-    return partidoMapper(data);
+    return data.map(matchResponseToSimplified);
   };
 
   getOneFasePlayoff = async (faseId: string) => {
-    const { data } = await httpClient.get<RoundCup[]>(
-      `tournament/league/categories/phase-playoff/get-rounds?phaseId=${faseId}`
-    );
-    return data.map(playoffFaseMapper);
+    const { data } = await httpClient.get<any>(`phases/${faseId}`);
+    return playoffResponseToRounds(data);
   };
 
   getPositionsFaseRegular = async (faseId: string) => {
-    const { data } = await httpClient.get<any>(
-      `tournament/league/categories/phase-general/get-positions?phaseId=${faseId}`
-    );
-    return data.map(getPositionsMapper);
-  };
-
-  getLastTeamsOfPhase = async (faseId: string) => {
-    const { data } = await httpClient.get<Team[]>(
-      `tournament/league/categories/phase-general/get-last-four-teams?phaseId=${faseId}`
-    );
-    return data;
+    const { data } = await httpClient.get<any>(`phases/${faseId}`);
+    return (data.positions || []).map(getPositionsMapper);
   };
 
   getFaseCuadrangular = async (faseId: string) => {
+    const { data } = await httpClient.get<any>(`phases/${faseId}`);
+    return data.groups || [];
+  };
+
+  getGoleadores = async (leagueId: string, categoryId: string) => {
     const { data } = await httpClient.get<any>(
-      `tournament/league/categories/phase-cuadrangular/get-groups?phaseId=${faseId}`
+      `stats/leagues/${leagueId}/categories/${categoryId}/scorers`
     );
     return data;
   };
 
-  getGoleadores = async (categoryId: string) => {
+  getAmarillas = async (leagueId: string, categoryId: string) => {
     const { data } = await httpClient.get<any>(
-      `tournament/league/categories/get-scorers?categoryId=${categoryId}`
-    );
-    return data;
-  };
-
-  getAmarillas = async (categoryId: string) => {
-    const { data } = await httpClient.get<any>(
-      `tournament/league/categories/get-yellow-cards?categoryId=${categoryId}`
+      `stats/leagues/${leagueId}/categories/${categoryId}/yellow-cards`
     );
     return data;
   };
 
   getCurrentDate = async (phaseId: string) => {
-    const { data } = await httpClient.get<any>(
-      `tournament/league/categories/phase-general/get-actual-date`,
-      {
-        params: {
-          phaseId: phaseId,
-        },
-      }
+    const { data } = await httpClient.get<number>(
+      `phases/${phaseId}/actual-date`
     );
     return data;
   };
@@ -144,33 +121,25 @@ export class CategoriaRepository {
 
 const repo = new CategoriaRepository();
 
-export const useAllFasesByCategory = (id: string) =>
-  useSuspenseQuery({
-    queryKey: repo.keys.fases(id),
-    queryFn: () => repo.allFases(id),
+export const useAllFasesByCategory = (leagueId: string, id: string) =>
+  useQuery({
+    queryKey: repo.keys.fases(leagueId, id),
+    queryFn: () => repo.allFases(leagueId, id),
+    enabled: !!id && !!leagueId,
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
   });
 
-export const useAllMatchesByFaseQuery = (id: string, fecha: number) =>
-  useSuspenseQuery({
-    queryKey: repo.keys.oneFase(id, fecha),
-    queryFn: () => repo.getAllLeagueMatches(id, fecha),
-  });
-
-export const useOnePartidoQuery = (
-  localId: string,
-  awayId: string,
-  faseId: string,
-  enabled: boolean
+export const useAllMatchesByFaseQuery = (
+  tournamentId: string,
+  categoryId: string,
+  id: string,
+  fecha: number
 ) =>
   useQuery({
-    queryKey: repo.keys.partido(localId + awayId + faseId),
-    queryFn: () =>
-      repo.getOnePartido({
-        homeTeamId: localId,
-        awayTeamId: awayId,
-        faseId: faseId,
-      }),
-    enabled: enabled,
+    queryKey: repo.keys.allMatches(tournamentId, categoryId, id, fecha),
+    queryFn: () => repo.getAllLeagueMatches(tournamentId, categoryId, id, fecha),
+    enabled: !!id && !!tournamentId && !!categoryId,
   });
 
 export const useOneFasePlayoffQuery = ({
@@ -183,7 +152,7 @@ export const useOneFasePlayoffQuery = ({
   useQuery({
     queryKey: repo.keys.oneFase(id),
     queryFn: () => repo.getOneFasePlayoff(id),
-    enabled: enabled,
+    enabled: enabled && id !== "",
   });
 
 export const useGetPositionsFaseRegular = (faseId: string) =>
@@ -193,46 +162,27 @@ export const useGetPositionsFaseRegular = (faseId: string) =>
     enabled: !!faseId,
   });
 
-export const useLastTeamsOfPhaseQuery = (faseId: string) =>
-  useQuery({
-    queryKey: repo.keys.lastTeams(faseId),
-    queryFn: () => repo.getLastTeamsOfPhase(faseId),
-    enabled: !!faseId,
-  });
-
 export const useGetFaseCuadrangularQuery = (faseId: string) =>
   useSuspenseQuery({
     queryKey: repo.keys.oneFase(faseId),
     queryFn: () => repo.getFaseCuadrangular(faseId),
   });
 
-export const useGoleadoresCategoriaQuery = (id: string) => {
+export const useGoleadoresCategoriaQuery = (leagueId: string, id: string) => {
   return useQuery({
-    queryKey: repo.keys.goleadores(id),
-    queryFn: () => repo.getGoleadores(id),
-    enabled: id !== "",
+    queryKey: repo.keys.goleadores(leagueId, id),
+    queryFn: () => repo.getGoleadores(leagueId, id),
+    enabled: id !== "" && leagueId !== "",
   });
 };
 
-export const useAmarillasCategoriaQuery = (id: string) => {
+export const useAmarillasCategoriaQuery = (leagueId: string, id: string) => {
   return useQuery({
-    queryKey: repo.keys.amarillas(id),
-    queryFn: () => repo.getAmarillas(id),
-    enabled: id !== "",
+    queryKey: repo.keys.amarillas(leagueId, id),
+    queryFn: () => repo.getAmarillas(leagueId, id),
+    enabled: id !== "" && leagueId !== "",
   });
 };
-
-export const useOnePartidoDescensoQuery = (
-  homeTeamId: string,
-  awayTeamId: string,
-  faseId: string,
-  enabled: boolean
-) =>
-  useQuery({
-    queryKey: repo.keys.partido(homeTeamId + awayTeamId + faseId),
-    queryFn: () => repo.getOnePartidoDescenso(faseId, homeTeamId, awayTeamId),
-    enabled: enabled,
-  });
 
 export const useCurrentDateQuery = (phaseId: string) =>
   useQuery({
@@ -242,24 +192,26 @@ export const useCurrentDateQuery = (phaseId: string) =>
   });
 
 // Non-suspense versions used by the home page summary section
-export const useAllFasesByCategoryQuery = (id: string) =>
+export const useAllFasesByCategoryQuery = (leagueId: string, id: string) =>
   useQuery({
-    queryKey: repo.keys.fases(id),
-    queryFn: () => repo.allFases(id),
-    enabled: !!id,
+    queryKey: repo.keys.fases(leagueId, id),
+    queryFn: () => repo.allFases(leagueId, id),
+    enabled: !!id && !!leagueId,
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });
 
 export const useLeagueMatchesQuery = (
+  tournamentId: string,
+  categoryId: string,
   id: string,
   fecha: number | undefined
 ) =>
   useQuery({
-    queryKey: repo.keys.oneFase(id, fecha),
-    queryFn: () => repo.getAllLeagueMatches(id, fecha!),
-    enabled: !!id && !!fecha,
+    queryKey: repo.keys.allMatches(tournamentId, categoryId, id, fecha ?? 0),
+    queryFn: () => repo.getAllLeagueMatches(tournamentId, categoryId, id, fecha!),
+    enabled: !!id && !!fecha && !!tournamentId && !!categoryId,
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,

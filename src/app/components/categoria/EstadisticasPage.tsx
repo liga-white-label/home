@@ -10,6 +10,7 @@ import { GoleadoresMapper, AmarillasMapper } from "@/app/models/FaseCampeonato";
 
 interface EstadisticasPageProps {
   categoryId: string;
+  leagueId: string;
 }
 
 const OPTIONS = [
@@ -19,12 +20,13 @@ const OPTIONS = [
 
 export const EstadisticasPage: React.FC<EstadisticasPageProps> = ({
   categoryId = "",
+  leagueId = "",
 }) => {
   const { data: goleadores = [], isLoading: goleadoresLoading } =
-    useGoleadoresCategoriaQuery(categoryId);
+    useGoleadoresCategoriaQuery(leagueId, categoryId);
 
   const { data: amarillas = [], isLoading: amarillasLoading } =
-    useAmarillasCategoriaQuery(categoryId);
+    useAmarillasCategoriaQuery(leagueId, categoryId);
 
   const [selectedOption, setSelectedOption] = useState<string>("0");
 

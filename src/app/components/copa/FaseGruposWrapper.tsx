@@ -29,7 +29,7 @@ export const FaseGruposWrapper: FC<FaseGruposWrapperProps> = ({
   if (isLoading) return <LoadingScreen />;
   if (isError) return <ErrorPage />;
 
-  return faseData?.map((grupo, index) => (
+  return faseData?.map((grupo: any, index: number) => (
     <>
       <Box key={index}>
         <Box className="flex w-full py-2 bg-gray-200 items-center justify-center">

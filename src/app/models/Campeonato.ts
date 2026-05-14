@@ -24,8 +24,17 @@ export interface Copa extends Campeonato {
 }
 
 export const getCampeonatoMapper = (x: any): Liga | Copa => {
-  if (x.type === CampeonatoTypeEnum.REGULAR) {
-    return x as Liga;
+  const type = x.type?.toLowerCase();
+  const normalized = {
+    ...x,
+    type,
+    categories: x.categories?.map((c: any) => ({
+      ...c,
+      gender: c.gender?.toLowerCase(),
+    })),
+  };
+  if (type === CampeonatoTypeEnum.REGULAR) {
+    return normalized as Liga;
   }
-  return x as Copa;
+  return normalized as Copa;
 };

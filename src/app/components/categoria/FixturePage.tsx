@@ -1,26 +1,32 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { PartidosAgrupados } from "../fixture/PartidosAgrupados";
 import {
   useAllMatchesByFaseQuery,
   useCurrentDateQuery,
-  useOnePartidoQuery,
 } from "@/repositories/CategoriaRepository";
 import InfoMatchModal from "../InfoMatchModal";
 import LoadingScreen from "../loading/Loading";
-import { SimplifiedMatch } from "../../models/Match";
+import { Match, SimplifiedMatch } from "../../models/Match";
 
 interface FixturePageProps {
   faseId: string;
+  tournamentId: string;
+  categoryId: string;
 }
 
-export const FixturePage: React.FC<FixturePageProps> = ({ faseId }) => {
+export const FixturePage: React.FC<FixturePageProps> = ({
+  faseId,
+  tournamentId,
+  categoryId,
+}) => {
   const { data: currentDate, isLoading: isLoadingCurrentDate } =
     useCurrentDateQuery(faseId);
 
   const [selectedFecha, setSelectedFecha] = useState<number>(currentDate || 1);
-  const currentMatchSelected = useRef<any | undefined>();
+  const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
+  const [openMatchModal, setOpenMatchModal] = useState<boolean>(false);
 
   useEffect(() => {
     if (currentDate && !isLoadingCurrentDate) {
@@ -29,29 +35,19 @@ export const FixturePage: React.FC<FixturePageProps> = ({ faseId }) => {
   }, [currentDate, isLoadingCurrentDate]);
 
   const { data: matchesFechaActual, isLoading } = useAllMatchesByFaseQuery(
+    tournamentId,
+    categoryId,
     faseId,
     selectedFecha
   );
 
-  const { data: match, isLoading: isLoadingMatch } = useOnePartidoQuery(
-    currentMatchSelected.current?.homeTeam,
-    currentMatchSelected.current?.awayTeam,
-    currentMatchSelected.current?.phaseId || "",
-    !!currentMatchSelected.current
-  );
-  const [openMatchModal, setOpenMatchModal] = useState<boolean>(false);
-
   const handleClickSeeMatch = (match: SimplifiedMatch) => {
-    currentMatchSelected.current = {
-      homeTeam: match.homeTeamId,
-      awayTeam: match.awayTeamId,
-      phaseId: faseId || "",
-    };
+    setSelectedMatch(match.matchDetail || null);
     setOpenMatchModal(true);
   };
 
   const handleCloseModal = () => {
-    currentMatchSelected.current = undefined;
+    setSelectedMatch(null);
     setOpenMatchModal(false);
   };
 
@@ -90,17 +86,12 @@ export const FixturePage: React.FC<FixturePageProps> = ({ faseId }) => {
         <PartidosAgrupados
           matches={matchesFechaActual || []}
           handleClickSeeMatch={handleClickSeeMatch}
-          isLoadingMatch={isLoadingMatch}
-          selectedMatch={
-            [
-              currentMatchSelected.current?.homeTeam,
-              currentMatchSelected.current?.awayTeam,
-            ].join("") || ""
-          }
+          isLoadingMatch={false}
+          selectedMatch=""
         />
       </div>
       <InfoMatchModal
-        match={match || null}
+        match={selectedMatch}
         openMatchModal={openMatchModal}
         handleCloseModal={handleCloseModal}
       />
