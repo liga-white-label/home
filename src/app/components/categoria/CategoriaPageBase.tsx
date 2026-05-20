@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { FixturePage } from "./FixturePage";
 import { TablaDePosicionesWrapper } from "./TablasDePosicionesWrapper";
 import PlayoffsPage from "../playoffs/PlayoffsPage";
-import { useAllFasesByCategory } from "@/repositories/CategoriaRepository";
+import { useAllFasesByCategory, useCurrentDateQuery, useCurrentDateGroupQuery } from "@/repositories/CategoriaRepository";
 import { EstadisticasPage } from "./EstadisticasPage";
 import CuadrangularDescensoPage from "./CuadrangularDescensoPage";
 import { FaseGruposWrapper } from "../copa/FaseGruposWrapper";
@@ -95,6 +95,12 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
     selectedTab >= TabsEnum.GRUPOS_BASE &&
     selectedTab < TabsEnum.FIXTURE_ZONAS_BASE;
   const isFixtureZonasTab = selectedTab >= TabsEnum.FIXTURE_ZONAS_BASE;
+
+  const { data: currentDate, isLoading: isLoadingCurrentDate } =
+    useCurrentDateQuery(faseRegular?.id || "");
+
+  const { data: currentDateGroup, isLoading: isLoadingCurrentDateGroup } =
+    useCurrentDateGroupQuery(isFixtureZonasTab ? getSelectedFaseGrupos()?.id || "" : "");
 
   const tabClass = (active: boolean) =>
     `cursor-pointer pb-3 text-sm font-medium whitespace-nowrap transition-colors ${active

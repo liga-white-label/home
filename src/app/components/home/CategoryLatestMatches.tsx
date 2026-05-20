@@ -4,11 +4,13 @@ import { useState, useMemo } from "react";
 import {
   useAllFasesByCategoryQuery,
   useCurrentDateQuery,
+  useCurrentDateGroupQuery,
   useLeagueMatchesQuery,
   useOneFasePlayoffQuery,
 } from "@/repositories/CategoriaRepository";
+import { useGetAllGroupMatchesByFaseQuery } from "@/repositories/CampeonatoRepository";
 import moment from "moment";
-import { Match, MatchStatus, SimplifiedMatch } from "@/app/models/Match";
+import { Match, MatchStatus, SimplifiedMatch, convertToSimplifiedMatch } from "@/app/models/Match";
 import Link from "next/link";
 import MiniLoading from "../loading/MiniLoading";
 import MatchResultRow from "./MatchResultRow";
@@ -56,10 +58,19 @@ const CategoryLatestMatches = ({
     fases?.phases?.find((f: any) => f.type === "general") ?? null;
   const fasePlayoff =
     fases?.phases?.find((f: any) => f.type === "playoff") ?? null;
+  const primeraFaseGrupo =
+    fases?.phases?.find((f: any) => f.type === "group" || f.type === "intergroup") ?? null;
 
   const { data: currentDate, isLoading: isLoadingDate } = useCurrentDateQuery(
     faseRegular?.id ?? ""
   );
+  const { data: currentDateGroup, isLoading: isLoadingDateGroup } =
+    useCurrentDateGroupQuery(primeraFaseGrupo?.id ?? "");
+  const { data: groupMatchesData = [], isLoading: isLoadingGroupMatches } =
+    useGetAllGroupMatchesByFaseQuery({
+      faseId: primeraFaseGrupo?.id ?? "",
+      dateNumber: currentDateGroup ?? 1,
+    });
   const { data: generalMatches = [], isLoading: isLoadingMatches } =
     useLeagueMatchesQuery(ligaId, categoryId, faseRegular?.id ?? "", currentDate);
 
@@ -67,7 +78,8 @@ const CategoryLatestMatches = ({
     useOneFasePlayoffQuery({ id: fasePlayoff?.id ?? "", enabled: !!fasePlayoff?.id });
 
   const isLoading =
-    isLoadingFases || isLoadingDate || isLoadingMatches || isLoadingPlayoff;
+    isLoadingFases || isLoadingDate || isLoadingMatches || isLoadingPlayoff ||
+    isLoadingDateGroup || isLoadingGroupMatches;
 
   const sorted: SimplifiedMatch[] = [...(generalMatches as SimplifiedMatch[])].sort(
     (a, b) => {
@@ -136,6 +148,56 @@ const CategoryLatestMatches = ({
             ))}
           </div>
         ))}
+        <InfoMatchModal
+          openMatchModal={selectedMatch !== null}
+          handleCloseModal={() => setSelectedMatch(null)}
+          match={selectedMatch}
+        />
+      </>
+    );
+  }
+
+  if (!faseRegular && primeraFaseGrupo) {
+    const groupMatches: SimplifiedMatch[] = (groupMatchesData as any[])
+      .flatMap((g: any) => g.matches.map(convertToSimplifiedMatch));
+    const sortedGroup = [...groupMatches].sort((a, b) => {
+      if (!a.date && !b.date) return 0;
+      if (!a.date) return 1;
+      if (!b.date) return -1;
+      return moment(a.date).valueOf() - moment(b.date).valueOf();
+    });
+
+    return (
+      <>
+        <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid #1a1a1a" }}>
+          <span className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+            Fase de Zonas — Fecha {currentDateGroup}
+          </span>
+          <Link
+            href={`/campeonatos/${ligaId}/categorias/${categoryId}?tab=200`}
+            className="text-xs font-semibold hover:opacity-80 transition-opacity text-gray-500"
+          >
+            Ver fixture zonas →
+          </Link>
+        </div>
+        {sortedGroup.length === 0 ? (
+          <p className="text-center text-gray-500 py-8 text-sm">
+            No hay partidos para esta fecha.
+          </p>
+        ) : (
+          groupMatchesByDay(sortedGroup).map((group) => (
+            <div key={group.dayKey}>
+              <DayHeader label={group.dayLabel} />
+              {group.matches.map((match, i) => (
+                <MatchResultRow
+                  key={i}
+                  match={match}
+                  onClick={match.matchDetail ? () => setSelectedMatch(match.matchDetail!) : undefined}
+                />
+              ))}
+            </div>
+          ))
+        )}
         <InfoMatchModal
           openMatchModal={selectedMatch !== null}
           handleCloseModal={() => setSelectedMatch(null)}

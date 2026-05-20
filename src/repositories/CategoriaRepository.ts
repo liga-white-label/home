@@ -22,14 +22,14 @@ const playoffResponseToRounds = (data: any): RoundCup[] => {
       awayMatch: partidoMapper(match.awayMatch),
       teamWinner: match.teamWinnerId
         ? {
-            id: match.teamWinnerId,
-            name: "",
-            logoUrl: "",
-            gender: GeneroEnum.MASCULINO,
-            categoryName: null,
-            leagueName: null,
-            players: [],
-          }
+          id: match.teamWinnerId,
+          name: "",
+          logoUrl: "",
+          gender: GeneroEnum.MASCULINO,
+          categoryName: null,
+          leagueName: null,
+          players: [],
+        }
         : null,
       nextMatchId: "",
       homeTeamPenalties: match.penalties?.homeTeam ?? null,
@@ -51,6 +51,7 @@ export class CategoriaRepository {
     goleadores: (leagueId: string, idCat: string) => ["goleadores", leagueId, idCat],
     amarillas: (leagueId: string, idCat: string) => ["amarillas", leagueId, idCat],
     currentDate: (idCat: string) => ["currentDate" + idCat],
+    currentDateGroup: (phaseId: string) => ["currentDateGroup", phaseId],
     allMatches: (tournamentId: string, categoryId: string, faseId: string, fecha: number) => [
       "matches",
       tournamentId,
@@ -114,6 +115,13 @@ export class CategoriaRepository {
   getCurrentDate = async (phaseId: string) => {
     const { data } = await httpClient.get<number>(
       `phases/${phaseId}/actual-date`
+    );
+    return data;
+  };
+
+  getGroupCurrentDate = async (phaseId: string) => {
+    const { data } = await httpClient.get<number>(
+      `phases/group/${phaseId}/actual-date`
     );
     return data;
   };
@@ -188,6 +196,13 @@ export const useCurrentDateQuery = (phaseId: string) =>
   useQuery({
     queryKey: repo.keys.currentDate(phaseId),
     queryFn: () => repo.getCurrentDate(phaseId),
+    enabled: !!phaseId,
+  });
+
+export const useCurrentDateGroupQuery = (phaseId: string) =>
+  useQuery({
+    queryKey: repo.keys.currentDateGroup(phaseId),
+    queryFn: () => repo.getGroupCurrentDate(phaseId),
     enabled: !!phaseId,
   });
 

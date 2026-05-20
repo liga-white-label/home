@@ -4,8 +4,9 @@ import {
   useGetAllPositionsByFaseQuery,
   useGetAllGroupMatchesByFaseQuery,
 } from "@/repositories/CampeonatoRepository";
+import { useCurrentDateGroupQuery } from "@/repositories/CategoriaRepository";
 import Box from "@mui/material/Box";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { PartidosAgrupados } from "../fixture/PartidosAgrupados";
 import LoadingScreen from "../loading/Loading";
 import InfoMatchModal from "../InfoMatchModal";
@@ -27,8 +28,17 @@ const FixtureCopaPage: React.FC<FixtureCopaPageProps> = ({
   fromCategoria = false,
   extraFechas = 0,
 }) => {
-  const [selectedFecha, setSelectedFecha] = useState<number>(1);
+  const { data: currentDate, isLoading: isLoadingCurrentDate } =
+    useCurrentDateGroupQuery(faseId);
+
+  const [selectedFecha, setSelectedFecha] = useState<number>(currentDate || 1);
   const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
+
+  useEffect(() => {
+    if (currentDate && !isLoadingCurrentDate) {
+      setSelectedFecha(currentDate);
+    }
+  }, [currentDate, isLoadingCurrentDate]);
   const [openMatchModal, setOpenMatchModal] = useState<boolean>(false);
 
   const {
@@ -69,7 +79,7 @@ const FixtureCopaPage: React.FC<FixtureCopaPageProps> = ({
     setOpenMatchModal(false);
   };
 
-  if (isLoadingFase || isLoadingMatches) return <LoadingScreen />;
+  if (isLoadingCurrentDate || isLoadingFase || isLoadingMatches) return <LoadingScreen />;
   if (isErrorFase || isErrorMatches) return <ErrorPage />;
 
   return (
