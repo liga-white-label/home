@@ -1,5 +1,6 @@
 import { Novedad } from "@/app/models/Novedad";
 import Image from "next/image";
+import Link from "next/link";
 import moment from "moment";
 import "moment/dist/locale/es";
 
@@ -57,6 +58,7 @@ const CategoryBadge: React.FC<{ categoria: string }> = ({ categoria }) => (
 const NovedadCardHome: React.FC<NovedadCardHomeProps> = ({ novedad, compact = false }) => {
 
     return (
+        <Link href={`/novedades/${novedad.id}`} className="block group h-full">
         <article
             className="group flex flex-col rounded-xl overflow-hidden h-full transition-colors"
             style={{ backgroundColor: "#1a1a1a" }}
@@ -86,6 +88,7 @@ const NovedadCardHome: React.FC<NovedadCardHomeProps> = ({ novedad, compact = fa
                 )}
             </div>
         </article>
+        </Link>
     );
 };
 

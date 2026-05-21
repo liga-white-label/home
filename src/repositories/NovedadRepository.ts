@@ -28,3 +28,12 @@ const repo = new NovedadRepository();
 
 export const useAllNovedadesQuery = () =>
   useQuery({ queryKey: repo.keys.all(), queryFn: repo.getAll });
+
+export const useNovedadQuery = (id: string) =>
+  useQuery({
+    queryKey: [...repo.keys.all(), id],
+    queryFn: async () => {
+      const all = await repo.getAll();
+      return all.find((n) => n.id === id) ?? null;
+    },
+  });
