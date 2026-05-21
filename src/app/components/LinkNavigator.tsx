@@ -110,7 +110,7 @@ export const LinkNavigator = () => {
         {path === "/" && (
           <span
             className="absolute bottom-0 left-0 w-full h-0.5 rounded-full"
-            style={{ backgroundColor: "#ef4444" }}
+            style={{ backgroundColor: "rgba(var(--color-gradient),1)" }}
           />
         )}
       </Link>
@@ -129,7 +129,7 @@ export const LinkNavigator = () => {
             {path.includes("categorias") && (
               <span
                 className="absolute bottom-0 left-0 w-full h-0.5 rounded-full"
-                style={{ backgroundColor: "#ef4444" }}
+                style={{ backgroundColor: "rgba(var(--color-gradient),1)" }}
               />
             )}
           </button>
@@ -188,7 +188,7 @@ export const LinkNavigator = () => {
         {path.includes("novedades") && (
           <span
             className="absolute bottom-0 left-0 w-full h-0.5 rounded-full"
-            style={{ backgroundColor: "#ef4444" }}
+            style={{ backgroundColor: "rgba(var(--color-gradient),1)" }}
           />
         )}
       </Link>
@@ -208,7 +208,7 @@ export const LinkNavigator = () => {
           {path.includes("campeonatos") && !path.includes("categorias") && (
             <span
               className="absolute bottom-0 left-0 w-full h-0.5 rounded-full"
-              style={{ backgroundColor: "#ef4444" }}
+              style={{ backgroundColor: "rgba(var(--color-gradient),1)" }}
             />
           )}
         </button>

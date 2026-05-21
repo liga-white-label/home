@@ -20,7 +20,7 @@ export const NavBar = () => {
         className="absolute bottom-0 left-0 right-0 h-px pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 100%, rgba(180,0,0,0.6) 0%, transparent 70%)",
+            "radial-gradient(ellipse at 50% 100%, rgba(var(--color-gradient),0.6) 0%, transparent 70%)",
           height: 1,
         }}
       />
@@ -29,7 +29,7 @@ export const NavBar = () => {
         style={{
           height: 24,
           background:
-            "radial-gradient(ellipse at 50% 100%, rgba(140,0,0,0.25) 0%, transparent 70%)",
+            "radial-gradient(ellipse at 50% 100%, rgba(var(--color-gradient),0.25) 0%, transparent 70%)",
         }}
       />
 

@@ -28,6 +28,7 @@ export default function RootLayoutWrapper({
           <MainLayout
             primaryColor={tenantConfig.brand.primaryColor}
             secondaryColor={tenantConfig.brand.secondaryColor}
+            gradientColor={tenantConfig.brand.gradientColor}
           >
             {children}
           </MainLayout>

@@ -7,10 +7,12 @@ export const MainLayout = ({
   children,
   primaryColor,
   secondaryColor,
+  gradientColor,
 }: Readonly<{
   children: React.ReactNode;
   primaryColor: string;
   secondaryColor: string;
+  gradientColor: string;
 }>) => {
   return (
     <html
@@ -18,6 +20,7 @@ export const MainLayout = ({
       style={{
         ["--color-primary" as string]: primaryColor,
         ["--color-secondary" as string]: secondaryColor,
+        ["--color-gradient" as string]: gradientColor,
       }}
     >
       <body>

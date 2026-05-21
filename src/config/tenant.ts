@@ -6,6 +6,7 @@ export const tenantConfig = {
       "Club Universitario de Bahía Blanca",
     primaryColor: process.env.NEXT_PUBLIC_PRIMARY_COLOR ?? "#A60000",
     secondaryColor: process.env.NEXT_PUBLIC_SECONDARY_COLOR ?? "#0C0C0C",
+    gradientColor: process.env.NEXT_PUBLIC_GRADIENT_COLOR ?? "180,0,0",
     logoPath:
       process.env.NEXT_PUBLIC_LOGO_PATH ?? "/assets/logo_2025.png",
     logoWidth: Number(process.env.NEXT_PUBLIC_LOGO_WIDTH ?? 200),
@@ -45,6 +46,7 @@ export interface HomeSlide {
   imagePath: string;
   categoryName: string;
   gender: "male" | "female";
+  link?: string;
 }
 
 function parseSlides(raw: string | undefined): HomeSlide[] {

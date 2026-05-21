@@ -38,7 +38,7 @@ const HomeContent = () => {
   const SLIDES = tenantConfig.home.slides.map((slide) => ({
     title: slide.title,
     asset: slide.imagePath,
-    link: getSlideLink(slide.categoryName, slide.gender),
+    link: slide.link ?? getSlideLink(slide.categoryName, slide.gender),
   }));
 
   if (isLoadingAllCampeonatos || isLoadingCampeonatoActual) {
@@ -61,7 +61,7 @@ const HomeContent = () => {
         className="w-full pt-24 pb-8 px-6 md:px-10"
         style={{
           background:
-            "radial-gradient(ellipse at 80% 0%, rgba(180,0,0,0.35) 0%, transparent 60%), #0a0a0a",
+            "radial-gradient(ellipse at 80% 0%, rgba(var(--color-gradient),0.35) 0%, transparent 60%), #0a0a0a",
         }}
       >
         <p
