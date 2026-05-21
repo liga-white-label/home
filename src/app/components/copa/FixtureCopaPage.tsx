@@ -5,8 +5,9 @@ import {
   useGetAllGroupMatchesByFaseQuery,
   useOnePartidoCopaQuery,
 } from "@/repositories/CampeonatoRepository";
+import { useCurrentDateGroupQuery } from "@/repositories/CategoriaRepository";
 import Box from "@mui/material/Box";
-import React, { useRef, useState, useMemo } from "react";
+import React, { useRef, useState, useMemo, useEffect } from "react";
 import { PartidosAgrupados } from "../fixture/PartidosAgrupados";
 import LoadingScreen from "../loading/Loading";
 import InfoMatchModal from "../InfoMatchModal";
@@ -30,6 +31,15 @@ const FixtureCopaPage: React.FC<FixtureCopaPageProps> = ({
 }) => {
   const currentMatchSelected = useRef<any | undefined>();
   const [selectedFecha, setSelectedFecha] = useState<number>(1);
+
+  const { data: currentGroupDate, isLoading: isLoadingGroupDate } =
+    useCurrentDateGroupQuery(fromCategoria ? faseId : "");
+
+  useEffect(() => {
+    if (fromCategoria && currentGroupDate && !isLoadingGroupDate) {
+      setSelectedFecha(currentGroupDate);
+    }
+  }, [fromCategoria, currentGroupDate, isLoadingGroupDate]);
 
   const {
     data: matchesData,

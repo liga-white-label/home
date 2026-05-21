@@ -7,6 +7,7 @@ moment.locale("es");
 
 interface NovedadCardHomeProps {
     novedad: Novedad;
+    compact?: boolean;
 }
 
 const DiagonalPattern = () => (
@@ -53,7 +54,7 @@ const CategoryBadge: React.FC<{ categoria: string }> = ({ categoria }) => (
     </span>
 );
 
-const NovedadCardHome: React.FC<NovedadCardHomeProps> = ({ novedad }) => {
+const NovedadCardHome: React.FC<NovedadCardHomeProps> = ({ novedad, compact = false }) => {
 
     return (
         <article
@@ -61,7 +62,7 @@ const NovedadCardHome: React.FC<NovedadCardHomeProps> = ({ novedad }) => {
             style={{ backgroundColor: "#1a1a1a" }}
         >
             {/* Image */}
-            <div className="relative aspect-[4/3] flex-shrink-0 overflow-hidden">
+            <div className={`relative flex-shrink-0 overflow-hidden ${compact ? "aspect-[16/9]" : "aspect-[4/3]"}`}>
                 <ImageArea novedad={novedad} />
                 {novedad.categoria && (
                     <div className="absolute top-3 left-3 z-20">
@@ -71,16 +72,18 @@ const NovedadCardHome: React.FC<NovedadCardHomeProps> = ({ novedad }) => {
             </div>
 
             {/* Content */}
-            <div className="flex flex-col gap-2 p-4 flex-1">
-                <span className="text-[11px] text-gray-500 uppercase tracking-wide">
+            <div className={`flex flex-col gap-1.5 flex-1 ${compact ? "p-3" : "p-4 gap-2"}`}>
+                <span className="text-[10px] text-gray-500 uppercase tracking-wide">
                     {moment(novedad.fecha).format("D MMM. YYYY")}
                 </span>
-                <h3 className="font-bold text-white text-sm leading-snug line-clamp-2 uppercase">
+                <h3 className={`font-bold text-white leading-snug line-clamp-2 uppercase ${compact ? "text-xs" : "text-sm"}`}>
                     {novedad.titulo}
                 </h3>
-                <p className="text-xs text-gray-400 leading-relaxed line-clamp-3 flex-1">
-                    {novedad.descripcion}
-                </p>
+                {!compact && (
+                    <p className="text-xs text-gray-400 leading-relaxed line-clamp-3 flex-1">
+                        {novedad.descripcion}
+                    </p>
+                )}
             </div>
         </article>
     );

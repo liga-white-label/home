@@ -43,6 +43,8 @@ export class CategoriaRepository {
     goleadores: (idFase: string) => ["goleadores", idFase],
     amarillas: (idFase: string) => ["amarillas", idFase],
     currentDate: (idCat: string) => ["currentDate" + idCat],
+    currentDateGroup: (phaseId: string) => ["currentDateGroup" + phaseId],
+    groupMatches: (phaseId: string, fecha?: number) => ["groupMatches", phaseId + fecha],
   };
 
   allFases = async (categoryId: string) => {
@@ -137,6 +139,25 @@ export class CategoriaRepository {
           phaseId: phaseId,
         },
       }
+    );
+    return data;
+  };
+
+  getCurrentDateGroup = async (phaseId: string) => {
+    const { data } = await httpClient.get<any>(
+      `tournament/league/categories/phase-group/get-actual-date-group`,
+      {
+        params: {
+          phaseId: phaseId,
+        },
+      }
+    );
+    return data;
+  };
+
+  getGroupMatchesByPhase = async (faseId: string, dateNumber: number) => {
+    const { data } = await httpClient.get<any[]>(
+      `tournament/phase/get-all-groups-matches?phaseId=${faseId}&dateNumber=${dateNumber}`
     );
     return data;
   };
@@ -241,6 +262,13 @@ export const useCurrentDateQuery = (phaseId: string) =>
     enabled: !!phaseId,
   });
 
+export const useCurrentDateGroupQuery = (phaseId: string) =>
+  useQuery({
+    queryKey: repo.keys.currentDateGroup(phaseId),
+    queryFn: () => repo.getCurrentDateGroup(phaseId),
+    enabled: !!phaseId,
+  });
+
 // Non-suspense versions used by the home page summary section
 export const useAllFasesByCategoryQuery = (id: string) =>
   useQuery({
@@ -260,6 +288,19 @@ export const useLeagueMatchesQuery = (
     queryKey: repo.keys.oneFase(id, fecha),
     queryFn: () => repo.getAllLeagueMatches(id, fecha!),
     enabled: !!id && !!fecha,
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+
+export const useLeagueGroupMatchesQuery = (
+  phaseId: string,
+  dateNumber: number | undefined
+) =>
+  useQuery({
+    queryKey: repo.keys.groupMatches(phaseId, dateNumber),
+    queryFn: () => repo.getGroupMatchesByPhase(phaseId, dateNumber!),
+    enabled: !!phaseId && !!dateNumber,
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,

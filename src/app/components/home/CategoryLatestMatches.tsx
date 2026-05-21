@@ -4,9 +4,12 @@ import { useState, useMemo } from "react";
 import {
   useAllFasesByCategoryQuery,
   useCurrentDateQuery,
+  useCurrentDateGroupQuery,
   useLeagueMatchesQuery,
+  useLeagueGroupMatchesQuery,
   useOneFasePlayoffQuery,
 } from "@/repositories/CategoriaRepository";
+import { convertToSimplifiedMatch } from "@/app/models/Match";
 import moment from "moment";
 import { Match, MatchStatus, SimplifiedMatch } from "@/app/models/Match";
 import Link from "next/link";
@@ -56,6 +59,8 @@ const CategoryLatestMatches = ({
     fases?.phases?.find((f: any) => f.type === "general") ?? null;
   const fasePlayoff =
     fases?.phases?.find((f: any) => f.type === "playoff") ?? null;
+  const faseGrupo =
+    fases?.phases?.find((f: any) => f.type === "group" || f.type === "intergroup") ?? null;
 
   const { data: currentDate, isLoading: isLoadingDate } = useCurrentDateQuery(
     faseRegular?.id ?? ""
@@ -66,8 +71,21 @@ const CategoryLatestMatches = ({
   const { data: playoffRounds = [], isLoading: isLoadingPlayoff } =
     useOneFasePlayoffQuery({ id: fasePlayoff?.id ?? "", enabled: !!fasePlayoff?.id });
 
+  const { data: currentGroupDate, isLoading: isLoadingGroupDate } =
+    useCurrentDateGroupQuery(!faseRegular ? (faseGrupo?.id ?? "") : "");
+  const { data: groupMatchesRaw = [], isLoading: isLoadingGroupMatches } =
+    useLeagueGroupMatchesQuery(!faseRegular ? (faseGrupo?.id ?? "") : "", currentGroupDate);
+
+  const groupMatches: SimplifiedMatch[] = useMemo(() => {
+    if (!Array.isArray(groupMatchesRaw)) return [];
+    return (groupMatchesRaw as any[]).flatMap((g: any) =>
+      (g.matches ?? []).map(convertToSimplifiedMatch)
+    );
+  }, [groupMatchesRaw]);
+
   const isLoading =
-    isLoadingFases || isLoadingDate || isLoadingMatches || isLoadingPlayoff;
+    isLoadingFases || isLoadingDate || isLoadingMatches || isLoadingPlayoff ||
+    isLoadingGroupDate || isLoadingGroupMatches;
 
   const sorted: SimplifiedMatch[] = [...(generalMatches as SimplifiedMatch[])].sort(
     (a, b) => {
@@ -136,6 +154,54 @@ const CategoryLatestMatches = ({
             ))}
           </div>
         ))}
+        <InfoMatchModal
+          openMatchModal={selectedMatch !== null}
+          handleCloseModal={() => setSelectedMatch(null)}
+          match={selectedMatch}
+        />
+      </>
+    );
+  }
+
+  if (!faseRegular && faseGrupo) {
+    const sortedGroupMatches = [...groupMatches].sort((a, b) => {
+      if (!a.date && !b.date) return 0;
+      if (!a.date) return 1;
+      if (!b.date) return -1;
+      return moment(a.date).valueOf() - moment(b.date).valueOf();
+    });
+
+    return (
+      <>
+        <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid #1a1a1a" }}>
+          <span className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+            Fase de Grupos — Fecha {currentGroupDate}
+          </span>
+          <Link
+            href={`/campeonatos/${ligaId}/categorias/${categoryId}?tab=200`}
+            className="text-xs font-semibold hover:opacity-80 transition-opacity text-gray-500"
+          >
+            Ver fixture completo →
+          </Link>
+        </div>
+        {sortedGroupMatches.length === 0 ? (
+          <p className="text-center text-gray-500 py-8 text-sm">
+            No hay partidos para esta fecha.
+          </p>
+        ) : (
+          groupMatchesByDay(sortedGroupMatches).map((group) => (
+            <div key={group.dayKey}>
+              <DayHeader label={group.dayLabel} />
+              {group.matches.map((match, i) => (
+                <MatchResultRow
+                  key={i}
+                  match={match}
+                  onClick={match.matchDetail ? () => setSelectedMatch(match.matchDetail!) : undefined}
+                />
+              ))}
+            </div>
+          ))
+        )}
         <InfoMatchModal
           openMatchModal={selectedMatch !== null}
           handleCloseModal={() => setSelectedMatch(null)}

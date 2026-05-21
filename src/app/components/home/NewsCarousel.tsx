@@ -1,73 +1,77 @@
 "use client";
 
-import useEmblaCarousel from "embla-carousel-react";
-import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import Link from "next/link";
+import Image from "next/image";
 import { useAllNovedadesQuery } from "@/repositories/NovedadRepository";
-import NovedadCardHome from "./novedad-card.home";
-import { usePrevNextButtons } from "../carousel/EmblaCarousel";
+import moment from "moment";
+import "moment/dist/locale/es";
+
+moment.locale("es");
 
 const NewsCarousel = () => {
   const { data: novedades = [], isLoading } = useAllNovedadesQuery();
-  const [emblaRef, emblaApi] = useEmblaCarousel({ align: "start", dragFree: true });
-  const { onPrevButtonClick, onNextButtonClick, prevBtnDisabled, nextBtnDisabled } =
-    usePrevNextButtons(emblaApi);
 
-  const latest = novedades.slice(0, 6);
+  const latest = novedades.slice(0, 8);
 
   if (isLoading || latest.length === 0) return null;
 
   return (
-    <section className="w-full px-4 md:px-10 py-8">
-      <div className="flex items-center justify-between mb-5">
-        <h2 className="text-xl font-bold uppercase tracking-wide text-white">
+    <div className="w-full border-b border-gray-800" style={{ backgroundColor: "#111" }}>
+      <div className="flex items-center justify-between px-4 md:px-10 pt-4 pb-2">
+        <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">
           Novedades
-        </h2>
+        </span>
         <Link
           href="/novedades"
-          className="text-sm font-medium hover:underline"
-          style={{ color: "var(--color-primary)" }}
+          className="text-[10px] font-semibold uppercase tracking-widest hover:opacity-80 transition-opacity"
+          style={{ color: "white" }}
         >
           Ver todas →
         </Link>
       </div>
 
-      <div className="relative">
-        {/* Embla viewport */}
-        <div className="overflow-hidden" ref={emblaRef}>
-          <div className="flex -ml-4">
-            {latest.map((novedad) => (
+      {/* Filmstrip */}
+      <div className="overflow-x-auto scrollbar-hide px-4 md:px-10 pb-4">
+        <div className="flex gap-3" style={{ width: "max-content" }}>
+          {latest.map((novedad) => (
+            <Link
+              key={novedad.id}
+              href="/novedades"
+              className="flex-shrink-0 group"
+              style={{ width: "160px" }}
+            >
+              {/* Image */}
               <div
-                key={novedad.id}
-                className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] pl-4 min-w-0"
+                className="relative w-full overflow-hidden rounded-lg mb-2"
+                style={{ aspectRatio: "16/9" }}
               >
-                <NovedadCardHome novedad={novedad} />
+                <Image
+                  src={novedad.imagen}
+                  fill
+                  alt={novedad.titulo}
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).style.display = "none";
+                  }}
+                />
+                <div
+                  className="absolute inset-0 rounded-lg"
+                  style={{ background: "linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 60%)" }}
+                />
               </div>
-            ))}
-          </div>
+
+              {/* Title */}
+              <p className="text-white text-xs font-semibold leading-snug line-clamp-2 group-hover:text-gray-300 transition-colors">
+                {novedad.titulo}
+              </p>
+              <p className="text-gray-500 text-[10px] mt-1">
+                {moment(novedad.fecha).format("D MMM. YYYY")}
+              </p>
+            </Link>
+          ))}
         </div>
-
-        {/* Prev button */}
-        <button
-          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 h-8 w-8 rounded-full bg-white shadow-md flex items-center justify-center disabled:opacity-30 transition-opacity"
-          onClick={onPrevButtonClick}
-          disabled={prevBtnDisabled}
-          aria-label="Anterior"
-        >
-          <ChevronLeft fontSize="small" />
-        </button>
-
-        {/* Next button */}
-        <button
-          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 h-8 w-8 rounded-full bg-white shadow-md flex items-center justify-center disabled:opacity-30 transition-opacity"
-          onClick={onNextButtonClick}
-          disabled={nextBtnDisabled}
-          aria-label="Siguiente"
-        >
-          <ChevronRight fontSize="small" />
-        </button>
       </div>
-    </section>
+    </div>
   );
 };
 
