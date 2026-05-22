@@ -23,8 +23,14 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
     prevBtnDisabled,
   } = usePrevNextButtons(emblaApi);
 
+  // Center slides when they don't fill the viewport at each breakpoint
+  // sm threshold: 2 slides (50% each), lg threshold: 4 slides (25% each)
+  const centerSm = slides.length < 2 ? "embla--center-sm" : "";
+  const centerLg = slides.length < 4 ? "embla--center-lg" : "";
+  const sectionClass = ["embla", centerSm, centerLg].filter(Boolean).join(" ");
+
   return (
-    <section className="embla">
+    <section className={sectionClass}>
       <div className="embla__viewport" ref={emblaRef}>
         <div className="embla__container">
           {slides.map((item, index) => {

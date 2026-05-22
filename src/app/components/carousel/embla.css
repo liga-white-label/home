@@ -52,6 +52,20 @@
     padding-left: var(--slide-spacing-lg);
   }
 }
+/* Centered layout when slides don't fill the viewport */
+@media (min-width: 750px) {
+  .embla--center-sm .embla__container {
+    justify-content: center;
+    margin-left: 0 !important;
+  }
+}
+@media (min-width: 1200px) {
+  .embla--center-lg .embla__container {
+    justify-content: center;
+    margin-left: 0 !important;
+  }
+}
+
 .embla__slide__text {
   box-shadow: inset 0 0 0 0.2rem var(--detail-medium-contrast);
   border-radius: 1.8rem;
