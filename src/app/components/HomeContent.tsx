@@ -35,11 +35,17 @@ const HomeContent = () => {
     return `/campeonatos/${ligaActual.id}/categorias/${catFound.id}`;
   };
 
-  const SLIDES = tenantConfig.home.slides.map((slide) => ({
-    title: slide.title,
-    asset: slide.imagePath,
-    link: slide.link ?? getSlideLink(slide.categoryName, slide.gender),
-  }));
+  const SLIDES = tenantConfig.home.slides.length > 0
+    ? tenantConfig.home.slides.map((slide) => ({
+        title: slide.title,
+        asset: slide.imagePath,
+        link: slide.link ?? getSlideLink(slide.categoryName, slide.gender),
+      }))
+    : categorias.map((cat) => ({
+        title: `Cat ${cat.name} — ${cat.gender === "male" ? "Masculino" : "Femenino"}`,
+        asset: "",
+        link: `/campeonatos/${ligaActual?.id}/categorias/${cat.id}`,
+      }));
 
   if (isLoadingAllCampeonatos || isLoadingCampeonatoActual) {
     return (

@@ -54,57 +54,8 @@ function parseSlides(raw: string | undefined): HomeSlide[] {
     try {
       return JSON.parse(raw) as HomeSlide[];
     } catch {
-      console.warn("NEXT_PUBLIC_HOME_SLIDES is not valid JSON — using defaults");
+      console.warn("NEXT_PUBLIC_HOME_SLIDES is not valid JSON — using category defaults");
     }
   }
-  return [
-    {
-      title: "Categoria A - Masculina",
-      imagePath: "/assets/cat_a_mas.jpg",
-      categoryName: "A",
-      gender: "male",
-    },
-    {
-      title: "Categoria A - Femenina",
-      imagePath: "/assets/cat_a_fem.jpg",
-      categoryName: "A",
-      gender: "female",
-    },
-    {
-      title: "Categoria B - Masculina",
-      imagePath: "/assets/cat_b_mas.jpg",
-      categoryName: "B",
-      gender: "male",
-    },
-    {
-      title: "Categoria B - Femenina",
-      imagePath: "/assets/cat_b_fem.jpg",
-      categoryName: "B",
-      gender: "female",
-    },
-    {
-      title: "Categoria C - Masculina",
-      imagePath: "/assets/cat_c_mas.jpg",
-      categoryName: "C",
-      gender: "male",
-    },
-    {
-      title: "Categoria C - Femenina",
-      imagePath: "/assets/cat_c_fem.jpg",
-      categoryName: "C",
-      gender: "female",
-    },
-    {
-      title: "Categoria D - Masculina",
-      imagePath: "/assets/cat_d_mas.jpg",
-      categoryName: "D",
-      gender: "male",
-    },
-    {
-      title: "Categoria E - Masculina",
-      imagePath: "/assets/cat_e_mas.jpg",
-      categoryName: "E",
-      gender: "male",
-    },
-  ];
+  return [];
 }
