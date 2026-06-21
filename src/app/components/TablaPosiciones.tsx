@@ -2,10 +2,12 @@ import { FC } from "react";
 import Image from "next/image";
 import { abbreviateTeamName } from "@/app/utils/stringUtils";
 import { NextTeamInfo } from "./NextTeamInfo";
+import { SubscriptionBell } from "./subscription/SubscriptionBell";
 
 interface TablaPosicionesProps {
   data: {
     pos: number;
+    equipoId?: string;
     equipo: string;
     escudo: string;
     pts: number;
@@ -148,6 +150,12 @@ export const TablaPosiciones: FC<TablaPosicionesProps> = ({ data, ignoreLines })
                       <span className="text-white text-xs font-medium uppercase sm:hidden">
                         {abbreviateTeamName(team.equipo)}
                       </span>
+                      {!!team.equipoId && (
+                        <SubscriptionBell
+                          teamId={team.equipoId}
+                          teamName={team.equipo}
+                        />
+                      )}
                     </div>
                   </td>
 

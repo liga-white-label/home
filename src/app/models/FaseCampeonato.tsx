@@ -26,6 +26,7 @@ export interface FaseGruposCopaOnlyMatches {
 
 export interface TablePosition {
   pos: number;
+  equipoId?: string;
   equipo: string;
   escudo: string;
   pts: number;
@@ -91,6 +92,7 @@ export interface RoundMatch {
 
 export const getPositionsMapper = (data: any): TablePosition => ({
   pos: 0,
+  equipoId: data.teamId,
   equipo: data.teamName,
   escudo: data.teamLogo,
   pts: data.totalPoints,
