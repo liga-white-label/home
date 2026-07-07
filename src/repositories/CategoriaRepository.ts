@@ -45,6 +45,7 @@ export class CategoriaRepository {
     currentDate: (idCat: string) => ["currentDate" + idCat],
     currentDateGroup: (phaseId: string) => ["currentDateGroup" + phaseId],
     groupMatches: (phaseId: string, fecha?: number) => ["groupMatches", phaseId + fecha],
+    totalFechas: (phaseId: string) => ["totalFechas", phaseId],
   };
 
   allFases = async (categoryId: string) => {
@@ -161,6 +162,21 @@ export class CategoriaRepository {
     );
     return data;
   };
+
+  // No hay endpoint de "total de fechas" — el backend devuelve [] (no error)
+  // para una fecha sin partidos cargados, así que se prueba secuencialmente
+  // hasta encontrar el primer hueco. Tope defensivo, no hay reglamento con
+  // tantas fechas en una sola rueda de temporada.
+  getTotalFechas = async (faseId: string): Promise<number> => {
+    const HARD_CAP = 60;
+    let total = 0;
+    for (let fecha = 1; fecha <= HARD_CAP; fecha++) {
+      const matches = await this.getAllLeagueMatches(faseId, fecha);
+      if (!matches || matches.length === 0) break;
+      total = fecha;
+    }
+    return total;
+  };
 }
 
 const repo = new CategoriaRepository();
@@ -267,6 +283,16 @@ export const useCurrentDateGroupQuery = (phaseId: string) =>
     queryKey: repo.keys.currentDateGroup(phaseId),
     queryFn: () => repo.getCurrentDateGroup(phaseId),
     enabled: !!phaseId,
+  });
+
+export const useTotalFechasQuery = (phaseId: string) =>
+  useQuery({
+    queryKey: repo.keys.totalFechas(phaseId),
+    queryFn: () => repo.getTotalFechas(phaseId),
+    enabled: !!phaseId,
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 
 // Non-suspense versions used by the home page summary section

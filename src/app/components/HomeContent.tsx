@@ -1,29 +1,24 @@
 "use client";
 import { WelcomeGifContainer } from "./WelcomeGifContainer";
 import EmblaCarousel from "./carousel/EmblaCarousel";
-import {
-  useAllCampeonatosQuery,
-  useCampeonatoQuery,
-} from "@/repositories/CampeonatoRepository";
-import { Liga } from "@/app/models/Campeonato";
 import MiniLoading from "./loading/MiniLoading";
 import { tenantConfig } from "@/config/tenant";
 import LatestResultsSection from "./home/LatestResultsSection";
 import NewsCarousel from "./home/NewsCarousel";
+import { ZonalHomeSection } from "./home/ZonalHomeSection";
+import { SeasonSwitchBadge } from "./season/SeasonSwitchBadge";
+import { useActiveCampeonatos } from "@/app/hooks/useActiveCampeonatos";
 
 const HomeContent = () => {
-  const { data: allCampeonatos, isLoading: isLoadingAllCampeonatos } =
-    useAllCampeonatosQuery();
-
-  const campeonatoActualVacio = allCampeonatos?.find((c) => c.current);
-
-  const { data: campeonatoActual, isLoading: isLoadingCampeonatoActual } =
-    useCampeonatoQuery(campeonatoActualVacio?.id || "");
-
-  const ligaActual = campeonatoActual as Liga;
-  const categorias = ligaActual?.categories || [];
-  const copasActivas =
-    allCampeonatos?.filter((c) => c.type === "cup" && c.enabled) ?? [];
+  const {
+    isLoading,
+    ligaActual,
+    categorias,
+    isLiga,
+    copaPrincipal,
+    zonalPrincipal,
+    seasonPair,
+  } = useActiveCampeonatos();
 
   const getSlideLink = (categoryName: string, gender: "male" | "female") => {
     const catFound = categorias.find(
@@ -31,7 +26,7 @@ const HomeContent = () => {
         cat.name.toLowerCase() === categoryName.toLowerCase() &&
         cat.gender === gender
     );
-    if (!catFound) return "/";
+    if (!catFound || !ligaActual) return "/";
     return `/campeonatos/${ligaActual.id}/categorias/${catFound.id}`;
   };
 
@@ -47,7 +42,7 @@ const HomeContent = () => {
         link: `/campeonatos/${ligaActual?.id}/categorias/${cat.id}`,
       }));
 
-  if (isLoadingAllCampeonatos || isLoadingCampeonatoActual) {
+  if (isLoading) {
     return (
       <div
         className="flex flex-col w-full items-center justify-center py-10 h-screen"
@@ -57,8 +52,6 @@ const HomeContent = () => {
       </div>
     );
   }
-
-  const isLiga = !!ligaActual?.categories?.length;
 
   return (
     <div className="flex flex-col w-full" style={{ backgroundColor: "#0a0a0a" }}>
@@ -86,13 +79,24 @@ const HomeContent = () => {
 
       <NewsCarousel />
 
-      {/* Latest results */}
-      {(isLiga || copasActivas.length > 0) && (
+      {seasonPair.isPartOfSeason && ligaActual?.linkedSeasonId && seasonPair.currentSeason && (
+        <div className="w-full px-6 md:px-10 pb-4">
+          <SeasonSwitchBadge
+            current={seasonPair.currentSeason}
+            linkedId={ligaActual.linkedSeasonId}
+          />
+        </div>
+      )}
+
+      {/* Latest results — solo el torneo marcado como principal (current) */}
+      {(isLiga || !!copaPrincipal) && (
         <LatestResultsSection
-          liga={isLiga ? ligaActual : null}
-          cups={copasActivas}
+          liga={isLiga && ligaActual ? ligaActual : null}
+          cups={!isLiga && copaPrincipal ? [copaPrincipal] : []}
         />
       )}
+
+      {zonalPrincipal && <ZonalHomeSection torneo={zonalPrincipal} />}
 
       <WelcomeGifContainer />
 

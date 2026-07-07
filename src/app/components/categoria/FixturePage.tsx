@@ -6,6 +6,7 @@ import {
   useAllMatchesByFaseQuery,
   useCurrentDateQuery,
   useOnePartidoQuery,
+  useTotalFechasQuery,
 } from "@/repositories/CategoriaRepository";
 import InfoMatchModal from "../InfoMatchModal";
 import LoadingScreen from "../loading/Loading";
@@ -18,6 +19,9 @@ interface FixturePageProps {
 export const FixturePage: React.FC<FixturePageProps> = ({ faseId }) => {
   const { data: currentDate, isLoading: isLoadingCurrentDate } =
     useCurrentDateQuery(faseId);
+
+  const { data: totalFechas, isLoading: isLoadingTotalFechas } =
+    useTotalFechasQuery(faseId);
 
   const [selectedFecha, setSelectedFecha] = useState<number>(currentDate || 1);
   const currentMatchSelected = useRef<any | undefined>();
@@ -55,7 +59,7 @@ export const FixturePage: React.FC<FixturePageProps> = ({ faseId }) => {
     setOpenMatchModal(false);
   };
 
-  if (isLoadingCurrentDate || isLoading) {
+  if (isLoadingCurrentDate || isLoading || isLoadingTotalFechas) {
     return <LoadingScreen />;
   }
 
@@ -68,7 +72,7 @@ export const FixturePage: React.FC<FixturePageProps> = ({ faseId }) => {
             Fecha
           </label>
           <div className="flex gap-2 flex-wrap">
-            {Array.from({ length: 15 }, (_, i) => i + 1).map((item) => (
+            {Array.from({ length: totalFechas || 1 }, (_, i) => i + 1).map((item) => (
               <button
                 key={item}
                 onClick={() => setSelectedFecha(item)}

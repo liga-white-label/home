@@ -11,10 +11,22 @@ import CuadrangularDescensoPage from "./CuadrangularDescensoPage";
 import { FaseGruposWrapper } from "../copa/FaseGruposWrapper";
 import FixtureCopaPage from "../copa/FixtureCopaPage";
 import { tenantConfig } from "@/config/tenant";
+import { SeasonEnum } from "@/app/models/Campeonato";
+import { SeasonSwitchBadge } from "../season/SeasonSwitchBadge";
+import { FaseFinalDeEtapaPage } from "./FaseFinalDeEtapaPage";
+import { useAccumulatedTableQuery } from "@/repositories/SeasonRepository";
+import { TablaPosiciones } from "../TablaPosiciones";
+import MiniLoading from "../loading/MiniLoading";
 
 interface CategoriaPageBaseProps {
   id: string;
   title: string;
+  seasonInfo?: {
+    current: SeasonEnum;
+    linkedId: string;
+    aperturaId: string;
+    clausuraId: string;
+  } | null;
 }
 
 export enum TabsEnum {
@@ -23,6 +35,8 @@ export enum TabsEnum {
   PLAYOFFS = 2,
   ESTADISTICAS = 3,
   DESCENSO = 4,
+  FASE_FINAL = 5,
+  TABLA_GENERAL = 6,
   // Los tabs dinámicos empezarán desde 100
   GRUPOS_BASE = 100,
   FIXTURE_ZONAS_BASE = 200,
@@ -31,6 +45,7 @@ export enum TabsEnum {
 export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
   id,
   title,
+  seasonInfo = null,
 }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -53,6 +68,16 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
 
   const faseDescenso =
     fases?.phases.find((f: any) => f.type === "relegated") || null;
+
+  const { data: tablaGeneral, isLoading: isLoadingTablaGeneral } =
+    useAccumulatedTableQuery({
+      aperturaLeagueId: seasonInfo?.aperturaId || "",
+      clausuraLeagueId: seasonInfo?.clausuraId || "",
+      categoryName: fases?.categoryName || "",
+    });
+
+  const faseFinal =
+    fases?.phases.find((f: any) => f.type === "seasonfinal") || null;
 
   const getInitialTab = () => {
     if (tabParam) {
@@ -115,6 +140,11 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
         <h1 className="text-white text-3xl md:text-5xl font-extrabold uppercase tracking-tight">
           {title}
         </h1>
+        {seasonInfo && (
+          <div className="mt-3">
+            <SeasonSwitchBadge current={seasonInfo.current} linkedId={seasonInfo.linkedId} />
+          </div>
+        )}
       </div>
 
       {/* Tab bar */}
@@ -130,6 +160,16 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
               style={selectedTab === TabsEnum.POSICIONES ? { borderColor: "var(--color-primary)" } : {}}
             >
               Posiciones
+            </button>
+          )}
+
+          {!!seasonInfo && (
+            <button
+              onClick={() => handleChangeTab(TabsEnum.TABLA_GENERAL)}
+              className={tabClass(selectedTab === TabsEnum.TABLA_GENERAL)}
+              style={selectedTab === TabsEnum.TABLA_GENERAL ? { borderColor: "var(--color-primary)" } : {}}
+            >
+              Tabla General
             </button>
           )}
 
@@ -193,6 +233,16 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
             </button>
           )}
 
+          {!!faseFinal && (
+            <button
+              onClick={() => handleChangeTab(TabsEnum.FASE_FINAL)}
+              className={tabClass(selectedTab === TabsEnum.FASE_FINAL)}
+              style={selectedTab === TabsEnum.FASE_FINAL ? { borderColor: "var(--color-primary)" } : {}}
+            >
+              Fase Final de Etapa
+            </button>
+          )}
+
           <button
             onClick={() => handleChangeTab(TabsEnum.ESTADISTICAS)}
             className={tabClass(selectedTab === TabsEnum.ESTADISTICAS)}
@@ -206,6 +256,21 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
       <div className="h-full w-full min-h-lvh overflow-hidden p-4 md:p-10" style={{ backgroundColor: "#0a0a0a" }}>
         {selectedTab === TabsEnum.POSICIONES && (
           <TablaDePosicionesWrapper faseId={faseRegular?.id || ""} />
+        )}
+        {selectedTab === TabsEnum.TABLA_GENERAL && !!seasonInfo && (
+          isLoadingTablaGeneral ? (
+            <div className="flex justify-center py-10">
+              <MiniLoading />
+            </div>
+          ) : (
+            <TablaPosiciones
+              data={tablaGeneral || []}
+              serverOrdered
+              showPromotionZones={false}
+              showNextMatch={false}
+              title="Tabla General"
+            />
+          )
         )}
         {selectedTab === TabsEnum.FIXTURE && !!faseRegular && (
           <FixturePage faseId={faseRegular?.id || ""} />
@@ -230,6 +295,9 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
         )}
         {selectedTab === TabsEnum.DESCENSO && !!faseDescenso && (
           <CuadrangularDescensoPage faseId={faseDescenso?.id || ""} />
+        )}
+        {selectedTab === TabsEnum.FASE_FINAL && !!faseFinal && (
+          <FaseFinalDeEtapaPage faseId={faseFinal.id} />
         )}
         {selectedTab === TabsEnum.ESTADISTICAS && (
           <EstadisticasPage categoryId={id} />

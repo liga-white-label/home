@@ -4,9 +4,12 @@ export const tenantConfig = {
     subtitle:
       process.env.NEXT_PUBLIC_BRAND_SUBTITLE ??
       "Club Universitario de Bahía Blanca",
-    primaryColor: process.env.NEXT_PUBLIC_PRIMARY_COLOR ?? "#A60000",
-    secondaryColor: process.env.NEXT_PUBLIC_SECONDARY_COLOR ?? "#0C0C0C",
-    gradientColor: process.env.NEXT_PUBLIC_GRADIENT_COLOR ?? "180,0,0",
+    // "||" (no "??"): valores hex como "#000000" quedan vacíos si el .env no
+    // los envuelve en comillas (dotenv corta desde el "#" como si fuera un
+    // comentario) — "??" no cae al default ante un string vacío, "||" sí.
+    primaryColor: process.env.NEXT_PUBLIC_PRIMARY_COLOR || "#A60000",
+    secondaryColor: process.env.NEXT_PUBLIC_SECONDARY_COLOR || "#0C0C0C",
+    gradientColor: process.env.NEXT_PUBLIC_GRADIENT_COLOR || "180,0,0",
     logoPath:
       process.env.NEXT_PUBLIC_LOGO_PATH ?? "/assets/logo_2025.png",
     logoWidth: Number(process.env.NEXT_PUBLIC_LOGO_WIDTH ?? 200),

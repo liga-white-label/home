@@ -10,7 +10,6 @@ import {
 import { RoundCup, RoundMatch } from "@/app/models/FaseCampeonato";
 import { MatchStatus } from "@/app/models/Match";
 import PlayoffArrows from "./PlayoffArrows";
-import { tenantConfig } from "@/config/tenant";
 
 interface CuadroPlayoffProps {
   rondas: RoundCup[];
@@ -85,10 +84,8 @@ const CuadroPlayoff: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
         className={screenClassName}
         style={{
           height: `${screenHeight}px`,
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('${tenantConfig.home.categoryBannerPath}')`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
+          background:
+            "radial-gradient(ellipse at 80% 0%, rgba(var(--color-gradient),0.35) 0%, transparent 60%), #0a0a0a",
           display: "flex",
           justifyContent: "center",
           alignItems: "flex-start",

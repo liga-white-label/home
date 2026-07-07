@@ -47,8 +47,12 @@ const repo = new EquipoRepository();
 export const useAllEquiposQuery = () =>
   useQuery({ queryKey: repo.keys.all(), queryFn: repo.getAll });
 
-export const useEquipoQuery = (id: string) =>
-  useQuery({ queryKey: repo.keys.oneById(id), queryFn: () => repo.get(id) });
+export const useEquipoQuery = (id: string, enabled: boolean = true) =>
+  useQuery({
+    queryKey: repo.keys.oneById(id),
+    queryFn: () => repo.get(id),
+    enabled: enabled && id !== "",
+  });
 
 export const useAllEquiposByCategory = (id: string) =>
   useQuery({

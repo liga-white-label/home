@@ -19,6 +19,12 @@ interface TablaPosicionesProps {
     nextMatch: { name: string; logo: string } | null;
   }[];
   ignoreLines?: boolean;
+  // El backend ya ordena (aplica desempate cabeza-a-cabeza que no se puede
+  // recalcular en el cliente) — usado por tablas de zona/temporada.
+  serverOrdered?: boolean;
+  showPromotionZones?: boolean;
+  showNextMatch?: boolean;
+  title?: string;
 }
 
 function getZone(pos: number, total: number): "ascenso" | "playoff" | "descenso" | "none" {
@@ -46,15 +52,24 @@ const TH = ({ children, className = "" }: { children: React.ReactNode; className
   </th>
 );
 
-export const TablaPosiciones: FC<TablaPosicionesProps> = ({ data, ignoreLines }) => {
-  const calculatedPositions = [...data]
-    .sort((a, b) => {
-      if (a.pts !== b.pts) return b.pts - a.pts;
-      if (a.dg !== b.dg) return b.dg - a.dg;
-      if (a.gf !== b.gf) return b.gf - a.gf;
-      return a.equipo?.localeCompare(b.equipo);
-    })
-    .map((team, index) => ({ ...team, pos: index + 1 }));
+export const TablaPosiciones: FC<TablaPosicionesProps> = ({
+  data,
+  ignoreLines,
+  serverOrdered = false,
+  showPromotionZones = true,
+  showNextMatch = true,
+  title = "Tabla de posiciones",
+}) => {
+  const calculatedPositions = serverOrdered
+    ? data.map((team, index) => ({ ...team, pos: index + 1 }))
+    : [...data]
+        .sort((a, b) => {
+          if (a.pts !== b.pts) return b.pts - a.pts;
+          if (a.dg !== b.dg) return b.dg - a.dg;
+          if (a.gf !== b.gf) return b.gf - a.gf;
+          return a.equipo?.localeCompare(b.equipo);
+        })
+        .map((team, index) => ({ ...team, pos: index + 1 }));
 
   const total = calculatedPositions.length;
 
@@ -63,26 +78,28 @@ export const TablaPosiciones: FC<TablaPosicionesProps> = ({ data, ignoreLines })
       {/* Legend header */}
       <div className="flex items-center justify-between px-4 py-3" style={{ backgroundColor: "#111" }}>
         <span className="text-xs font-semibold tracking-widest text-gray-400 uppercase">
-          Tabla de posiciones
+          {title}
         </span>
-        <div className="flex items-center gap-4 text-xs text-gray-400">
-          <span className="flex items-center gap-1">
-            <span className="inline-block w-2 h-2 rounded-full bg-green-500" />
-            Ascenso
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="inline-block w-2 h-2 rounded-full bg-amber-400" />
-            Playoff
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="inline-block w-2 h-2 rounded-full bg-red-500" />
-            Descenso
-          </span>
-        </div>
+        {showPromotionZones && (
+          <div className="flex items-center gap-4 text-xs text-gray-400">
+            <span className="flex items-center gap-1">
+              <span className="inline-block w-2 h-2 rounded-full bg-green-500" />
+              Ascenso
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="inline-block w-2 h-2 rounded-full bg-amber-400" />
+              Playoff
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="inline-block w-2 h-2 rounded-full bg-red-500" />
+              Descenso
+            </span>
+          </div>
+        )}
       </div>
 
       <div className="overflow-x-auto w-full">
-        <table className="w-full border-collapse" style={{ minWidth: 480 }}>
+        <table className="w-full border-collapse" style={{ minWidth: showNextMatch ? 480 : 400 }}>
           <thead>
             <tr style={{ backgroundColor: "#1a1a1a" }}>
               <TH className="text-left pl-4 w-10">POS</TH>
@@ -95,12 +112,12 @@ export const TablaPosiciones: FC<TablaPosicionesProps> = ({ data, ignoreLines })
               <TH className="hidden md:table-cell">GC</TH>
               <TH>DG</TH>
               <TH>PTS</TH>
-              <TH className="hidden md:table-cell">PRÓXIMO</TH>
+              {showNextMatch && <TH className="hidden md:table-cell">PRÓXIMO</TH>}
             </tr>
           </thead>
           <tbody>
             {calculatedPositions.map((team) => {
-              const zone = getZone(team.pos, total);
+              const zone = showPromotionZones ? getZone(team.pos, total) : "none";
               const zoneColor = ZONE_COLORS[zone];
               return (
                 <tr
@@ -166,18 +183,20 @@ export const TablaPosiciones: FC<TablaPosicionesProps> = ({ data, ignoreLines })
                   <td className="py-3 px-2 md:px-3 text-center text-white text-sm font-bold">
                     {team.pts}
                   </td>
-                  <td className="py-3 px-2 md:px-3 text-center hidden md:table-cell">
-                    <div className="flex justify-center">
-                      <NextTeamInfo
-                        data={{
-                          escudo: team.escudo,
-                          nextTeam: team.nextMatch?.logo || null,
-                          nombreEquipo: abbreviateTeamName(team.equipo),
-                          nombreEquipoRival: abbreviateTeamName(team.nextMatch?.name || ""),
-                        }}
-                      />
-                    </div>
-                  </td>
+                  {showNextMatch && (
+                    <td className="py-3 px-2 md:px-3 text-center hidden md:table-cell">
+                      <div className="flex justify-center">
+                        <NextTeamInfo
+                          data={{
+                            escudo: team.escudo,
+                            nextTeam: team.nextMatch?.logo || null,
+                            nombreEquipo: abbreviateTeamName(team.equipo),
+                            nombreEquipoRival: abbreviateTeamName(team.nextMatch?.name || ""),
+                          }}
+                        />
+                      </div>
+                    </td>
+                  )}
                 </tr>
               );
             })}

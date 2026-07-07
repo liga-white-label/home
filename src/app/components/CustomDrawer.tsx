@@ -2,14 +2,12 @@
 import { Drawer } from "@mui/material";
 import { useSidebar } from "@/app/context/SideBarContext";
 import Link from "next/link";
-import {
-  useAllCampeonatosQuery,
-  useCampeonatoQuery,
-} from "@/repositories/CampeonatoRepository";
-import { Liga } from "@/app/models/Campeonato";
-import { Categoria } from "@/app/models/Categoria";
 import MiniLoading from "./loading/MiniLoading";
 import { useState } from "react";
+import { Liga, SeasonEnum } from "@/app/models/Campeonato";
+import { Categoria } from "@/app/models/Categoria";
+import { SEASON_LABEL } from "@/app/utils/seasonLabels";
+import { useActiveCampeonatos } from "@/app/hooks/useActiveCampeonatos";
 
 const ChevronDown = ({ open }: { open: boolean }) => (
   <svg
@@ -34,22 +32,42 @@ export const CustomDrawer = () => {
   const { sidebarOpen, handleClose } = useSidebar();
   const [catOpen, setCatOpen] = useState(false);
   const [copaOpen, setCopaOpen] = useState(false);
+  const [torneosOpen, setTorneosOpen] = useState(false);
 
-  const { data: allCampeonatos, isLoading: isLoadingAllCampeonatos } =
-    useAllCampeonatosQuery();
+  const {
+    isLoading,
+    ligaActual,
+    categorias,
+    copasActivas,
+    torneosActivos,
+    seasonPair,
+  } = useActiveCampeonatos();
 
-  const campeonatoActualVacio = allCampeonatos?.find((c) => c.current);
-
-  const { data: campeonatoActualData, isLoading: isLoadingCampeonatoActual } =
-    useCampeonatoQuery(campeonatoActualVacio?.id || "");
-
-  const ligaActual = campeonatoActualData as Liga;
-  const categorias = ligaActual?.categories || [];
-  const allCopas = allCampeonatos?.filter((c) => c.type === "cup" && c.enabled) || [];
   const masculinas = categorias.filter((c: Categoria) => c.gender === "male");
   const femeninas = categorias.filter((c: Categoria) => c.gender === "female");
 
-  const isLoading = isLoadingAllCampeonatos || isLoadingCampeonatoActual;
+  const renderCategoryLinks = (liga: Liga, cats: Categoria[]) =>
+    cats.map((cat) => (
+      <Link
+        key={cat.id}
+        href={`/campeonatos/${liga.id}/categorias/${cat.id}`}
+        onClick={handleClose}
+        className="block px-6 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
+      >
+        Cat {cat.name} — {cat.gender === "male" ? "Masculina" : "Femenina"}
+      </Link>
+    ));
+
+  const renderLigaGroup = (liga: Liga) => {
+    const masc = liga.categories.filter((c) => c.gender === "male");
+    const fem = liga.categories.filter((c) => c.gender === "female");
+    return (
+      <>
+        {masc.length > 0 && renderCategoryLinks(liga, masc)}
+        {fem.length > 0 && renderCategoryLinks(liga, fem)}
+      </>
+    );
+  };
 
   return (
     <Drawer
@@ -81,7 +99,7 @@ export const CustomDrawer = () => {
           </Link>
 
           {/* Categorías accordion */}
-          {categorias.length > 0 && (
+          {(categorias.length > 0 || seasonPair.isPartOfSeason) && (
             <div className="border-b border-gray-800">
               <button
                 onClick={() => setCatOpen((v) => !v)}
@@ -92,41 +110,47 @@ export const CustomDrawer = () => {
               </button>
               {catOpen && (
                 <div className="pb-2" style={{ backgroundColor: "#0e0e0e" }}>
-                  {masculinas.length > 0 && (
+                  {seasonPair.isPartOfSeason ? (
                     <>
-                      <p className="px-6 pt-3 pb-1 text-xs font-bold uppercase tracking-widest text-gray-500">
-                        Masculino
-                      </p>
-                      {masculinas.map((cat: Categoria) => (
-                        <Link
-                          key={cat.id}
-                          href={`/campeonatos/${ligaActual.id}/categorias/${cat.id}`}
-                          onClick={handleClose}
-                          className="block px-6 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
-                        >
-                          Cat {cat.name} — Masculina
-                        </Link>
-                      ))}
+                      {seasonPair.apertura && (
+                        <>
+                          <p className="px-6 pt-3 pb-1 text-xs font-bold uppercase tracking-widest text-gray-500">
+                            {SEASON_LABEL[SeasonEnum.APERTURA]}
+                          </p>
+                          {renderLigaGroup(seasonPair.apertura)}
+                        </>
+                      )}
+                      {seasonPair.clausura && (
+                        <>
+                          <div className="mx-6 my-2 h-px bg-gray-800" />
+                          <p className="px-6 pt-1 pb-1 text-xs font-bold uppercase tracking-widest text-gray-500">
+                            {SEASON_LABEL[SeasonEnum.CLAUSURA]}
+                          </p>
+                          {renderLigaGroup(seasonPair.clausura)}
+                        </>
+                      )}
                     </>
-                  )}
-                  {femeninas.length > 0 && (
+                  ) : (
                     <>
                       {masculinas.length > 0 && (
-                        <div className="mx-6 my-2 h-px bg-gray-800" />
+                        <>
+                          <p className="px-6 pt-3 pb-1 text-xs font-bold uppercase tracking-widest text-gray-500">
+                            Masculino
+                          </p>
+                          {ligaActual && renderCategoryLinks(ligaActual, masculinas)}
+                        </>
                       )}
-                      <p className="px-6 pt-1 pb-1 text-xs font-bold uppercase tracking-widest text-gray-500">
-                        Femenino
-                      </p>
-                      {femeninas.map((cat: Categoria) => (
-                        <Link
-                          key={cat.id}
-                          href={`/campeonatos/${ligaActual.id}/categorias/${cat.id}`}
-                          onClick={handleClose}
-                          className="block px-6 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
-                        >
-                          Cat {cat.name} — Femenina
-                        </Link>
-                      ))}
+                      {femeninas.length > 0 && (
+                        <>
+                          {masculinas.length > 0 && (
+                            <div className="mx-6 my-2 h-px bg-gray-800" />
+                          )}
+                          <p className="px-6 pt-1 pb-1 text-xs font-bold uppercase tracking-widest text-gray-500">
+                            Femenino
+                          </p>
+                          {ligaActual && renderCategoryLinks(ligaActual, femeninas)}
+                        </>
+                      )}
                     </>
                   )}
                 </div>
@@ -134,14 +158,34 @@ export const CustomDrawer = () => {
             </div>
           )}
 
-          {/* Novedades */}
-          <Link
-            href="/novedades"
-            onClick={handleClose}
-            className="px-6 py-4 text-base font-medium text-white hover:bg-white/5 transition-colors border-b border-gray-800"
-          >
-            Novedades
-          </Link>
+          {/* Torneos accordion */}
+          <div className="border-b border-gray-800">
+            <button
+              onClick={() => setTorneosOpen((v) => !v)}
+              className="w-full flex items-center justify-between px-6 py-4 text-base font-medium text-white hover:bg-white/5 transition-colors"
+            >
+              Torneos
+              <ChevronDown open={torneosOpen} />
+            </button>
+            {torneosOpen && (
+              <div className="pb-2" style={{ backgroundColor: "#0e0e0e" }}>
+                {torneosActivos.length > 0 ? (
+                  torneosActivos.map((t) => (
+                    <Link
+                      key={t.id}
+                      href={`/campeonatos/${t.id}`}
+                      onClick={handleClose}
+                      className="block px-6 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
+                    >
+                      {t.name}
+                    </Link>
+                  ))
+                ) : (
+                  <p className="px-6 py-3 text-sm text-gray-500">No hay torneos</p>
+                )}
+              </div>
+            )}
+          </div>
 
           {/* Copas accordion */}
           <div className="border-b border-gray-800">
@@ -154,8 +198,8 @@ export const CustomDrawer = () => {
             </button>
             {copaOpen && (
               <div className="pb-2" style={{ backgroundColor: "#0e0e0e" }}>
-                {allCopas.length > 0 ? (
-                  allCopas.map((c) => (
+                {copasActivas.length > 0 ? (
+                  copasActivas.map((c) => (
                     <Link
                       key={c.id}
                       href={`/campeonatos/${c.id}`}
@@ -171,6 +215,15 @@ export const CustomDrawer = () => {
               </div>
             )}
           </div>
+
+          {/* Novedades */}
+          <Link
+            href="/novedades"
+            onClick={handleClose}
+            className="px-6 py-4 text-base font-medium text-white hover:bg-white/5 transition-colors border-b border-gray-800"
+          >
+            Novedades
+          </Link>
         </nav>
       )}
     </Drawer>

@@ -41,18 +41,6 @@ export const NavBar = () => {
           height={logoHeight}
           className="h-10 w-auto object-contain"
         />
-        <span
-          className="absolute -bottom-1 -right-2 text-white font-bold leading-none"
-          style={{
-            fontSize: 8,
-            backgroundColor: "var(--color-secondary)",
-            padding: "2px 4px",
-            borderRadius: 3,
-            letterSpacing: "0.08em",
-          }}
-        >
-          TEST
-        </span>
       </Link>
 
       <LinkNavigator />

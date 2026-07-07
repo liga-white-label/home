@@ -16,7 +16,6 @@ import Image from "next/image";
 import { Match, MatchStatus } from "../models/Match";
 import moment from "moment";
 import "moment/locale/es";
-import { getGeneroLabel } from "../models/Jugador";
 
 interface InfoMatchModalProps {
   openMatchModal: boolean;
@@ -88,59 +87,6 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
 
   const canchaLabel = match.field || "A definir";
 
-  const getPlanilleroLabel = () => {
-    if (match.status === MatchStatus.JUGADO && !match.scorer) {
-      return <p className="text-sm md:text-base">Subcomisión</p>;
-    }
-
-    if (match.scorer) {
-      return (
-        <Box className="flex gap-2 items-center justify-between">
-          <Image
-            src={match.scorer.logoUrl}
-            height={30}
-            width={30}
-            alt={match.scorer.name || ""}
-          />
-          <p className="text-xs md:text-sm">
-            {match.scorer.name +
-              " (" +
-              getGeneroLabel(match.scorer.gender) +
-              ")"}
-          </p>
-        </Box>
-      );
-    } else {
-      return <p className="text-sm md:text-base">A definir</p>;
-    }
-  };
-
-  const getLineaLabel = () => {
-    if (match.status === MatchStatus.JUGADO && !match.scorer) {
-      return <p className="text-sm md:text-base">Subcomisión</p>;
-    }
-
-    if (match.linemenTeam) {
-      return (
-        <Box className="flex gap-2 items-center justify-between">
-          <Image
-            src={match.linemenTeam.logoUrl}
-            height={40}
-            width={40}
-            alt={match.linemenTeam.name}
-          />
-          <p className="text-xs md:text-sm">
-            {match.linemenTeam.name +
-              " (" +
-              getGeneroLabel(match.linemenTeam.gender) +
-              ")"}
-          </p>
-        </Box>
-      );
-    } else {
-      return <p className="text-sm md:text-base">A definir</p>;
-    }
-  };
   return (
     <Dialog
       open={openMatchModal}
@@ -272,14 +218,6 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
             <p className="text-sm md:text-base">{canchaLabel}</p>
           </Box>
 
-          <Box className="flex items-center justify-between w-full">
-            <p className="font-extrabold text-sm md:text-md">Planillero:</p>
-            {getPlanilleroLabel()}
-          </Box>
-          <Box className="flex items-center justify-between w-full">
-            <p className="font-extrabold text-sm md:text-md">Linea:</p>
-            {getLineaLabel()}
-          </Box>
           <Box
             sx={{ display: match.comments ? "flex" : "none" }}
             className="flex-col items-center justify-between w-full gap-2"

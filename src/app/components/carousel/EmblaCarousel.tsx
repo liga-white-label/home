@@ -36,10 +36,12 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
           {slides.map((item, index) => {
             return (
               <Box
-                className="embla__slide h-svh transform transition-transform duration-300 hover:scale-105 bg-center"
+                className="embla__slide h-[var(--slide-height)] rounded-2xl overflow-hidden transform transition-transform duration-300 hover:scale-105 bg-center"
                 key={index}
                 style={{
-                  backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${item.asset})`,
+                  background: item.asset
+                    ? `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${item.asset})`
+                    : "radial-gradient(ellipse at 80% 0%, rgba(var(--color-gradient),0.35) 0%, transparent 60%), #0a0a0a",
                   cursor: item.link !== "/" ? "pointer" : "default",
                 }}
                 onClick={() => {
