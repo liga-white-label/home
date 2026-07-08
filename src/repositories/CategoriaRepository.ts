@@ -164,18 +164,32 @@ export class CategoriaRepository {
   };
 
   // No hay endpoint de "total de fechas" — el backend devuelve [] (no error)
-  // para una fecha sin partidos cargados, así que se prueba secuencialmente
-  // hasta encontrar el primer hueco. Tope defensivo, no hay reglamento con
+  // para una fecha sin partidos cargados, así que se busca el primer hueco.
+  // Búsqueda binaria en vez de lineal: mismo resultado (asume que las fechas
+  // están cargadas de forma contigua desde la 1), pero ~6 llamadas en el
+  // peor caso en vez de hasta 60. Tope defensivo, no hay reglamento con
   // tantas fechas en una sola rueda de temporada.
   getTotalFechas = async (faseId: string): Promise<number> => {
     const HARD_CAP = 60;
-    let total = 0;
-    for (let fecha = 1; fecha <= HARD_CAP; fecha++) {
+    const hasMatches = async (fecha: number) => {
       const matches = await this.getAllLeagueMatches(faseId, fecha);
-      if (!matches || matches.length === 0) break;
-      total = fecha;
+      return !!matches && matches.length > 0;
+    };
+
+    if (!(await hasMatches(1))) return 0;
+    if (await hasMatches(HARD_CAP)) return HARD_CAP;
+
+    let lo = 1;
+    let hi = HARD_CAP;
+    while (hi - lo > 1) {
+      const mid = Math.floor((lo + hi) / 2);
+      if (await hasMatches(mid)) {
+        lo = mid;
+      } else {
+        hi = mid;
+      }
     }
-    return total;
+    return lo;
   };
 }
 
