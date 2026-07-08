@@ -20,8 +20,7 @@ export const FixturePage: React.FC<FixturePageProps> = ({ faseId }) => {
   const { data: currentDate, isLoading: isLoadingCurrentDate } =
     useCurrentDateQuery(faseId);
 
-  const { data: totalFechas, isLoading: isLoadingTotalFechas } =
-    useTotalFechasQuery(faseId);
+  const { data: totalFechas } = useTotalFechasQuery(faseId);
 
   const [selectedFecha, setSelectedFecha] = useState<number>(currentDate || 1);
   const currentMatchSelected = useRef<any | undefined>();
@@ -59,7 +58,7 @@ export const FixturePage: React.FC<FixturePageProps> = ({ faseId }) => {
     setOpenMatchModal(false);
   };
 
-  if (isLoadingCurrentDate || isLoading || isLoadingTotalFechas) {
+  if (isLoadingCurrentDate || isLoading) {
     return <LoadingScreen />;
   }
 
