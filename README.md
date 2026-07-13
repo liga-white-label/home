@@ -1,6 +1,6 @@
-# Liga CUBB Home
+# Liga White Label — Home
 
-This is the home website for Liga CUBB, built with [Next.js](https://nextjs.org/) and bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is the white-label home website used across Liga tenants (e.g. Liga del Sur), built with [Next.js](https://nextjs.org/) and bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app). Tenant-specific branding lives in `src/config/tenant.ts` — see `.env.example`.
 
 ## Prerequisites
 
@@ -15,7 +15,7 @@ Before you begin, ensure you have the following installed on your system:
 
 ```bash
 git clone [repository-url]
-cd liga-cubb-home
+cd home
 ```
 
 2. Install the dependencies:
