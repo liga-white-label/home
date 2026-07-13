@@ -1,12 +1,12 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { PartidosAgrupados } from "../fixture/PartidosAgrupados";
 import {
   useAllMatchesByFaseQuery,
   useCurrentDateQuery,
+  useDatesCountQuery,
   useOnePartidoQuery,
-  useTotalFechasQuery,
 } from "@/repositories/CategoriaRepository";
 import InfoMatchModal from "../InfoMatchModal";
 import LoadingScreen from "../loading/Loading";
@@ -19,17 +19,36 @@ interface FixturePageProps {
 export const FixturePage: React.FC<FixturePageProps> = ({ faseId }) => {
   const { data: currentDate, isLoading: isLoadingCurrentDate } =
     useCurrentDateQuery(faseId);
+  const { data: datesCount, isLoading: isLoadingDatesCount } =
+    useDatesCountQuery(faseId);
 
-  const { data: totalFechas } = useTotalFechasQuery(faseId);
+  if (isLoadingCurrentDate || isLoadingDatesCount) {
+    return <LoadingScreen />;
+  }
 
-  const [selectedFecha, setSelectedFecha] = useState<number>(currentDate || 1);
+  return (
+    <FixtureContent
+      key={faseId}
+      faseId={faseId}
+      initialFecha={currentDate || 1}
+      totalFechas={datesCount || currentDate || 1}
+    />
+  );
+};
+
+interface FixtureContentProps {
+  faseId: string;
+  initialFecha: number;
+  totalFechas: number;
+}
+
+const FixtureContent: React.FC<FixtureContentProps> = ({
+  faseId,
+  initialFecha,
+  totalFechas,
+}) => {
+  const [selectedFecha, setSelectedFecha] = useState<number>(initialFecha);
   const currentMatchSelected = useRef<any | undefined>();
-
-  useEffect(() => {
-    if (currentDate && !isLoadingCurrentDate) {
-      setSelectedFecha(currentDate);
-    }
-  }, [currentDate, isLoadingCurrentDate]);
 
   const { data: matchesFechaActual, isLoading } = useAllMatchesByFaseQuery(
     faseId,
@@ -58,9 +77,18 @@ export const FixturePage: React.FC<FixturePageProps> = ({ faseId }) => {
     setOpenMatchModal(false);
   };
 
-  if (isLoadingCurrentDate || isLoading) {
+  if (isLoading) {
     return <LoadingScreen />;
   }
+
+  const fechas = Array.from({ length: totalFechas }, (_, i) => i + 1);
+
+  const fechaButtonStyle = (item: number) => ({
+    backgroundColor: selectedFecha === item ? "var(--color-primary)" : "#1a1a1a",
+    color: selectedFecha === item ? "white" : "#9ca3af",
+    border: "1px solid",
+    borderColor: selectedFecha === item ? "var(--color-primary)" : "#2a2a2a",
+  });
 
   return (
     <>
@@ -70,19 +98,13 @@ export const FixturePage: React.FC<FixturePageProps> = ({ faseId }) => {
           <label className="text-xs font-semibold uppercase tracking-widest text-gray-400">
             Fecha
           </label>
-          <div className="flex gap-2 flex-wrap">
-            {Array.from({ length: totalFechas || 1 }, (_, i) => i + 1).map((item) => (
+          <div className="flex gap-2 flex-wrap items-center">
+            {fechas.map((item) => (
               <button
                 key={item}
                 onClick={() => setSelectedFecha(item)}
                 className="px-3 py-1.5 rounded text-sm font-medium transition-colors"
-                style={{
-                  backgroundColor:
-                    selectedFecha === item ? "var(--color-primary)" : "#1a1a1a",
-                  color: selectedFecha === item ? "white" : "#9ca3af",
-                  border: "1px solid",
-                  borderColor: selectedFecha === item ? "var(--color-primary)" : "#2a2a2a",
-                }}
+                style={fechaButtonStyle(item)}
               >
                 {item}
               </button>

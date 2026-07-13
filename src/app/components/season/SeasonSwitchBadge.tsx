@@ -14,7 +14,7 @@ export const SeasonSwitchBadge: FC<SeasonSwitchBadgeProps> = ({
   current,
   linkedId,
 }) => (
-  <div className="flex items-center gap-3 text-sm">
+  <div className="flex items-center gap-3 text-sm mt-2">
     <span className="text-gray-400">
       Temporada: <span className="text-white font-medium">{SEASON_LABEL[current]}</span>
     </span>

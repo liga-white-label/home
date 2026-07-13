@@ -45,7 +45,7 @@ export class CategoriaRepository {
     currentDate: (idCat: string) => ["currentDate" + idCat],
     currentDateGroup: (phaseId: string) => ["currentDateGroup" + phaseId],
     groupMatches: (phaseId: string, fecha?: number) => ["groupMatches", phaseId + fecha],
-    totalFechas: (phaseId: string) => ["totalFechas", phaseId],
+    datesCount: (phaseId: string) => ["datesCount", phaseId],
   };
 
   allFases = async (categoryId: string) => {
@@ -163,33 +163,16 @@ export class CategoriaRepository {
     return data;
   };
 
-  // No hay endpoint de "total de fechas" — el backend devuelve [] (no error)
-  // para una fecha sin partidos cargados, así que se busca el primer hueco.
-  // Búsqueda binaria en vez de lineal: mismo resultado (asume que las fechas
-  // están cargadas de forma contigua desde la 1), pero ~6 llamadas en el
-  // peor caso en vez de hasta 60. Tope defensivo, no hay reglamento con
-  // tantas fechas en una sola rueda de temporada.
-  getTotalFechas = async (faseId: string): Promise<number> => {
-    const HARD_CAP = 60;
-    const hasMatches = async (fecha: number) => {
-      const matches = await this.getAllLeagueMatches(faseId, fecha);
-      return !!matches && matches.length > 0;
-    };
-
-    if (!(await hasMatches(1))) return 0;
-    if (await hasMatches(HARD_CAP)) return HARD_CAP;
-
-    let lo = 1;
-    let hi = HARD_CAP;
-    while (hi - lo > 1) {
-      const mid = Math.floor((lo + hi) / 2);
-      if (await hasMatches(mid)) {
-        lo = mid;
-      } else {
-        hi = mid;
+  getDatesCount = async (phaseId: string): Promise<number> => {
+    const { data } = await httpClient.get<number>(
+      `tournament/league/categories/phase-general/get-dates-count`,
+      {
+        params: {
+          phaseId: phaseId,
+        },
       }
-    }
-    return lo;
+    );
+    return data;
   };
 }
 
@@ -299,10 +282,10 @@ export const useCurrentDateGroupQuery = (phaseId: string) =>
     enabled: !!phaseId,
   });
 
-export const useTotalFechasQuery = (phaseId: string) =>
+export const useDatesCountQuery = (phaseId: string) =>
   useQuery({
-    queryKey: repo.keys.totalFechas(phaseId),
-    queryFn: () => repo.getTotalFechas(phaseId),
+    queryKey: repo.keys.datesCount(phaseId),
+    queryFn: () => repo.getDatesCount(phaseId),
     enabled: !!phaseId,
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
