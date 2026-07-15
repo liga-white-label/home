@@ -57,7 +57,7 @@ const HomeContent = () => {
     <div className="flex flex-col w-full" style={{ backgroundColor: "#0a0a0a" }}>
       {/* Hero masthead */}
       <div
-        className="w-full pt-24 pb-8 px-6 md:px-10"
+        className="w-full pt-16 pb-6 px-6 md:px-10"
         style={{
           background:
             "radial-gradient(ellipse at 80% 0%, rgba(var(--color-gradient),0.35) 0%, transparent 60%), #0a0a0a",
@@ -69,7 +69,7 @@ const HomeContent = () => {
         >
           {tenantConfig.home.seasonLabel ?? "Temporada"}
         </p>
-        <h1 className="text-white text-4xl md:text-6xl font-extrabold uppercase tracking-tight leading-none mb-3">
+        <h1 className="text-white text-3xl md:text-5xl font-extrabold uppercase tracking-tight leading-none mb-3">
           {tenantConfig.brand.name}
         </h1>
         <p className="text-gray-400 text-sm md:text-base">

@@ -11,11 +11,7 @@ export const Footer = () => {
       name: "Joaquin Franciscutti",
       link: "https://linkedin.com/in/jfranciscutti",
     },
-    { name: "Julian Acttis", link: "https://linkedin.com/in/julian-acttis" },
-    {
-      name: "Marco Valla",
-      link: "https://linkedin.com/in/marco-luis-valla-zanardi",
-    },
+    { name: "Julian Acttis", link: "https://linkedin.com/in/julian-acttis" }
   ];
 
   return (

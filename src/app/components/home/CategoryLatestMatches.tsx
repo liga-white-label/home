@@ -109,10 +109,6 @@ const CategoryLatestMatches = ({
     ? sorted.filter((m) => m.field === selectedCancha)
     : sorted;
 
-  const canchaLabel = selectedCancha
-    ? selectedCancha.toUpperCase()
-    : "TODAS LAS CANCHAS";
-
   if (isLoading) {
     return (
       <div className="flex justify-center items-center py-8">
@@ -256,7 +252,7 @@ const CategoryLatestMatches = ({
       )}
       <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid #1a1a1a" }}>
         <span className="text-xs font-semibold uppercase tracking-widest text-gray-500">
-          Fase Regular — Fecha {currentDate} — {canchaLabel}
+          Fecha {currentDate}
         </span>
         <Link
           href={`/campeonatos/${ligaId}/categorias/${categoryId}?tab=1`}

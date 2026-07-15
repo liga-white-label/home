@@ -46,7 +46,8 @@ export const PartidosAgrupados: React.FC<PartidosAgrupadosProps> = ({
     >
       <Table
         sx={{
-          minWidth: "auto",
+          minWidth: 600,
+          margin: "0 auto",
           backgroundColor: "#111",
         }}
       >

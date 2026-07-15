@@ -10,15 +10,15 @@ export const resolveLogoUrl = (url: string | null): string => {
 
 const TeamAvatar = ({ name, logo }: { name: string | null; logo: string | null }) => (
   <div
-    className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden"
-    style={{ backgroundColor: "#2a2a2a" }}
+    className="w-8 h-8 rounded flex items-center justify-center flex-shrink-0 overflow-hidden p-1"
+    style={{ backgroundColor: "#FFFFFF" }}
   >
     <Image
       src={resolveLogoUrl(logo)}
       alt={name || ""}
-      width={28}
-      height={28}
-      className="object-contain w-7 h-7"
+      width={24}
+      height={24}
+      className="object-contain w-6 h-6"
     />
   </div>
 );

@@ -98,12 +98,12 @@ const FixtureContent: React.FC<FixtureContentProps> = ({
           <label className="text-xs font-semibold uppercase tracking-widest text-gray-400">
             Fecha
           </label>
-          <div className="flex gap-2 flex-wrap items-center">
+          <div className="flex gap-2 items-center overflow-x-auto pb-1 -mx-1 px-1">
             {fechas.map((item) => (
               <button
                 key={item}
                 onClick={() => setSelectedFecha(item)}
-                className="px-3 py-1.5 rounded text-sm font-medium transition-colors"
+                className="px-3 py-1.5 rounded text-sm font-medium transition-colors flex-shrink-0"
                 style={fechaButtonStyle(item)}
               >
                 {item}
