@@ -37,10 +37,10 @@ export const PartidosAgrupados: React.FC<PartidosAgrupadosProps> = ({
         overflowX: "auto",
         WebkitOverflowScrolling: "touch",
         borderRadius: "8px",
-        backgroundColor: "#111",
+        backgroundColor: "var(--color-surface-2)",
         msOverflowStyle: "-ms-autohiding-scrollbar",
         "&::-webkit-scrollbar": { height: "6px" },
-        "&::-webkit-scrollbar-track": { background: "#1a1a1a", borderRadius: "4px" },
+        "&::-webkit-scrollbar-track": { background: "var(--color-surface)", borderRadius: "4px" },
         "&::-webkit-scrollbar-thumb": { background: "#333", borderRadius: "4px" },
       }}
     >
@@ -48,7 +48,7 @@ export const PartidosAgrupados: React.FC<PartidosAgrupadosProps> = ({
         sx={{
           minWidth: 600,
           margin: "0 auto",
-          backgroundColor: "#111",
+          backgroundColor: "var(--color-surface-2)",
         }}
       >
         <TableBody>

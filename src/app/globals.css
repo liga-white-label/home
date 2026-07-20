@@ -3,9 +3,28 @@
 @tailwind utilities;
 
 :root {
-  --background--rgb: 255,255,255;
   /* Overridden at runtime via layoutWrapper inline style */
   --color-primary: #A60000;
+
+  /* Theme tokens — user-toggleable, default is light (see ThemeModeContext).
+     data-theme is set on <html> from the user's stored preference. */
+  --color-bg: #0a0a0a;
+  --color-surface: #1a1a1a;
+  --color-surface-2: #111111;
+  --color-surface-hover: #2a2a2a;
+  --color-border: #2a2a2a;
+  --color-text: #ffffff;
+  --color-text-secondary: #9ca3af;
+}
+
+:root[data-theme="light"] {
+  --color-bg: #ffffff;
+  --color-surface: #f5f6f8;
+  --color-surface-2: #eef0f3;
+  --color-surface-hover: #e7e9ed;
+  --color-border: #dde1e6;
+  --color-text: #111111;
+  --color-text-secondary: #6b7280;
 }
 
 html {
@@ -13,8 +32,8 @@ html {
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: rgb(var(--background--rgb));
+  color: var(--color-text);
+  background: var(--color-bg);
   min-height: 100vh;
   margin: 0;
   padding: 0 !important;

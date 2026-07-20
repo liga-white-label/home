@@ -1,19 +1,21 @@
 "use client";
 import Image from "next/image";
 import { LinkNavigator } from "./LinkNavigator";
-import { Menu } from "@mui/icons-material";
+import { Menu, LightMode, DarkMode } from "@mui/icons-material";
 import Link from "next/link";
 import { useSidebar } from "../context/SideBarContext";
+import { useThemeMode } from "../context/ThemeModeContext";
 import { tenantConfig } from "@/config/tenant";
 
 export const NavBar = () => {
   const { switchSidebar } = useSidebar();
+  const { mode, toggleMode } = useThemeMode();
   const { logoPath, logoWidth, logoHeight, name } = tenantConfig.brand;
 
   return (
     <div
       className="h-16 w-full z-50 flex items-center justify-between px-4 md:px-8 relative"
-      style={{ backgroundColor: "#0a0a0a" }}
+      style={{ backgroundColor: "var(--color-bg)" }}
     >
       {/* Red bottom glow */}
       <div
@@ -45,13 +47,27 @@ export const NavBar = () => {
 
       <LinkNavigator />
 
-      <button
-        className="lg:hidden flex items-center text-white"
-        onClick={switchSidebar}
-        aria-label="Abrir menú"
-      >
-        <Menu className="h-7 w-7" />
-      </button>
+      <div className="flex items-center gap-3">
+        <button
+          className="flex items-center justify-center h-9 w-9 rounded-full transition-colors text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface-hover)]"
+          onClick={toggleMode}
+          aria-label={mode === "light" ? "Cambiar a modo oscuro" : "Cambiar a modo claro"}
+        >
+          {mode === "light" ? (
+            <DarkMode className="h-5 w-5" />
+          ) : (
+            <LightMode className="h-5 w-5" />
+          )}
+        </button>
+
+        <button
+          className="lg:hidden flex items-center text-[var(--color-text)]"
+          onClick={switchSidebar}
+          aria-label="Abrir menú"
+        >
+          <Menu className="h-7 w-7" />
+        </button>
+      </div>
     </div>
   );
 };

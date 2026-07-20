@@ -36,7 +36,7 @@ export const SeasonTablaGeneralPanel: FC<SeasonTablaGeneralPanelProps> = ({
 
   if (commonCategories.length === 0) {
     return (
-      <p className="text-gray-500 text-sm">
+      <p className="text-[var(--color-text-secondary)] text-sm">
         No hay categorías en común entre Apertura y Clausura.
       </p>
     );
@@ -55,7 +55,7 @@ export const SeasonTablaGeneralPanel: FC<SeasonTablaGeneralPanelProps> = ({
             style={
               normalize(cat.name) === normalize(activeName)
                 ? { backgroundColor: "var(--color-primary)", color: "#fff" }
-                : { backgroundColor: "#111", color: "#9ca3af", border: "1px solid #2a2a2a" }
+                : { backgroundColor: "var(--color-surface-2)", color: "var(--color-text-secondary)", border: "1px solid var(--color-border)" }
             }
           >
             Cat {cat.name}

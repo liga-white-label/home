@@ -49,7 +49,7 @@ export const ResultBox: React.FC<ResultBoxProps> = ({
             <Divider
               orientation="vertical"
               flexItem
-              className="bg-white mx-1"
+              className="bg-[var(--color-border)] mx-1"
             />
             <Typography variant="body2" className="absolute right-8">
               {resultVuelta ?? "-"}
@@ -61,7 +61,7 @@ export const ResultBox: React.FC<ResultBoxProps> = ({
             <Divider
               orientation="vertical"
               flexItem
-              className="bg-white mx-1"
+              className="bg-[var(--color-border)] mx-1"
             />
             <Typography variant="body2" className="absolute right-2">
               {`(${resultPenales ?? "-"})`}
@@ -104,7 +104,7 @@ export const InvertedResultBox: React.FC<ResultBoxProps> = ({
       </Typography>
       {showVuelta && (
         <>
-          <Divider orientation="vertical" flexItem className="bg-white mx-1" />
+          <Divider orientation="vertical" flexItem className="bg-[var(--color-border)] mx-1" />
           <Typography variant="body2" className="absolute left-8">
             {resultVuelta ?? "-"}
           </Typography>
@@ -112,7 +112,7 @@ export const InvertedResultBox: React.FC<ResultBoxProps> = ({
       )}
       {showPenales && (
         <>
-          <Divider orientation="vertical" flexItem className="bg-white mx-1" />
+          <Divider orientation="vertical" flexItem className="bg-[var(--color-border)] mx-1" />
           <Typography variant="body2" className="absolute left-2">
             {`(${resultPenales ?? "-"})`}
           </Typography>

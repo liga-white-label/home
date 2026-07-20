@@ -17,7 +17,7 @@ export default function NovedadDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-screen" style={{ backgroundColor: "#0a0a0a" }}>
+      <div className="flex justify-center items-center min-h-screen" style={{ backgroundColor: "var(--color-bg)" }}>
         <MiniLoading />
       </div>
     );
@@ -25,8 +25,8 @@ export default function NovedadDetailPage() {
 
   if (!novedad) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen gap-4" style={{ backgroundColor: "#0a0a0a" }}>
-        <p className="text-gray-400 text-lg">Novedad no encontrada.</p>
+      <div className="flex flex-col items-center justify-center min-h-screen gap-4" style={{ backgroundColor: "var(--color-bg)" }}>
+        <p className="text-[var(--color-text-secondary)] text-lg">Novedad no encontrada.</p>
         <button
           onClick={() => router.push("/novedades")}
           className="text-sm font-semibold uppercase tracking-widest px-5 py-2 rounded transition-opacity hover:opacity-80"
@@ -39,19 +39,19 @@ export default function NovedadDetailPage() {
   }
 
   return (
-    <div className="flex flex-col w-full min-h-screen" style={{ backgroundColor: "#0a0a0a" }}>
+    <div className="flex flex-col w-full min-h-screen" style={{ backgroundColor: "var(--color-bg)" }}>
       {/* Masthead */}
       <div
         className="w-full pt-24 pb-8 px-6 md:px-10"
         style={{
           background:
-            "radial-gradient(ellipse at 80% 0%, rgba(var(--color-gradient),0.35) 0%, transparent 60%), #0a0a0a",
+            "radial-gradient(ellipse at 80% 0%, rgba(var(--color-gradient),0.35) 0%, transparent 60%), var(--color-bg)",
         }}
       >
         <button
           onClick={() => router.push("/novedades")}
           className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest mb-6 transition-opacity hover:opacity-70"
-          style={{ color: "white" }}
+          style={{ color: "var(--color-text)" }}
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="15 18 9 12 15 6" />
@@ -61,7 +61,7 @@ export default function NovedadDetailPage() {
 
         <p
           className="text-xs font-semibold uppercase tracking-widest mb-3"
-          style={{ color: "white" }}
+          style={{ color: "var(--color-text)" }}
         >
           {tenantConfig.brand.name}
         </p>
@@ -75,12 +75,12 @@ export default function NovedadDetailPage() {
               {novedad.categoria}
             </span>
           )}
-          <span className="text-xs text-gray-500 uppercase tracking-wide">
+          <span className="text-xs text-[var(--color-text-secondary)] uppercase tracking-wide">
             {moment(novedad.fecha).format("D [de] MMMM [de] YYYY")}
           </span>
         </div>
 
-        <h1 className="text-white text-3xl md:text-4xl font-black uppercase tracking-tight leading-tight max-w-3xl">
+        <h1 className="text-[var(--color-text)] text-3xl md:text-4xl font-black uppercase tracking-tight leading-tight max-w-3xl">
           {novedad.titulo}
         </h1>
       </div>
@@ -106,7 +106,7 @@ export default function NovedadDetailPage() {
         {novedad.descripcion && (
           <div
             className="rounded-xl p-6 md:p-8"
-            style={{ backgroundColor: "#1a1a1a" }}
+            style={{ backgroundColor: "var(--color-surface)" }}
           >
             <p className="text-gray-300 text-base leading-relaxed whitespace-pre-wrap">
               {novedad.descripcion}

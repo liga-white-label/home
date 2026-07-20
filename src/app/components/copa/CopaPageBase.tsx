@@ -60,29 +60,29 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
 
   const tabClass = (active: boolean) =>
     `cursor-pointer pb-3 text-sm font-medium whitespace-nowrap transition-colors ${active
-      ? "text-white border-b-2"
-      : "text-gray-400 hover:text-white border-b-2 border-transparent"
+      ? "text-[var(--color-text)] border-b-2"
+      : "text-[var(--color-text-secondary)] hover:text-[var(--color-text)] border-b-2 border-transparent"
     }`;
 
   return (
-    <div className="w-full" style={{ backgroundColor: "#0a0a0a" }}>
+    <div className="w-full" style={{ backgroundColor: "var(--color-bg)" }}>
       {/* Header */}
       <div
         className="w-full pt-24 pb-8 px-6 md:px-10"
         style={{
-          background: "radial-gradient(ellipse at 80% 0%, rgba(var(--color-gradient),0.35) 0%, transparent 60%), #0a0a0a",
+          background: "radial-gradient(ellipse at 80% 0%, rgba(var(--color-gradient),0.35) 0%, transparent 60%), var(--color-bg)",
         }}
       >
-        <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "#FFFFFF" }}>
+        <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "var(--color-text)" }}>
           {tenantConfig.home.seasonLabel ?? "Temporada"}
         </p>
-        <h1 className="text-white text-3xl md:text-5xl font-extrabold uppercase tracking-tight">
+        <h1 className="text-[var(--color-text)] text-3xl md:text-5xl font-extrabold uppercase tracking-tight">
           {title}
         </h1>
       </div>
 
       {/* Tab bar */}
-      <div className="w-full border-b border-gray-800" style={{ backgroundColor: "#0a0a0a" }}>
+      <div className="w-full border-b border-[var(--color-border)]" style={{ backgroundColor: "var(--color-bg)" }}>
         <div className="flex gap-6 px-6 md:px-10 overflow-x-auto">
           {!!faseGrupos && (
             <button
@@ -121,7 +121,7 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
         </div>
       </div>
 
-      <div className="w-full p-4 md:p-10" style={{ backgroundColor: "#0a0a0a" }}>
+      <div className="w-full p-4 md:p-10" style={{ backgroundColor: "var(--color-bg)" }}>
         {selectedTab === TabsEnum.GRUPOS && (
           <FaseGruposWrapper faseId={faseGrupos?.id || ""} />
         )}

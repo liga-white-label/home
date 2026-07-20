@@ -46,7 +46,7 @@ const DG_COLOR = (dg: number) =>
 
 const TH = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
   <th
-    className={`text-xs font-semibold tracking-wider py-3 px-2 md:px-3 text-gray-400 uppercase ${className}`}
+    className={`text-xs font-semibold tracking-wider py-3 px-2 md:px-3 text-[var(--color-text-secondary)] uppercase ${className}`}
   >
     {children}
   </th>
@@ -74,14 +74,14 @@ export const TablaPosiciones: FC<TablaPosicionesProps> = ({
   const total = calculatedPositions.length;
 
   return (
-    <div className="w-full rounded-lg overflow-hidden" style={{ backgroundColor: "#111" }}>
+    <div className="w-full rounded-lg overflow-hidden" style={{ backgroundColor: "var(--color-surface-2)" }}>
       {/* Legend header */}
-      <div className="flex items-center justify-between px-4 py-3" style={{ backgroundColor: "#111" }}>
-        <span className="text-xs font-semibold tracking-widest text-gray-400 uppercase">
+      <div className="flex items-center justify-between px-4 py-3" style={{ backgroundColor: "var(--color-surface-2)" }}>
+        <span className="text-xs font-semibold tracking-widest text-[var(--color-text-secondary)] uppercase">
           {title}
         </span>
         {showPromotionZones && (
-          <div className="flex items-center gap-4 text-xs text-gray-400">
+          <div className="flex items-center gap-4 text-xs text-[var(--color-text-secondary)]">
             <span className="flex items-center gap-1">
               <span className="inline-block w-2 h-2 rounded-full bg-green-500" />
               Ascenso
@@ -101,7 +101,7 @@ export const TablaPosiciones: FC<TablaPosicionesProps> = ({
       <div className="overflow-x-auto w-full">
         <table className="w-full border-collapse" style={{ minWidth: showNextMatch ? 480 : 400 }}>
           <thead>
-            <tr style={{ backgroundColor: "#1a1a1a" }}>
+            <tr style={{ backgroundColor: "var(--color-surface)" }}>
               <TH className="text-left pl-4 w-10">POS</TH>
               <TH className="text-left">EQUIPO</TH>
               <TH>PJ</TH>
@@ -123,9 +123,9 @@ export const TablaPosiciones: FC<TablaPosicionesProps> = ({
                 <tr
                   key={team.pos}
                   className="transition-colors"
-                  style={{ borderBottom: "1px solid #1f1f1f" }}
+                  style={{ borderBottom: "1px solid var(--color-border)" }}
                   onMouseEnter={(e) =>
-                    (e.currentTarget.style.backgroundColor = "#1a1a1a")
+                    (e.currentTarget.style.backgroundColor = "var(--color-surface-hover)")
                   }
                   onMouseLeave={(e) =>
                     (e.currentTarget.style.backgroundColor = "transparent")
@@ -159,28 +159,28 @@ export const TablaPosiciones: FC<TablaPosicionesProps> = ({
                           className="object-contain w-8 h-8"
                         />
                       </div>
-                      <span className="text-white text-sm font-medium uppercase hidden sm:block">
+                      <span className="text-[var(--color-text)] text-sm font-medium uppercase hidden sm:block">
                         {team.equipo}
                       </span>
-                      <span className="text-white text-xs font-medium uppercase sm:hidden">
+                      <span className="text-[var(--color-text)] text-xs font-medium uppercase sm:hidden">
                         {abbreviateTeamName(team.equipo)}
                       </span>
                     </div>
                   </td>
 
-                  <td className="py-3 px-2 md:px-3 text-center text-gray-300 text-sm">{team.pj}</td>
-                  <td className="py-3 px-2 md:px-3 text-center text-gray-300 text-sm">{team.pg}</td>
-                  <td className="py-3 px-2 md:px-3 text-center text-gray-300 text-sm">{team.pe}</td>
-                  <td className="py-3 px-2 md:px-3 text-center text-gray-300 text-sm">{team.pp}</td>
-                  <td className="py-3 px-2 md:px-3 text-center text-gray-300 text-sm hidden md:table-cell">{team.gf}</td>
-                  <td className="py-3 px-2 md:px-3 text-center text-gray-300 text-sm hidden md:table-cell">{team.gc}</td>
+                  <td className="py-3 px-2 md:px-3 text-center text-[var(--color-text-secondary)] text-sm">{team.pj}</td>
+                  <td className="py-3 px-2 md:px-3 text-center text-[var(--color-text-secondary)] text-sm">{team.pg}</td>
+                  <td className="py-3 px-2 md:px-3 text-center text-[var(--color-text-secondary)] text-sm">{team.pe}</td>
+                  <td className="py-3 px-2 md:px-3 text-center text-[var(--color-text-secondary)] text-sm">{team.pp}</td>
+                  <td className="py-3 px-2 md:px-3 text-center text-[var(--color-text-secondary)] text-sm hidden md:table-cell">{team.gf}</td>
+                  <td className="py-3 px-2 md:px-3 text-center text-[var(--color-text-secondary)] text-sm hidden md:table-cell">{team.gc}</td>
                   <td
                     className="py-3 px-2 md:px-3 text-center text-sm font-medium"
                     style={{ color: DG_COLOR(team.dg) }}
                   >
                     {team.dg > 0 ? `+${team.dg}` : team.dg}
                   </td>
-                  <td className="py-3 px-2 md:px-3 text-center text-white text-sm font-bold">
+                  <td className="py-3 px-2 md:px-3 text-center text-[var(--color-text)] text-sm font-bold">
                     {team.pts}
                   </td>
                   {showNextMatch && (

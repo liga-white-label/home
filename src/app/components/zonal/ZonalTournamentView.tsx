@@ -31,7 +31,7 @@ export const ZonalTournamentView: FC<ZonalTournamentViewProps> = ({
 
   if (!zonas || zonas.length === 0) {
     return (
-      <p className="text-gray-500 text-sm">
+      <p className="text-[var(--color-text-secondary)] text-sm">
         Todavía no hay zonas cargadas para este torneo.
       </p>
     );
@@ -50,7 +50,7 @@ export const ZonalTournamentView: FC<ZonalTournamentViewProps> = ({
             style={
               selectedZoneId === zona.id
                 ? { backgroundColor: "var(--color-primary)", color: "#fff" }
-                : { backgroundColor: "#111", color: "#9ca3af", border: "1px solid #2a2a2a" }
+                : { backgroundColor: "var(--color-surface-2)", color: "var(--color-text-secondary)", border: "1px solid var(--color-border)" }
             }
           >
             {zona.name}

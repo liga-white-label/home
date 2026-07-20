@@ -23,7 +23,7 @@ export const ZonaPanel: FC<ZonaPanelProps> = ({ zoneId, torneoId }) => {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <p className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-3">
+        <p className="text-xs font-bold uppercase tracking-widest text-[var(--color-text-secondary)] mb-3">
           Categorías
         </p>
         {isLoadingCategorias ? (
@@ -34,15 +34,15 @@ export const ZonaPanel: FC<ZonaPanelProps> = ({ zoneId, torneoId }) => {
               <Link
                 key={cat.id}
                 href={`/campeonatos/${torneoId}/categorias/${cat.id}`}
-                className="px-4 py-2 rounded-full text-sm text-gray-300 hover:text-white transition-colors"
-                style={{ backgroundColor: "#111", border: "1px solid #2a2a2a" }}
+                className="px-4 py-2 rounded-full text-sm text-gray-300 hover:text-[var(--color-text)] transition-colors"
+                style={{ backgroundColor: "var(--color-surface-2)", border: "1px solid var(--color-border)" }}
               >
                 Cat {cat.name}
               </Link>
             ))}
           </div>
         ) : (
-          <p className="text-gray-500 text-sm">
+          <p className="text-[var(--color-text-secondary)] text-sm">
             Todavía no hay categorías cargadas en esta zona.
           </p>
         )}

@@ -41,7 +41,7 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
                 style={{
                   background: item.asset
                     ? `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${item.asset})`
-                    : "radial-gradient(ellipse at 80% 0%, rgba(var(--color-gradient),0.35) 0%, transparent 60%), #0a0a0a",
+                    : "radial-gradient(ellipse at 80% 0%, rgba(var(--color-gradient),0.35) 0%, transparent 60%), var(--color-bg)",
                   cursor: item.link !== "/" ? "pointer" : "default",
                 }}
                 onClick={() => {
@@ -50,7 +50,11 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
                   }
                 }}
               >
-                <div className="embla__slide__text text-white text-center">
+                <div
+                  className={`embla__slide__text text-center ${
+                    item.asset ? "text-white" : "text-[var(--color-text)]"
+                  }`}
+                >
                   {item.title}
                 </div>
               </Box>
@@ -58,18 +62,18 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
           })}
         </div>
         <button
-          className="absolute left-0 top-1/2 transform h-10 rounded-xl hover:bg-[#1a222f] mx-1 mt-10 bg-[#111927] text-white p-2 group"
+          className="absolute left-0 top-1/2 transform h-10 rounded-xl hover:bg-[var(--color-surface-hover)] mx-1 mt-10 bg-[var(--color-surface)] text-[var(--color-text)] p-2 group"
           onClick={onPrevButtonClick}
           disabled={prevBtnDisabled}
         >
-          <ChevronLeft className="text-gray-400 group-hover:text-white" />
+          <ChevronLeft className="text-[var(--color-text-secondary)] group-hover:text-[var(--color-text)]" />
         </button>
         <button
-          className="absolute right-0 top-1/2 transform h-10 rounded-xl hover:bg-[#1a222f] mx-1 mt-10  bg-[#111927] text-white p-2 group"
+          className="absolute right-0 top-1/2 transform h-10 rounded-xl hover:bg-[var(--color-surface-hover)] mx-1 mt-10  bg-[var(--color-surface)] text-[var(--color-text)] p-2 group"
           onClick={onNextButtonClick}
           disabled={nextBtnDisabled}
         >
-          <ChevronRight className="text-gray-400 group-hover:text-white" />
+          <ChevronRight className="text-[var(--color-text-secondary)] group-hover:text-[var(--color-text)]" />
         </button>
       </div>
     </section>

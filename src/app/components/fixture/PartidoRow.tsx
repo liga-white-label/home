@@ -26,13 +26,13 @@ export const PartidoRow: FC<PartidoRowProps> = ({
   const isLessThanMd = useMediaQuery(theme.breakpoints.down("md"));
   const isSmallDevice = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const rowBg = index % 2 === 0 ? "#111" : "#151515";
+  const rowBg = index % 2 === 0 ? "var(--color-surface-2)" : "var(--color-surface)";
 
   return (
     <TableRow
       style={{ backgroundColor: rowBg }}
       sx={{
-        "&:hover": { backgroundColor: "#1a1a1a" },
+        "&:hover": { backgroundColor: "var(--color-surface-hover)" },
         transition: "background-color 0.15s ease",
       }}
     >
@@ -40,7 +40,7 @@ export const PartidoRow: FC<PartidoRowProps> = ({
         sx={{
           width: isSmallDevice ? "0%" : "15%",
           padding: isSmallDevice ? "8px 4px" : undefined,
-          borderBottom: "1px solid #1f1f1f",
+          borderBottom: "1px solid var(--color-border)",
         }}
       >
         <MatchDate date={match.date} isLessThanMd={isLessThanMd} />
@@ -51,7 +51,7 @@ export const PartidoRow: FC<PartidoRowProps> = ({
           pr: isSmallDevice ? 1 : 3,
           padding: isSmallDevice ? "8px 4px" : undefined,
           textAlign: "right",
-          borderBottom: "1px solid #1f1f1f",
+          borderBottom: "1px solid var(--color-border)",
         }}
       >
         <TeamInfo teamName={match.homeTeamName} teamLogo={match.homeTeamLogo} />
@@ -62,7 +62,7 @@ export const PartidoRow: FC<PartidoRowProps> = ({
           px: 0,
           padding: isSmallDevice ? "8px 2px" : undefined,
           textAlign: "center",
-          borderBottom: "1px solid #1f1f1f",
+          borderBottom: "1px solid var(--color-border)",
         }}
         onClick={
           isSmallDevice
@@ -97,7 +97,7 @@ export const PartidoRow: FC<PartidoRowProps> = ({
           pl: isSmallDevice ? 1 : 3,
           padding: isSmallDevice ? "8px 4px" : undefined,
           textAlign: "left",
-          borderBottom: "1px solid #1f1f1f",
+          borderBottom: "1px solid var(--color-border)",
         }}
       >
         <TeamInfo
@@ -112,7 +112,7 @@ export const PartidoRow: FC<PartidoRowProps> = ({
           padding: isSmallDevice ? "8px 2px" : undefined,
           textAlign: "center",
           display: isSmallDevice ? "none" : "table-cell",
-          borderBottom: "1px solid #1f1f1f",
+          borderBottom: "1px solid var(--color-border)",
         }}
       >
         <MatchField field={match.field} isLessThanMd={isLessThanMd} />
@@ -123,7 +123,7 @@ export const PartidoRow: FC<PartidoRowProps> = ({
           padding: isSmallDevice ? "8px 2px" : undefined,
           textAlign: "right",
           display: isSmallDevice ? "none" : "table-cell",
-          borderBottom: "1px solid #1f1f1f",
+          borderBottom: "1px solid var(--color-border)",
         }}
       >
         <LoadingButton
@@ -131,9 +131,9 @@ export const PartidoRow: FC<PartidoRowProps> = ({
           loading={isLoadingMatch}
           startIcon={<VisibilityIcon />}
           sx={{
-            color: "#9ca3af",
+            color: "var(--color-text-secondary)",
             minWidth: 0,
-            "&:hover": { color: "white" },
+            "&:hover": { color: "var(--color-text)" },
           }}
           disabled={match.homeTeamId === undefined || match.awayTeamId === undefined}
         >

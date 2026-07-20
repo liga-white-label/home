@@ -16,15 +16,15 @@ const NewsCarousel = () => {
   if (isLoading || latest.length === 0) return null;
 
   return (
-    <div className="w-full border-b border-gray-800" style={{ backgroundColor: "#111" }}>
+    <div className="w-full border-b border-[var(--color-border)]" style={{ backgroundColor: "var(--color-surface-2)" }}>
       <div className="flex items-center justify-between px-4 md:px-10 pt-4 pb-2">
-        <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">
+        <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--color-text-secondary)]">
           Novedades
         </span>
         <Link
           href="/novedades"
           className="text-[10px] font-semibold uppercase tracking-widest hover:opacity-80 transition-opacity"
-          style={{ color: "white" }}
+          style={{ color: "var(--color-text)" }}
         >
           Ver todas →
         </Link>
@@ -61,10 +61,10 @@ const NewsCarousel = () => {
               </div>
 
               {/* Title */}
-              <p className="text-white text-xs font-semibold leading-snug line-clamp-2 group-hover:text-gray-300 transition-colors">
+              <p className="text-[var(--color-text)] text-xs font-semibold leading-snug line-clamp-2 group-hover:text-gray-300 transition-colors">
                 {novedad.titulo}
               </p>
-              <p className="text-gray-500 text-[10px] mt-1">
+              <p className="text-[var(--color-text-secondary)] text-[10px] mt-1">
                 {moment(novedad.fecha).format("D MMM. YYYY")}
               </p>
             </Link>

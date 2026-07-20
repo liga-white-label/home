@@ -46,7 +46,7 @@ const HomeContent = () => {
     return (
       <div
         className="flex flex-col w-full items-center justify-center py-10 h-screen"
-        style={{ backgroundColor: "#0a0a0a" }}
+        style={{ backgroundColor: "var(--color-bg)" }}
       >
         <MiniLoading />
       </div>
@@ -54,25 +54,25 @@ const HomeContent = () => {
   }
 
   return (
-    <div className="flex flex-col w-full" style={{ backgroundColor: "#0a0a0a" }}>
+    <div className="flex flex-col w-full" style={{ backgroundColor: "var(--color-bg)" }}>
       {/* Hero masthead */}
       <div
         className="w-full pt-16 pb-6 px-6 md:px-10"
         style={{
           background:
-            "radial-gradient(ellipse at 80% 0%, rgba(var(--color-gradient),0.35) 0%, transparent 60%), #0a0a0a",
+            "radial-gradient(ellipse at 80% 0%, rgba(var(--color-gradient),0.35) 0%, transparent 60%), var(--color-bg)",
         }}
       >
         <p
           className="text-xs font-semibold uppercase tracking-widest mb-2"
-          style={{ color: "#FFFFFF" }}
+          style={{ color: "var(--color-text)" }}
         >
           {tenantConfig.home.seasonLabel ?? "Temporada"}
         </p>
-        <h1 className="text-white text-3xl md:text-5xl font-extrabold uppercase tracking-tight leading-none mb-3">
+        <h1 className="text-[var(--color-text)] text-3xl md:text-5xl font-extrabold uppercase tracking-tight leading-none mb-3">
           {tenantConfig.brand.name}
         </h1>
-        <p className="text-gray-400 text-sm md:text-base">
+        <p className="text-[var(--color-text-secondary)] text-sm md:text-base">
           {tenantConfig.brand.subtitle}
         </p>
       </div>
@@ -100,7 +100,7 @@ const HomeContent = () => {
 
       <WelcomeGifContainer />
 
-      <section className="w-full" style={{ backgroundColor: "#0a0a0a" }}>
+      <section className="w-full" style={{ backgroundColor: "var(--color-bg)" }}>
         <EmblaCarousel slides={SLIDES} options={{ align: "start" }} />
       </section>
     </div>

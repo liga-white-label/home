@@ -36,7 +36,7 @@ export const TeamInfo: FC<TeamInfoProps> = ({
       <Box
         component="span"
         sx={{
-          color: "white",
+          color: "var(--color-text)",
           fontSize: { xs: "0.8rem", sm: "0.95rem" },
           fontWeight: 500,
           whiteSpace: "nowrap",
