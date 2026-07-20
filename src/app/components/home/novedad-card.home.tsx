@@ -22,7 +22,7 @@ const DiagonalPattern = () => (
         rgba(255,255,255,0.03) 10px,
         rgba(255,255,255,0.03) 20px
       )`,
-            backgroundColor: "#1c1c1c",
+            backgroundColor: "var(--color-surface)",
         }}
     />
 );
@@ -61,7 +61,7 @@ const NovedadCardHome: React.FC<NovedadCardHomeProps> = ({ novedad, compact = fa
         <Link href={`/novedades/${novedad.id}`} className="block group h-full">
         <article
             className="group flex flex-col rounded-xl overflow-hidden h-full transition-colors"
-            style={{ backgroundColor: "#1a1a1a" }}
+            style={{ backgroundColor: "var(--color-surface)" }}
         >
             {/* Image */}
             <div className={`relative flex-shrink-0 overflow-hidden ${compact ? "aspect-[16/9]" : "aspect-[4/3]"}`}>
@@ -75,14 +75,14 @@ const NovedadCardHome: React.FC<NovedadCardHomeProps> = ({ novedad, compact = fa
 
             {/* Content */}
             <div className={`flex flex-col gap-1.5 flex-1 ${compact ? "p-3" : "p-4 gap-2"}`}>
-                <span className="text-[10px] text-gray-500 uppercase tracking-wide">
+                <span className="text-[10px] text-[var(--color-text-secondary)] uppercase tracking-wide">
                     {moment(novedad.fecha).format("D MMM. YYYY")}
                 </span>
-                <h3 className={`font-bold text-white leading-snug line-clamp-2 uppercase ${compact ? "text-xs" : "text-sm"}`}>
+                <h3 className={`font-bold text-[var(--color-text)] leading-snug line-clamp-2 uppercase ${compact ? "text-xs" : "text-sm"}`}>
                     {novedad.titulo}
                 </h3>
                 {!compact && (
-                    <p className="text-xs text-gray-400 leading-relaxed line-clamp-3 flex-1">
+                    <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed line-clamp-3 flex-1">
                         {novedad.descripcion}
                     </p>
                 )}

@@ -30,8 +30,8 @@ interface CupLatestMatchesProps {
 }
 
 const DayHeader = ({ label }: { label: string }) => (
-  <div className="px-4 py-2" style={{ backgroundColor: "#1a1a1a" }}>
-    <span className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+  <div className="px-4 py-2" style={{ backgroundColor: "var(--color-surface)" }}>
+    <span className="text-xs font-semibold uppercase tracking-widest text-[var(--color-text-secondary)]">
       {label}
     </span>
   </div>
@@ -128,13 +128,13 @@ const CupLatestMatches = ({ cupId }: CupLatestMatchesProps) => {
 
     return (
       <>
-        <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid #1a1a1a" }}>
-          <span className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+        <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid var(--color-surface)" }}>
+          <span className="text-xs font-semibold uppercase tracking-widest text-[var(--color-text-secondary)]">
             Playoffs — {getRoundLabel(activeRound.roundNumber)}
           </span>
           <Link
             href={`/campeonatos/${cupId}?tab=2`}
-            className="text-xs font-semibold hover:opacity-80 transition-opacity text-gray-500"
+            className="text-xs font-semibold hover:opacity-80 transition-opacity text-[var(--color-text-secondary)]"
           >
             Ver playoffs →
           </Link>
@@ -162,7 +162,7 @@ const CupLatestMatches = ({ cupId }: CupLatestMatchesProps) => {
 
   if (!groupPhase || (gruposData as FaseGruposCopa[]).length === 0) {
     return (
-      <p className="text-center text-gray-500 py-8 text-sm">
+      <p className="text-center text-[var(--color-text-secondary)] py-8 text-sm">
         No hay información disponible para esta copa.
       </p>
     );
@@ -176,10 +176,10 @@ const CupLatestMatches = ({ cupId }: CupLatestMatchesProps) => {
             onClick={() => setSelectedCancha(null)}
             className="whitespace-nowrap px-3 py-1.5 rounded text-sm font-medium transition-colors flex-shrink-0"
             style={{
-              backgroundColor: selectedCancha === null ? "white" : "#1a1a1a",
-              color: selectedCancha === null ? "#0a0a0a" : "#9ca3af",
+              backgroundColor: selectedCancha === null ? "var(--color-primary)" : "var(--color-surface)",
+              color: selectedCancha === null ? "white" : "var(--color-text-secondary)",
               border: "1px solid",
-              borderColor: selectedCancha === null ? "white" : "#2a2a2a",
+              borderColor: selectedCancha === null ? "var(--color-primary)" : "var(--color-border)",
               fontWeight: selectedCancha === null ? 700 : 500,
             }}
           >
@@ -191,10 +191,10 @@ const CupLatestMatches = ({ cupId }: CupLatestMatchesProps) => {
               onClick={() => setSelectedCancha(cancha)}
               className="whitespace-nowrap px-3 py-1.5 rounded text-sm font-medium transition-colors flex-shrink-0"
               style={{
-                backgroundColor: selectedCancha === cancha ? "white" : "#1a1a1a",
-                color: selectedCancha === cancha ? "#0a0a0a" : "#9ca3af",
+                backgroundColor: selectedCancha === cancha ? "var(--color-primary)" : "var(--color-surface)",
+                color: selectedCancha === cancha ? "white" : "var(--color-text-secondary)",
                 border: "1px solid",
-                borderColor: selectedCancha === cancha ? "white" : "#2a2a2a",
+                borderColor: selectedCancha === cancha ? "var(--color-primary)" : "var(--color-border)",
                 fontWeight: selectedCancha === cancha ? 700 : 500,
               }}
             >
@@ -203,8 +203,8 @@ const CupLatestMatches = ({ cupId }: CupLatestMatchesProps) => {
           ))}
         </div>
       )}
-      <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid #1a1a1a" }}>
-        <span className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+      <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid var(--color-surface)" }}>
+        <span className="text-xs font-semibold uppercase tracking-widest text-[var(--color-text-secondary)]">
           {groupLabel}
         </span>
         <Link
@@ -216,7 +216,7 @@ const CupLatestMatches = ({ cupId }: CupLatestMatchesProps) => {
         </Link>
       </div>
       {filteredMatches.length === 0 ? (
-        <p className="text-center text-gray-500 py-8 text-sm">
+        <p className="text-center text-[var(--color-text-secondary)] py-8 text-sm">
           No hay partidos disponibles.
         </p>
       ) : (

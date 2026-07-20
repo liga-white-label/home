@@ -100,7 +100,7 @@ const FixtureCopaPage: React.FC<FixtureCopaPageProps> = ({
   return (
     <>
       <div className="flex flex-col gap-2 mb-5">
-        <label className="text-xs font-semibold uppercase tracking-widest text-gray-400">
+        <label className="text-xs font-semibold uppercase tracking-widest text-[var(--color-text-secondary)]">
           Fecha
         </label>
         <div className="flex gap-2 flex-wrap">
@@ -110,10 +110,10 @@ const FixtureCopaPage: React.FC<FixtureCopaPageProps> = ({
               onClick={() => setSelectedFecha(date)}
               className="px-3 py-1.5 rounded text-sm font-medium transition-colors"
               style={{
-                backgroundColor: selectedFecha === date ? "var(--color-primary)" : "#1a1a1a",
-                color: selectedFecha === date ? "white" : "#9ca3af",
+                backgroundColor: selectedFecha === date ? "var(--color-primary)" : "var(--color-surface)",
+                color: selectedFecha === date ? "white" : "var(--color-text-secondary)",
                 border: "1px solid",
-                borderColor: selectedFecha === date ? "var(--color-primary)" : "#2a2a2a",
+                borderColor: selectedFecha === date ? "var(--color-primary)" : "var(--color-border)",
               }}
             >
               {date}
@@ -129,13 +129,13 @@ const FixtureCopaPage: React.FC<FixtureCopaPageProps> = ({
               display: "flex",
               width: "100%",
               padding: "0.5rem 1rem",
-              backgroundColor: "#1a1a1a",
+              backgroundColor: "var(--color-surface)",
               alignItems: "center",
               justifyContent: "center",
               marginBottom: "1px",
             }}
           >
-            <span style={{ color: "white", fontWeight: "bold", fontSize: "1rem" }}>
+            <span style={{ color: "var(--color-text)", fontWeight: "bold", fontSize: "1rem" }}>
               {`${fromCategoria ? "" : "Grupo"} ${grupo.name}`}
             </span>
           </div>

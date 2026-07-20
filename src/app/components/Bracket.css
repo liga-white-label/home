@@ -5,7 +5,7 @@
     align-items: center;
     width: 100vw;
     height: 100vh;
-    background-color: #2b2b2b;
+    background-color: var(--color-surface);
   }
   
   .column {
@@ -30,7 +30,7 @@
     height: 50px;
     margin: 20px 0;
     color: white;
-    background-color: #3a3a3a;
+    background-color: var(--color-border);
   }
   
   .final {
@@ -44,7 +44,7 @@
     border: 2px solid gold;
     width: 200px;
     height: 75px;
-    background-color: #4a4a4a;
+    background-color: var(--color-surface-hover);
     font-weight: bold;
     font-size: 18px;
   }

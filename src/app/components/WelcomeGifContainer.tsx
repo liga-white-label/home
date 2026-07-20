@@ -7,7 +7,7 @@ export const WelcomeGifContainer = () => {
   if (!heroVideoPath) return null;
 
   return (
-    <div className="flex flex-col items-center h-[100svh] bg-black relative">
+    <div className="flex flex-col items-center h-[100svh] bg-[var(--color-bg)] relative">
       <video
         className="w-full h-screen object-cover"
         autoPlay
@@ -20,7 +20,7 @@ export const WelcomeGifContainer = () => {
         Tu navegador no soporta la etiqueta de video.
       </video>
       <div className="absolute bottom-4 animate-bounce">
-        <ArrowDropDown className="text-white h-10 w-10" />
+        <ArrowDropDown className="text-[var(--color-text)] h-10 w-10" />
       </div>
     </div>
   );

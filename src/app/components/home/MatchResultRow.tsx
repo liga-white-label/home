@@ -10,15 +10,15 @@ export const resolveLogoUrl = (url: string | null): string => {
 
 const TeamAvatar = ({ name, logo }: { name: string | null; logo: string | null }) => (
   <div
-    className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden"
-    style={{ backgroundColor: "#2a2a2a" }}
+    className="w-8 h-8 rounded flex items-center justify-center flex-shrink-0 overflow-hidden p-1"
+    style={{ backgroundColor: "#FFFFFF" }}
   >
     <Image
       src={resolveLogoUrl(logo)}
       alt={name || ""}
-      width={28}
-      height={28}
-      className="object-contain w-7 h-7"
+      width={24}
+      height={24}
+      className="object-contain w-6 h-6"
     />
   </div>
 );
@@ -48,9 +48,9 @@ const ScoreBox = ({ match }: { match: SimplifiedMatch }) => {
     return (
       <div
         className="flex items-center justify-center px-3 py-1.5 rounded min-w-[64px]"
-        style={{ backgroundColor: "#222" }}
+        style={{ backgroundColor: "var(--color-surface-hover)" }}
       >
-        <span className="text-white font-bold text-sm">
+        <span className="text-[var(--color-text)] font-bold text-sm">
           {match.homeTeamGoals ?? 0} - {match.awayTeamGoals ?? 0}
         </span>
       </div>
@@ -60,12 +60,12 @@ const ScoreBox = ({ match }: { match: SimplifiedMatch }) => {
   return (
     <div
       className="flex flex-col items-center justify-center px-3 py-1 rounded min-w-[64px]"
-      style={{ backgroundColor: "#222" }}
+      style={{ backgroundColor: "var(--color-surface-hover)" }}
     >
-      <span className="text-gray-300 font-medium text-sm leading-tight">
+      <span className="text-[var(--color-text)] font-medium text-sm leading-tight">
         {hasTime ? moment(match.date).format("HH:mm") : "-"}
       </span>
-      <span className="text-gray-500 text-[10px] uppercase tracking-wider">vs</span>
+      <span className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-wider">vs</span>
     </div>
   );
 };
@@ -82,8 +82,8 @@ const MatchResultRow = ({
   return (
     <div
       className={`flex items-center justify-between gap-3 py-3 px-4 transition-colors ${onClick ? "cursor-pointer" : ""}`}
-      style={{ borderBottom: "1px solid #1a1a1a" }}
-      onMouseEnter={(e) => onClick && (e.currentTarget.style.backgroundColor = "#1a1a1a")}
+      style={{ borderBottom: "1px solid var(--color-surface)" }}
+      onMouseEnter={(e) => onClick && (e.currentTarget.style.backgroundColor = "var(--color-surface)")}
       onMouseLeave={(e) => onClick && (e.currentTarget.style.backgroundColor = "transparent")}
       onClick={onClick}
     >
@@ -91,7 +91,7 @@ const MatchResultRow = ({
       <div className="flex items-center gap-2 flex-1 justify-end min-w-0">
         <span
           className={`text-sm text-right truncate uppercase ${
-            isPlayed ? "text-white font-semibold" : "text-gray-400"
+            isPlayed ? "text-[var(--color-text)] font-semibold" : "text-[var(--color-text-secondary)]"
           }`}
         >
           {match.homeTeamName}
@@ -109,7 +109,7 @@ const MatchResultRow = ({
         <TeamAvatar name={match.awayTeamName} logo={match.awayTeamLogo} />
         <span
           className={`text-sm truncate uppercase ${
-            isPlayed ? "text-white font-semibold" : "text-gray-400"
+            isPlayed ? "text-[var(--color-text)] font-semibold" : "text-[var(--color-text-secondary)]"
           }`}
         >
           {match.awayTeamName}

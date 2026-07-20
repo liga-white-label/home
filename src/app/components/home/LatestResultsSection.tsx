@@ -36,8 +36,8 @@ const LatestResultsSection = ({ liga, cups }: LatestResultsSectionProps) => {
   const selectedTab = tabs.find((t) => t.id === selectedId) ?? tabs[0];
 
   return (
-    <section className="w-full px-4 md:px-10 py-8" style={{ backgroundColor: "#0a0a0a" }}>
-      <h2 className="text-white text-lg font-bold mb-5 tracking-widest uppercase">
+    <section className="w-full px-4 md:px-10 py-8" style={{ backgroundColor: "var(--color-bg)" }}>
+      <h2 className="text-[var(--color-text)] text-lg font-bold mb-5 tracking-widest uppercase">
         Fecha Actual
       </h2>
 
@@ -51,10 +51,10 @@ const LatestResultsSection = ({ liga, cups }: LatestResultsSectionProps) => {
               onClick={() => setSelectedId(tab.id)}
               className="whitespace-nowrap px-4 py-2 rounded text-sm font-medium transition-colors flex-shrink-0"
               style={{
-                backgroundColor: isSelected ? "white" : "#1a1a1a",
-                color: isSelected ? "#0a0a0a" : "#9ca3af",
+                backgroundColor: isSelected ? "var(--color-primary)" : "var(--color-surface)",
+                color: isSelected ? "white" : "var(--color-text-secondary)",
                 border: "1px solid",
-                borderColor: isSelected ? "white" : "#2a2a2a",
+                borderColor: isSelected ? "var(--color-primary)" : "var(--color-border)",
                 fontWeight: isSelected ? 700 : 500,
               }}
             >
@@ -65,7 +65,7 @@ const LatestResultsSection = ({ liga, cups }: LatestResultsSectionProps) => {
       </div>
 
       {/* Content panel */}
-      <div className="rounded-lg overflow-hidden" style={{ backgroundColor: "#111" }}>
+      <div className="rounded-lg overflow-hidden" style={{ backgroundColor: "var(--color-surface-2)" }}>
         {selectedTab.kind === "category" && (
           <CategoryLatestMatches
             key={selectedTab.id}

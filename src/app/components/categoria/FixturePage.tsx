@@ -84,10 +84,10 @@ const FixtureContent: React.FC<FixtureContentProps> = ({
   const fechas = Array.from({ length: totalFechas }, (_, i) => i + 1);
 
   const fechaButtonStyle = (item: number) => ({
-    backgroundColor: selectedFecha === item ? "var(--color-primary)" : "#1a1a1a",
-    color: selectedFecha === item ? "white" : "#9ca3af",
+    backgroundColor: selectedFecha === item ? "var(--color-primary)" : "var(--color-surface)",
+    color: selectedFecha === item ? "white" : "var(--color-text-secondary)",
     border: "1px solid",
-    borderColor: selectedFecha === item ? "var(--color-primary)" : "#2a2a2a",
+    borderColor: selectedFecha === item ? "var(--color-primary)" : "var(--color-border)",
   });
 
   return (
@@ -95,15 +95,15 @@ const FixtureContent: React.FC<FixtureContentProps> = ({
       <div className="flex flex-col h-full w-full gap-5">
         {/* Fecha selector */}
         <div className="flex flex-col gap-2">
-          <label className="text-xs font-semibold uppercase tracking-widest text-gray-400">
+          <label className="text-xs font-semibold uppercase tracking-widest text-[var(--color-text-secondary)]">
             Fecha
           </label>
-          <div className="flex gap-2 flex-wrap items-center">
+          <div className="flex gap-2 items-center overflow-x-auto pb-1 -mx-1 px-1">
             {fechas.map((item) => (
               <button
                 key={item}
                 onClick={() => setSelectedFecha(item)}
-                className="px-3 py-1.5 rounded text-sm font-medium transition-colors"
+                className="px-3 py-1.5 rounded text-sm font-medium transition-colors flex-shrink-0"
                 style={fechaButtonStyle(item)}
               >
                 {item}

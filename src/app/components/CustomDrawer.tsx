@@ -76,10 +76,10 @@ export const CustomDrawer = () => {
       anchor="right"
       PaperProps={{
         style: {
-          backgroundColor: "#111",
+          backgroundColor: "var(--color-surface-2)",
           width: 280,
           paddingTop: 64,
-          borderLeft: "1px solid #1f1f1f",
+          borderLeft: "1px solid var(--color-border)",
         },
       }}
     >
@@ -93,7 +93,7 @@ export const CustomDrawer = () => {
           <Link
             href="/"
             onClick={handleClose}
-            className="px-6 py-4 text-base font-medium text-white hover:bg-white/5 transition-colors border-b border-gray-800"
+            className="px-6 py-4 text-base font-medium text-[var(--color-text)] hover:bg-white/5 transition-colors border-b border-gray-800"
           >
             Inicio
           </Link>
@@ -103,18 +103,18 @@ export const CustomDrawer = () => {
             <div className="border-b border-gray-800">
               <button
                 onClick={() => setCatOpen((v) => !v)}
-                className="w-full flex items-center justify-between px-6 py-4 text-base font-medium text-white hover:bg-white/5 transition-colors"
+                className="w-full flex items-center justify-between px-6 py-4 text-base font-medium text-[var(--color-text)] hover:bg-white/5 transition-colors"
               >
                 Categorías
                 <ChevronDown open={catOpen} />
               </button>
               {catOpen && (
-                <div className="pb-2" style={{ backgroundColor: "#0e0e0e" }}>
+                <div className="pb-2" style={{ backgroundColor: "var(--color-surface-2)" }}>
                   {seasonPair.isPartOfSeason ? (
                     <>
                       {seasonPair.apertura && (
                         <>
-                          <p className="px-6 pt-3 pb-1 text-xs font-bold uppercase tracking-widest text-gray-500">
+                          <p className="px-6 pt-3 pb-1 text-xs font-bold uppercase tracking-widest text-[var(--color-text-secondary)]">
                             {SEASON_LABEL[SeasonEnum.APERTURA]}
                           </p>
                           {renderLigaGroup(seasonPair.apertura)}
@@ -123,7 +123,7 @@ export const CustomDrawer = () => {
                       {seasonPair.clausura && (
                         <>
                           <div className="mx-6 my-2 h-px bg-gray-800" />
-                          <p className="px-6 pt-1 pb-1 text-xs font-bold uppercase tracking-widest text-gray-500">
+                          <p className="px-6 pt-1 pb-1 text-xs font-bold uppercase tracking-widest text-[var(--color-text-secondary)]">
                             {SEASON_LABEL[SeasonEnum.CLAUSURA]}
                           </p>
                           {renderLigaGroup(seasonPair.clausura)}
@@ -134,7 +134,7 @@ export const CustomDrawer = () => {
                     <>
                       {masculinas.length > 0 && (
                         <>
-                          <p className="px-6 pt-3 pb-1 text-xs font-bold uppercase tracking-widest text-gray-500">
+                          <p className="px-6 pt-3 pb-1 text-xs font-bold uppercase tracking-widest text-[var(--color-text-secondary)]">
                             Masculino
                           </p>
                           {ligaActual && renderCategoryLinks(ligaActual, masculinas)}
@@ -145,7 +145,7 @@ export const CustomDrawer = () => {
                           {masculinas.length > 0 && (
                             <div className="mx-6 my-2 h-px bg-gray-800" />
                           )}
-                          <p className="px-6 pt-1 pb-1 text-xs font-bold uppercase tracking-widest text-gray-500">
+                          <p className="px-6 pt-1 pb-1 text-xs font-bold uppercase tracking-widest text-[var(--color-text-secondary)]">
                             Femenino
                           </p>
                           {ligaActual && renderCategoryLinks(ligaActual, femeninas)}
@@ -162,13 +162,13 @@ export const CustomDrawer = () => {
           <div className="border-b border-gray-800">
             <button
               onClick={() => setTorneosOpen((v) => !v)}
-              className="w-full flex items-center justify-between px-6 py-4 text-base font-medium text-white hover:bg-white/5 transition-colors"
+              className="w-full flex items-center justify-between px-6 py-4 text-base font-medium text-[var(--color-text)] hover:bg-white/5 transition-colors"
             >
               Torneos
               <ChevronDown open={torneosOpen} />
             </button>
             {torneosOpen && (
-              <div className="pb-2" style={{ backgroundColor: "#0e0e0e" }}>
+              <div className="pb-2" style={{ backgroundColor: "var(--color-surface-2)" }}>
                 {torneosActivos.length > 0 ? (
                   torneosActivos.map((t) => (
                     <Link
@@ -181,7 +181,7 @@ export const CustomDrawer = () => {
                     </Link>
                   ))
                 ) : (
-                  <p className="px-6 py-3 text-sm text-gray-500">No hay torneos</p>
+                  <p className="px-6 py-3 text-sm text-[var(--color-text-secondary)]">No hay torneos</p>
                 )}
               </div>
             )}
@@ -191,13 +191,13 @@ export const CustomDrawer = () => {
           <div className="border-b border-gray-800">
             <button
               onClick={() => setCopaOpen((v) => !v)}
-              className="w-full flex items-center justify-between px-6 py-4 text-base font-medium text-white hover:bg-white/5 transition-colors"
+              className="w-full flex items-center justify-between px-6 py-4 text-base font-medium text-[var(--color-text)] hover:bg-white/5 transition-colors"
             >
               Copas
               <ChevronDown open={copaOpen} />
             </button>
             {copaOpen && (
-              <div className="pb-2" style={{ backgroundColor: "#0e0e0e" }}>
+              <div className="pb-2" style={{ backgroundColor: "var(--color-surface-2)" }}>
                 {copasActivas.length > 0 ? (
                   copasActivas.map((c) => (
                     <Link
@@ -210,7 +210,7 @@ export const CustomDrawer = () => {
                     </Link>
                   ))
                 ) : (
-                  <p className="px-6 py-3 text-sm text-gray-500">No hay copas</p>
+                  <p className="px-6 py-3 text-sm text-[var(--color-text-secondary)]">No hay copas</p>
                 )}
               </div>
             )}
@@ -220,7 +220,7 @@ export const CustomDrawer = () => {
           <Link
             href="/novedades"
             onClick={handleClose}
-            className="px-6 py-4 text-base font-medium text-white hover:bg-white/5 transition-colors border-b border-gray-800"
+            className="px-6 py-4 text-base font-medium text-[var(--color-text)] hover:bg-white/5 transition-colors border-b border-gray-800"
           >
             Novedades
           </Link>

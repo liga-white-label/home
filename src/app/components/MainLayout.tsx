@@ -1,7 +1,9 @@
+"use client";
 import "../globals.css";
 import { NavBar } from "./NavBar";
 import { Footer } from "./Footer";
 import { CustomDrawer } from "./CustomDrawer";
+import { useThemeMode } from "@/app/context/ThemeModeContext";
 
 export const MainLayout = ({
   children,
@@ -14,9 +16,12 @@ export const MainLayout = ({
   secondaryColor: string;
   gradientColor: string;
 }>) => {
+  const { mode } = useThemeMode();
+
   return (
     <html
       lang="en"
+      data-theme={mode}
       style={{
         ["--color-primary" as string]: primaryColor,
         ["--color-secondary" as string]: secondaryColor,

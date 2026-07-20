@@ -35,7 +35,7 @@ export const EstadisticasPage: React.FC<EstadisticasPageProps> = ({
   return (
     <div className="flex flex-col h-full w-full gap-5">
       <div className="flex flex-col gap-2">
-        <label className="text-xs font-semibold uppercase tracking-widest text-gray-400">
+        <label className="text-xs font-semibold uppercase tracking-widest text-[var(--color-text-secondary)]">
           Tipo de estadística
         </label>
         <div className="flex gap-2">
@@ -46,11 +46,11 @@ export const EstadisticasPage: React.FC<EstadisticasPageProps> = ({
               className="px-4 py-2 rounded text-sm font-medium transition-colors"
               style={{
                 backgroundColor:
-                  selectedOption === opt.value ? "var(--color-primary)" : "#1a1a1a",
-                color: selectedOption === opt.value ? "white" : "#9ca3af",
+                  selectedOption === opt.value ? "var(--color-primary)" : "var(--color-surface)",
+                color: selectedOption === opt.value ? "white" : "var(--color-text-secondary)",
                 border: "1px solid",
                 borderColor:
-                  selectedOption === opt.value ? "var(--color-primary)" : "#2a2a2a",
+                  selectedOption === opt.value ? "var(--color-primary)" : "var(--color-border)",
               }}
             >
               {opt.label}

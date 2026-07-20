@@ -21,14 +21,14 @@ export const NextTeamInfo: FC<NextTeamInfoProps> = ({ data }) => {
   const open = Boolean(anchorEl);
 
   if (!data.nextTeam) {
-    return <span className="text-gray-600 text-sm">—</span>;
+    return <span className="text-[var(--color-text-secondary)] text-sm">—</span>;
   }
 
   return (
     <>
       <div
-        className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white cursor-pointer hover:opacity-80 transition-opacity"
-        style={{ backgroundColor: "#2a2a2a" }}
+        className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-[var(--color-text)] cursor-pointer hover:opacity-80 transition-opacity"
+        style={{ backgroundColor: "var(--color-surface-hover)" }}
         aria-owns={open ? "next-team-popover" : undefined}
         aria-haspopup="true"
         onMouseEnter={handlePopoverOpen}
@@ -48,18 +48,18 @@ export const NextTeamInfo: FC<NextTeamInfoProps> = ({ data }) => {
       >
         <div
           className="flex flex-col items-center justify-center p-4 gap-3"
-          style={{ backgroundColor: "#1a1a1a" }}
+          style={{ backgroundColor: "var(--color-surface)" }}
         >
-          <p className="text-xs text-gray-400 uppercase tracking-wider">Próximo partido</p>
+          <p className="text-xs text-[var(--color-text-secondary)] uppercase tracking-wider">Próximo partido</p>
           <div className="flex gap-6 items-center justify-center">
             <div className="flex flex-col items-center gap-1">
               <Image src={data.escudo} alt={data.nombreEquipo} height={32} width={48} className="object-contain" />
-              <span className="text-xs text-white mt-1">{data.nombreEquipo}</span>
+              <span className="text-xs text-[var(--color-text)] mt-1">{data.nombreEquipo}</span>
             </div>
-            <span className="text-gray-400 text-sm font-bold">VS</span>
+            <span className="text-[var(--color-text-secondary)] text-sm font-bold">VS</span>
             <div className="flex flex-col items-center gap-1">
               <Image src={data.nextTeam} alt={data.nombreEquipoRival} height={32} width={48} className="object-contain" />
-              <span className="text-xs text-white mt-1">{data.nombreEquipoRival}</span>
+              <span className="text-xs text-[var(--color-text)] mt-1">{data.nombreEquipoRival}</span>
             </div>
           </div>
         </div>

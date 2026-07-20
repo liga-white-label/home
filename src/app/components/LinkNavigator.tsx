@@ -36,10 +36,10 @@ const dropdownStyle: React.CSSProperties = {
   top: "calc(100% + 12px)",
   right: 0,
   minWidth: 240,
-  backgroundColor: "#1c1c1c",
+  backgroundColor: "var(--color-surface)",
   borderRadius: 10,
   boxShadow: "0 8px 32px rgba(0,0,0,0.6)",
-  border: "1px solid #2a2a2a",
+  border: "1px solid var(--color-border)",
   zIndex: 100,
   overflow: "hidden",
 };
@@ -48,7 +48,7 @@ const sectionLabelStyle: React.CSSProperties = {
   fontSize: 11,
   fontWeight: 700,
   letterSpacing: "0.12em",
-  color: "#6b7280",
+  color: "var(--color-text-secondary)",
   textTransform: "uppercase",
   padding: "12px 20px 6px",
 };
@@ -60,7 +60,7 @@ const itemStyle: React.CSSProperties = {
   padding: "10px 20px",
   fontSize: 15,
   fontWeight: 500,
-  color: "#e5e7eb",
+  color: "var(--color-text)",
   background: "none",
   border: "none",
   cursor: "pointer",
@@ -95,7 +95,7 @@ export const LinkNavigator = () => {
   const femeninas = categorias.filter((c) => c.gender === "female");
 
   const navLinkClass = (active: boolean) =>
-    `text-base font-semibold transition-colors relative pb-0.5 ${active ? "text-white" : "text-gray-400 hover:text-white"
+    `text-base font-semibold transition-colors relative pb-0.5 ${active ? "text-[var(--color-text)]" : "text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
     }`;
 
   // El link activo se compara por id real de la URL, no por substring. Como
@@ -116,7 +116,7 @@ export const LinkNavigator = () => {
       <button
         key={c.id}
         style={itemStyle}
-        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#2a2a2a")}
+        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--color-surface-hover)")}
         onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
         onClick={() => closeAndPush(`/campeonatos/${liga.id}/categorias/${c.id}`)}
       >
@@ -180,7 +180,7 @@ export const LinkNavigator = () => {
                   )}
                   {seasonPair.clausura && (
                     <>
-                      <div style={{ height: 1, backgroundColor: "#2a2a2a", margin: "4px 0" }} />
+                      <div style={{ height: 1, backgroundColor: "var(--color-border)", margin: "4px 0" }} />
                       <p style={sectionLabelStyle}>{SEASON_LABEL[SeasonEnum.CLAUSURA]}</p>
                       {renderLigaGroup(seasonPair.clausura)}
                     </>
@@ -197,7 +197,7 @@ export const LinkNavigator = () => {
                   {femeninas.length > 0 && (
                     <>
                       {masculinas.length > 0 && (
-                        <div style={{ height: 1, backgroundColor: "#2a2a2a", margin: "4px 0" }} />
+                        <div style={{ height: 1, backgroundColor: "var(--color-border)", margin: "4px 0" }} />
                       )}
                       <p style={sectionLabelStyle}>Femenino</p>
                       {ligaActual && renderCategoryButtons(ligaActual, femeninas)}
@@ -236,7 +236,7 @@ export const LinkNavigator = () => {
                 <button
                   key={t.id}
                   style={itemStyle}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#2a2a2a")}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--color-surface-hover)")}
                   onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
                   onClick={() => {
                     torneosDropdown.setOpen(false);
@@ -247,7 +247,7 @@ export const LinkNavigator = () => {
                 </button>
               ))
             ) : (
-              <p style={{ ...itemStyle, color: "#6b7280", cursor: "default" }}>
+              <p style={{ ...itemStyle, color: "var(--color-text-secondary)", cursor: "default" }}>
                 No hay torneos
               </p>
             )}
@@ -281,7 +281,7 @@ export const LinkNavigator = () => {
                 <button
                   key={c.id}
                   style={itemStyle}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#2a2a2a")}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--color-surface-hover)")}
                   onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
                   onClick={() => {
                     copaDropdown.setOpen(false);
@@ -292,7 +292,7 @@ export const LinkNavigator = () => {
                 </button>
               ))
             ) : (
-              <p style={{ ...itemStyle, color: "#6b7280", cursor: "default" }}>
+              <p style={{ ...itemStyle, color: "var(--color-text-secondary)", cursor: "default" }}>
                 No hay copas
               </p>
             )}

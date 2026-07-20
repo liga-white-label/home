@@ -17,13 +17,13 @@ const NovedadesContent = () => {
   const [featured, ...rest] = paginated;
 
   return (
-    <div className="flex flex-col w-full min-h-screen" style={{ backgroundColor: "#0a0a0a" }}>
+    <div className="flex flex-col w-full min-h-screen" style={{ backgroundColor: "var(--color-bg)" }}>
       {/* Masthead */}
       <div
         className="w-full pt-24 pb-8 px-6 md:px-10"
         style={{
           background:
-            "radial-gradient(ellipse at 80% 0%, rgba(var(--color-gradient),0.35) 0%, transparent 60%), #0a0a0a",
+            "radial-gradient(ellipse at 80% 0%, rgba(var(--color-gradient),0.35) 0%, transparent 60%), var(--color-bg)",
         }}
       >
         <p
@@ -32,7 +32,7 @@ const NovedadesContent = () => {
         >
           {tenantConfig.brand.name}
         </p>
-        <h1 className="text-white text-4xl md:text-5xl font-black uppercase tracking-tight leading-none">
+        <h1 className="text-[var(--color-text)] text-4xl md:text-5xl font-black uppercase tracking-tight leading-none">
           Novedades
         </h1>
       </div>
@@ -44,7 +44,7 @@ const NovedadesContent = () => {
             <MiniLoading />
           </div>
         ) : novedades.length === 0 ? (
-          <p className="text-center text-gray-500 py-20">
+          <p className="text-center text-[var(--color-text-secondary)] py-20">
             No hay novedades disponibles.
           </p>
         ) : (
@@ -58,10 +58,10 @@ const NovedadesContent = () => {
             {rest.length > 0 && (
               <>
                 <div className="flex items-center gap-4 mb-5">
-                  <span className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+                  <span className="text-xs font-semibold uppercase tracking-widest text-[var(--color-text-secondary)]">
                     Más noticias
                   </span>
-                  <div className="flex-1 h-px" style={{ backgroundColor: "#1f1f1f" }} />
+                  <div className="flex-1 h-px" style={{ backgroundColor: "var(--color-border)" }} />
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
                   {rest.map((novedad) => (
@@ -82,10 +82,10 @@ const NovedadesContent = () => {
                     }}
                     className="w-9 h-9 rounded text-sm font-medium transition-colors"
                     style={{
-                      backgroundColor: page === p ? "var(--color-primary)" : "#1a1a1a",
-                      color: page === p ? "white" : "#9ca3af",
+                      backgroundColor: page === p ? "var(--color-primary)" : "var(--color-surface)",
+                      color: page === p ? "white" : "var(--color-text-secondary)",
                       border: "1px solid",
-                      borderColor: page === p ? "var(--color-primary)" : "#2a2a2a",
+                      borderColor: page === p ? "var(--color-primary)" : "var(--color-border)",
                     }}
                   >
                     {p}

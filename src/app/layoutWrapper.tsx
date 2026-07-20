@@ -1,6 +1,7 @@
 "use client";
 import { MainLayout } from "./components/MainLayout";
 import { SidebarProvider } from "./context/SideBarContext";
+import { ThemeModeProvider } from "./context/ThemeModeContext";
 import ReactQueryProvider from "./utils/providers/ReactQueryProvider";
 import MuiThemeProvider from "./utils/providers/MuiThemeProvider";
 import { tenantConfig } from "@/config/tenant";
@@ -22,18 +23,20 @@ export default function RootLayoutWrapper({
   }
 
   return (
-    <ReactQueryProvider>
-      <MuiThemeProvider>
-        <SidebarProvider>
-          <MainLayout
-            primaryColor={tenantConfig.brand.primaryColor}
-            secondaryColor={tenantConfig.brand.secondaryColor}
-            gradientColor={tenantConfig.brand.gradientColor}
-          >
-            {children}
-          </MainLayout>
-        </SidebarProvider>
-      </MuiThemeProvider>
-    </ReactQueryProvider>
+    <ThemeModeProvider>
+      <ReactQueryProvider>
+        <MuiThemeProvider>
+          <SidebarProvider>
+            <MainLayout
+              primaryColor={tenantConfig.brand.primaryColor}
+              secondaryColor={tenantConfig.brand.secondaryColor}
+              gradientColor={tenantConfig.brand.gradientColor}
+            >
+              {children}
+            </MainLayout>
+          </SidebarProvider>
+        </MuiThemeProvider>
+      </ReactQueryProvider>
+    </ThemeModeProvider>
   );
 }

@@ -72,7 +72,7 @@ export const TeamBox: React.FC<TeamBoxProps> = ({
           vueltaMatchStatus
         )}
       />
-      <Divider className="bg-white" />
+      <Divider className="bg-[var(--color-border)]" />
       <ResultBox
         team={awayTeam}
         resultIda={resultAwayIda}
@@ -124,7 +124,7 @@ export const InvertedTeamBox: React.FC<TeamBoxProps> = ({
           vueltaMatchStatus
         )}
       />
-      <Divider className="bg-white" />
+      <Divider className="bg-[var(--color-border)]" />
       <InvertedResultBox
         team={awayTeam}
         resultIda={resultAwayIda}
@@ -187,7 +187,7 @@ export const FinalTeamBox: React.FC<{
           vueltaMatchStatus
         )}
       />
-      <Divider className="bg-white" />
+      <Divider className="bg-[var(--color-border)]" />
       <ResultBox
         team={nameAway}
         resultIda={resultAwayIda}

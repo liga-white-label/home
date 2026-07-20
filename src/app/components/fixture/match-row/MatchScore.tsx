@@ -21,7 +21,7 @@ export const MatchScore: FC<MatchScoreProps> = ({
 
   return (
     <Box
-      bgcolor={status === MatchStatus.JUGADO ? "black" : "gray"}
+      bgcolor={status === MatchStatus.JUGADO ? "var(--color-bg)" : "gray"}
       px={isSmallDevice ? 1 : 2}
       py={isSmallDevice ? 0.5 : 1}
       borderRadius="4px"
@@ -49,7 +49,7 @@ export const MatchScore: FC<MatchScoreProps> = ({
     >
       <Typography
         variant="body2"
-        color="white"
+        color="var(--color-text)"
         fontWeight="bold"
         textAlign="center"
       >

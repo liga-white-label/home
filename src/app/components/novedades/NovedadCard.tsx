@@ -26,7 +26,7 @@ const NovedadCard: React.FC<NovedadCardProps> = ({ novedad, featured = false }) 
       <Link href={`/novedades/${novedad.id}`} className="block group">
         <article
           className="flex flex-col md:flex-row rounded-xl overflow-hidden w-full transition-opacity group-hover:opacity-90"
-          style={{ backgroundColor: "#1a1a1a" }}
+          style={{ backgroundColor: "var(--color-surface)" }}
         >
           {/* Image */}
           <div className="relative w-full md:w-[42%] aspect-[4/3] md:aspect-auto flex-shrink-0 min-h-[220px]">
@@ -45,21 +45,21 @@ const NovedadCard: React.FC<NovedadCardProps> = ({ novedad, featured = false }) 
           <div className="flex flex-col justify-center gap-4 p-6 md:p-8 flex-1">
             <div className="flex items-center gap-3 flex-wrap">
               {novedad.categoria && <CategoryBadge categoria={novedad.categoria} />}
-              <span className="text-xs text-gray-500 uppercase tracking-wide">
+              <span className="text-xs text-[var(--color-text-secondary)] uppercase tracking-wide">
                 {moment(novedad.fecha).format("D [de] MMMM [de] YYYY")}
               </span>
             </div>
-            <h2 className="text-xl md:text-2xl font-extrabold text-white leading-tight uppercase line-clamp-3">
+            <h2 className="text-xl md:text-2xl font-extrabold text-[var(--color-text)] leading-tight uppercase line-clamp-3">
               {novedad.titulo}
             </h2>
             {novedad.descripcion && (
-              <p className="text-gray-400 text-sm leading-relaxed line-clamp-4">
+              <p className="text-[var(--color-text-secondary)] text-sm leading-relaxed line-clamp-4">
                 {novedad.descripcion}
               </p>
             )}
             <span
               className="text-xs font-semibold uppercase tracking-widest self-start mt-1"
-              style={{ color: "white" }}
+              style={{ color: "var(--color-text)" }}
             >
               Leer más →
             </span>
@@ -73,7 +73,7 @@ const NovedadCard: React.FC<NovedadCardProps> = ({ novedad, featured = false }) 
     <Link href={`/novedades/${novedad.id}`} className="block group h-full">
       <article
         className="flex flex-col rounded-xl overflow-hidden h-full transition-opacity group-hover:opacity-90"
-        style={{ backgroundColor: "#1a1a1a" }}
+        style={{ backgroundColor: "var(--color-surface)" }}
       >
         {/* Image */}
         <div className="relative aspect-[4/3] flex-shrink-0 overflow-hidden">
@@ -95,20 +95,20 @@ const NovedadCard: React.FC<NovedadCardProps> = ({ novedad, featured = false }) 
 
         {/* Content */}
         <div className="flex flex-col gap-2 p-4 flex-1">
-          <span className="text-[11px] text-gray-500 uppercase tracking-wide">
+          <span className="text-[11px] text-[var(--color-text-secondary)] uppercase tracking-wide">
             {moment(novedad.fecha).format("D MMM. YYYY")}
           </span>
-          <h3 className="font-bold text-white text-sm leading-snug line-clamp-2 uppercase">
+          <h3 className="font-bold text-[var(--color-text)] text-sm leading-snug line-clamp-2 uppercase">
             {novedad.titulo}
           </h3>
           {novedad.descripcion && (
-            <p className="text-xs text-gray-400 leading-relaxed line-clamp-3 flex-1">
+            <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed line-clamp-3 flex-1">
               {novedad.descripcion}
             </p>
           )}
           <span
             className="text-[10px] font-semibold uppercase tracking-widest mt-auto pt-1"
-            style={{ color: "white" }}
+            style={{ color: "var(--color-text)" }}
           >
             Leer más →
           </span>
