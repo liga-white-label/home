@@ -2,6 +2,7 @@
 import { WelcomeGifContainer } from "./WelcomeGifContainer";
 import EmblaCarousel from "./carousel/EmblaCarousel";
 import MiniLoading from "./loading/MiniLoading";
+import ErrorPage from "./ErrorPage";
 import { tenantConfig } from "@/config/tenant";
 import LatestResultsSection from "./home/LatestResultsSection";
 import NewsCarousel from "./home/NewsCarousel";
@@ -12,6 +13,7 @@ import { useActiveCampeonatos } from "@/app/hooks/useActiveCampeonatos";
 const HomeContent = () => {
   const {
     isLoading,
+    isError,
     ligaActual,
     categorias,
     isLiga,
@@ -51,6 +53,10 @@ const HomeContent = () => {
         <MiniLoading />
       </div>
     );
+  }
+
+  if (isError) {
+    return <ErrorPage />;
   }
 
   return (

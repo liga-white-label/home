@@ -37,7 +37,7 @@ const ImageArea: React.FC<{ novedad: Novedad }> = ({
                 src={novedad.imagen}
                 fill
                 alt={novedad.titulo}
-                className="object-cover"
+                className="object-cover transition-transform duration-300 group-hover:scale-105"
                 onError={(e) => {
                     (e.currentTarget as HTMLImageElement).style.display = "none";
                 }}
@@ -60,7 +60,7 @@ const NovedadCardHome: React.FC<NovedadCardHomeProps> = ({ novedad, compact = fa
     return (
         <Link href={`/novedades/${novedad.id}`} className="block group h-full">
         <article
-            className="group flex flex-col rounded-xl overflow-hidden h-full transition-colors"
+            className="group flex flex-col rounded-xl overflow-hidden h-full transition-opacity group-hover:opacity-90"
             style={{ backgroundColor: "var(--color-surface)" }}
         >
             {/* Image */}

@@ -2,9 +2,10 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import MiniLoading from "./loading/MiniLoading";
 import { Categoria } from "@/app/models/Categoria";
-import { Liga, SeasonEnum } from "@/app/models/Campeonato";
+import { Campeonato, Liga, SeasonEnum } from "@/app/models/Campeonato";
 import { SEASON_LABEL } from "@/app/utils/seasonLabels";
 import { useActiveCampeonatos } from "@/app/hooks/useActiveCampeonatos";
 
@@ -63,6 +64,7 @@ const itemStyle: React.CSSProperties = {
   color: "var(--color-text)",
   background: "none",
   border: "none",
+  borderLeft: "3px solid transparent",
   cursor: "pointer",
 };
 
@@ -76,6 +78,7 @@ export const LinkNavigator = () => {
     categorias,
     copasActivas,
     torneosActivos,
+    torneosGrupos,
     seasonPair,
   } = useActiveCampeonatos();
 
@@ -106,23 +109,42 @@ export const LinkNavigator = () => {
   const isViewingTorneo =
     !!rootId && torneosActivos.some((t) => t.id === rootId);
 
+  const categoriaMatch = path.match(
+    /^\/campeonatos\/([^/]+)\/categorias\/([^/]+)\/?$/
+  );
+  const activeCategoriaLigaId = categoriaMatch?.[1];
+  const activeCategoriaId = categoriaMatch?.[2];
+
   const closeAndPush = (href: string) => {
     catDropdown.setOpen(false);
     router.push(href);
   };
 
   const renderCategoryButtons = (liga: Liga, cats: Categoria[]) =>
-    cats.map((c) => (
-      <button
-        key={c.id}
-        style={itemStyle}
-        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--color-surface-hover)")}
-        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
-        onClick={() => closeAndPush(`/campeonatos/${liga.id}/categorias/${c.id}`)}
-      >
-        {`Cat ${c.name} — ${c.gender === "male" ? "Masculina" : "Femenina"}`}
-      </button>
-    ));
+    cats.map((c) => {
+      const active =
+        liga.id === activeCategoriaLigaId && c.id === activeCategoriaId;
+      return (
+        <button
+          key={c.id}
+          style={{
+            ...itemStyle,
+            borderLeftColor: active ? "var(--color-primary)" : "transparent",
+            backgroundColor: active ? "var(--color-surface-hover)" : "transparent",
+            fontWeight: active ? 700 : itemStyle.fontWeight,
+          }}
+          onMouseEnter={(e) => {
+            if (!active) e.currentTarget.style.backgroundColor = "var(--color-surface-hover)";
+          }}
+          onMouseLeave={(e) => {
+            if (!active) e.currentTarget.style.backgroundColor = "transparent";
+          }}
+          onClick={() => closeAndPush(`/campeonatos/${liga.id}/categorias/${c.id}`)}
+        >
+          {`Cat ${c.name} — ${c.gender === "male" ? "Masculina" : "Femenina"}`}
+        </button>
+      );
+    });
 
   const renderLigaGroup = (liga: Liga) => {
     const masc = liga.categories.filter((c) => c.gender === "male");
@@ -132,6 +154,60 @@ export const LinkNavigator = () => {
         {masc.length > 0 && renderCategoryButtons(liga, masc)}
         {fem.length > 0 && renderCategoryButtons(liga, fem)}
       </>
+    );
+  };
+
+  const renderCopaButton = (c: Campeonato) => {
+    const active = c.id === rootId;
+    return (
+      <button
+        key={c.id}
+        style={{
+          ...itemStyle,
+          borderLeftColor: active ? "var(--color-primary)" : "transparent",
+          backgroundColor: active ? "var(--color-surface-hover)" : "transparent",
+          fontWeight: active ? 700 : itemStyle.fontWeight,
+        }}
+        onMouseEnter={(e) => {
+          if (!active) e.currentTarget.style.backgroundColor = "var(--color-surface-hover)";
+        }}
+        onMouseLeave={(e) => {
+          if (!active) e.currentTarget.style.backgroundColor = "transparent";
+        }}
+        onClick={() => {
+          copaDropdown.setOpen(false);
+          router.push(`/campeonatos/${c.id}`);
+        }}
+      >
+        {c.name}
+      </button>
+    );
+  };
+
+  const renderTorneoButton = (t: Campeonato) => {
+    const active = t.id === rootId;
+    return (
+      <button
+        key={t.id}
+        style={{
+          ...itemStyle,
+          borderLeftColor: active ? "var(--color-primary)" : "transparent",
+          backgroundColor: active ? "var(--color-surface-hover)" : "transparent",
+          fontWeight: active ? 700 : itemStyle.fontWeight,
+        }}
+        onMouseEnter={(e) => {
+          if (!active) e.currentTarget.style.backgroundColor = "var(--color-surface-hover)";
+        }}
+        onMouseLeave={(e) => {
+          if (!active) e.currentTarget.style.backgroundColor = "transparent";
+        }}
+        onClick={() => {
+          torneosDropdown.setOpen(false);
+          router.push(`/campeonatos/${t.id}`);
+        }}
+      >
+        {t.name}
+      </button>
     );
   };
 
@@ -168,45 +244,54 @@ export const LinkNavigator = () => {
             )}
           </button>
 
-          {catDropdown.open && (
-            <div style={dropdownStyle}>
-              {seasonPair.isPartOfSeason ? (
-                <>
-                  {seasonPair.apertura && (
-                    <>
-                      <p style={sectionLabelStyle}>{SEASON_LABEL[SeasonEnum.APERTURA]}</p>
-                      {renderLigaGroup(seasonPair.apertura)}
-                    </>
-                  )}
-                  {seasonPair.clausura && (
-                    <>
-                      <div style={{ height: 1, backgroundColor: "var(--color-border)", margin: "4px 0" }} />
-                      <p style={sectionLabelStyle}>{SEASON_LABEL[SeasonEnum.CLAUSURA]}</p>
-                      {renderLigaGroup(seasonPair.clausura)}
-                    </>
-                  )}
-                </>
-              ) : (
-                <>
-                  {masculinas.length > 0 && (
-                    <>
-                      <p style={sectionLabelStyle}>Masculino</p>
-                      {ligaActual && renderCategoryButtons(ligaActual, masculinas)}
-                    </>
-                  )}
-                  {femeninas.length > 0 && (
-                    <>
-                      {masculinas.length > 0 && (
+          <AnimatePresence>
+            {catDropdown.open && (
+              <motion.div
+                key="categorias-dropdown"
+                style={dropdownStyle}
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.15, ease: "easeOut" }}
+              >
+                {seasonPair.isPartOfSeason ? (
+                  <>
+                    {seasonPair.apertura && (
+                      <>
+                        <p style={sectionLabelStyle}>{SEASON_LABEL[SeasonEnum.APERTURA]}</p>
+                        {renderLigaGroup(seasonPair.apertura)}
+                      </>
+                    )}
+                    {seasonPair.clausura && (
+                      <>
                         <div style={{ height: 1, backgroundColor: "var(--color-border)", margin: "4px 0" }} />
-                      )}
-                      <p style={sectionLabelStyle}>Femenino</p>
-                      {ligaActual && renderCategoryButtons(ligaActual, femeninas)}
-                    </>
-                  )}
-                </>
-              )}
-            </div>
-          )}
+                        <p style={sectionLabelStyle}>{SEASON_LABEL[SeasonEnum.CLAUSURA]}</p>
+                        {renderLigaGroup(seasonPair.clausura)}
+                      </>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {masculinas.length > 0 && (
+                      <>
+                        <p style={sectionLabelStyle}>Masculino</p>
+                        {ligaActual && renderCategoryButtons(ligaActual, masculinas)}
+                      </>
+                    )}
+                    {femeninas.length > 0 && (
+                      <>
+                        {masculinas.length > 0 && (
+                          <div style={{ height: 1, backgroundColor: "var(--color-border)", margin: "4px 0" }} />
+                        )}
+                        <p style={sectionLabelStyle}>Femenino</p>
+                        {ligaActual && renderCategoryButtons(ligaActual, femeninas)}
+                      </>
+                    )}
+                  </>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       )}
 
@@ -229,30 +314,34 @@ export const LinkNavigator = () => {
           )}
         </button>
 
-        {torneosDropdown.open && (
-          <div style={dropdownStyle}>
-            {torneosActivos.length > 0 ? (
-              torneosActivos.map((t) => (
-                <button
-                  key={t.id}
-                  style={itemStyle}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--color-surface-hover)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
-                  onClick={() => {
-                    torneosDropdown.setOpen(false);
-                    router.push(`/campeonatos/${t.id}`);
-                  }}
-                >
-                  {t.name}
-                </button>
-              ))
-            ) : (
-              <p style={{ ...itemStyle, color: "var(--color-text-secondary)", cursor: "default" }}>
-                No hay torneos
-              </p>
-            )}
-          </div>
-        )}
+        <AnimatePresence>
+          {torneosDropdown.open && (
+            <motion.div
+              key="torneos-dropdown"
+              style={dropdownStyle}
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.15, ease: "easeOut" }}
+            >
+              {torneosGrupos.length > 0 ? (
+                torneosGrupos.map((grupo, i) => (
+                  <div key={grupo.label ?? `otros-${i}`}>
+                    {i > 0 && (
+                      <div style={{ height: 1, backgroundColor: "var(--color-border)", margin: "4px 0" }} />
+                    )}
+                    {grupo.label && <p style={sectionLabelStyle}>{grupo.label}</p>}
+                    {grupo.items.map(renderTorneoButton)}
+                  </div>
+                ))
+              ) : (
+                <p style={{ ...itemStyle, color: "var(--color-text-secondary)", cursor: "default" }}>
+                  No hay torneos
+                </p>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Copas dropdown */}
@@ -274,30 +363,26 @@ export const LinkNavigator = () => {
           )}
         </button>
 
-        {copaDropdown.open && (
-          <div style={dropdownStyle}>
-            {copasActivas.length > 0 ? (
-              copasActivas.map((c) => (
-                <button
-                  key={c.id}
-                  style={itemStyle}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--color-surface-hover)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
-                  onClick={() => {
-                    copaDropdown.setOpen(false);
-                    router.push(`/campeonatos/${c.id}`);
-                  }}
-                >
-                  {c.name}
-                </button>
-              ))
-            ) : (
-              <p style={{ ...itemStyle, color: "var(--color-text-secondary)", cursor: "default" }}>
-                No hay copas
-              </p>
-            )}
-          </div>
-        )}
+        <AnimatePresence>
+          {copaDropdown.open && (
+            <motion.div
+              key="copas-dropdown"
+              style={dropdownStyle}
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.15, ease: "easeOut" }}
+            >
+              {copasActivas.length > 0 ? (
+                copasActivas.map(renderCopaButton)
+              ) : (
+                <p style={{ ...itemStyle, color: "var(--color-text-secondary)", cursor: "default" }}>
+                  No hay copas
+                </p>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Novedades */}

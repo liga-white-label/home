@@ -81,11 +81,25 @@ const MatchResultRow = ({
 
   return (
     <div
-      className={`flex items-center justify-between gap-3 py-3 px-4 transition-colors ${onClick ? "cursor-pointer" : ""}`}
+      className={`flex items-center justify-between gap-3 py-3 px-4 transition-colors ${
+        onClick
+          ? "cursor-pointer hover:bg-[var(--color-surface)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]"
+          : ""
+      }`}
       style={{ borderBottom: "1px solid var(--color-surface)" }}
-      onMouseEnter={(e) => onClick && (e.currentTarget.style.backgroundColor = "var(--color-surface)")}
-      onMouseLeave={(e) => onClick && (e.currentTarget.style.backgroundColor = "transparent")}
       onClick={onClick}
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={
+        onClick
+          ? (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onClick();
+              }
+            }
+          : undefined
+      }
     >
       {/* Home team */}
       <div className="flex items-center gap-2 flex-1 justify-end min-w-0">

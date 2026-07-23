@@ -18,5 +18,11 @@ export const TablaDePosicionesWrapper: FC<TablaDePosicionesWrapperProps> = ({
     return <TablaPosiciones data={data} />;
   }
 
-  return <></>;
+  return (
+    <div className="flex justify-center py-10">
+      <p className="text-[var(--color-text-secondary)]">
+        No hay información de posiciones disponible.
+      </p>
+    </div>
+  );
 };

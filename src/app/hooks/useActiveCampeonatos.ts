@@ -12,6 +12,11 @@ import {
 } from "@/repositories/CampeonatoRepository";
 import { useSeasonPair, SeasonPairResult } from "./useSeasonPair";
 
+export interface TorneoGrupo {
+  label: string | null;
+  items: Campeonato[];
+}
+
 export interface UseActiveCampeonatosResult {
   isLoading: boolean;
   isError: boolean;
@@ -24,6 +29,13 @@ export interface UseActiveCampeonatosResult {
   zonalesActivos: TorneoZonal[];
   zonalPrincipal: TorneoZonal | undefined;
   torneosActivos: Campeonato[];
+  // torneosActivos ordenado en grupos para el nav. "Primera" no se detecta
+  // por type (league vs leaguewithzones): el discriminador real es "es el
+  // torneo que la app ya trata como EL destacado" — ligaActual (marcado
+  // current) más su mitad de temporada vinculada. El resto que sea Zonal
+  // (Juveniles/Menores/Infantiles) va a Formativas; lo que quede cae en un
+  // grupo sin label, sin perderse.
+  torneosGrupos: TorneoGrupo[];
   seasonPair: SeasonPairResult;
 }
 
@@ -70,6 +82,31 @@ export const useActiveCampeonatos = (): UseActiveCampeonatosResult => {
 
   const seasonPair = useSeasonPair(ligaActual);
 
+  const principalIds = new Set(
+    [ligaActual?.id, seasonPair.apertura?.id, seasonPair.clausura?.id].filter(
+      (id): id is string => !!id
+    )
+  );
+
+  const torneosGrupos: TorneoGrupo[] = [
+    {
+      label: "Primera División",
+      items: torneosActivos.filter((t) => principalIds.has(t.id)),
+    },
+    {
+      label: "Divisiones Formativas",
+      items: torneosActivos.filter(
+        (t) => !principalIds.has(t.id) && t.type === CampeonatoTypeEnum.ZONAL
+      ),
+    },
+    {
+      label: null,
+      items: torneosActivos.filter(
+        (t) => !principalIds.has(t.id) && t.type !== CampeonatoTypeEnum.ZONAL
+      ),
+    },
+  ].filter((grupo) => grupo.items.length > 0);
+
   return {
     isLoading: isLoadingAll || isLoadingActual,
     isError,
@@ -82,6 +119,7 @@ export const useActiveCampeonatos = (): UseActiveCampeonatosResult => {
     zonalesActivos,
     zonalPrincipal,
     torneosActivos,
+    torneosGrupos,
     seasonPair,
   };
 };

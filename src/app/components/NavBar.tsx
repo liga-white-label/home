@@ -61,7 +61,7 @@ export const NavBar = () => {
         </button>
 
         <button
-          className="lg:hidden flex items-center text-[var(--color-text)]"
+          className="lg:hidden flex items-center justify-center h-9 w-9 rounded-full transition-colors text-[var(--color-text)] hover:bg-[var(--color-surface-hover)]"
           onClick={switchSidebar}
           aria-label="Abrir menú"
         >
