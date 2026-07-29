@@ -13,9 +13,45 @@ import {
 import { useSeasonPair, SeasonPairResult } from "./useSeasonPair";
 
 export interface TorneoGrupo {
-  label: string | null;
+  label: string;
   items: Campeonato[];
 }
+
+// Orden preferido de disciplinas en el nav. Cada tier matchea por substring
+// (sin acentos, case-insensitive) contra el label real que manda la API, que
+// puede variar ("Infantiles y Menores", "Menores e Infantiles", etc.).
+const DISCIPLINA_ORDER: string[][] = [
+  ["masculin"],
+  ["femenin"],
+  ["infantil", "menor"],
+  ["futsal"],
+  ["senior"],
+];
+
+const normalizeLabel = (label: string) =>
+  label
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+
+const disciplinaRank = (label: string) => {
+  const normalized = normalizeLabel(label);
+  const rank = DISCIPLINA_ORDER.findIndex((keywords) =>
+    keywords.some((k) => normalized.includes(k))
+  );
+  return rank === -1 ? DISCIPLINA_ORDER.length : rank;
+};
+
+// Ordena por DISCIPLINA_ORDER; las disciplinas sin match caen al final,
+// manteniendo entre sí el orden de primera aparición en la API.
+const sortTorneosGrupos = (grupos: TorneoGrupo[]): TorneoGrupo[] =>
+  grupos
+    .map((grupo, index) => ({ grupo, index }))
+    .sort((a, b) => {
+      const rankDiff = disciplinaRank(a.grupo.label) - disciplinaRank(b.grupo.label);
+      return rankDiff !== 0 ? rankDiff : a.index - b.index;
+    })
+    .map(({ grupo }) => grupo);
 
 export interface UseActiveCampeonatosResult {
   isLoading: boolean;
@@ -29,12 +65,9 @@ export interface UseActiveCampeonatosResult {
   zonalesActivos: TorneoZonal[];
   zonalPrincipal: TorneoZonal | undefined;
   torneosActivos: Campeonato[];
-  // torneosActivos ordenado en grupos para el nav. "Primera" no se detecta
-  // por type (league vs leaguewithzones): el discriminador real es "es el
-  // torneo que la app ya trata como EL destacado" — ligaActual (marcado
-  // current) más su mitad de temporada vinculada. El resto que sea Zonal
-  // (Juveniles/Menores/Infantiles) va a Formativas; lo que quede cae en un
-  // grupo sin label, sin perderse.
+  // torneosActivos agrupados por su campo `discipline`, ordenados según
+  // DISCIPLINA_ORDER (masculino, femenino, infantiles/menores, futsal,
+  // senior); disciplinas sin match caen al final por orden de aparición.
   torneosGrupos: TorneoGrupo[];
   seasonPair: SeasonPairResult;
 }
@@ -82,30 +115,17 @@ export const useActiveCampeonatos = (): UseActiveCampeonatosResult => {
 
   const seasonPair = useSeasonPair(ligaActual);
 
-  const principalIds = new Set(
-    [ligaActual?.id, seasonPair.apertura?.id, seasonPair.clausura?.id].filter(
-      (id): id is string => !!id
-    )
-  );
+  const gruposPorDisciplina = new Map<string, Campeonato[]>();
+  torneosActivos.forEach((t) => {
+    const label = t.discipline || "Otros";
+    const items = gruposPorDisciplina.get(label) ?? [];
+    items.push(t);
+    gruposPorDisciplina.set(label, items);
+  });
 
-  const torneosGrupos: TorneoGrupo[] = [
-    {
-      label: "Primera División",
-      items: torneosActivos.filter((t) => principalIds.has(t.id)),
-    },
-    {
-      label: "Divisiones Formativas",
-      items: torneosActivos.filter(
-        (t) => !principalIds.has(t.id) && t.type === CampeonatoTypeEnum.ZONAL
-      ),
-    },
-    {
-      label: null,
-      items: torneosActivos.filter(
-        (t) => !principalIds.has(t.id) && t.type !== CampeonatoTypeEnum.ZONAL
-      ),
-    },
-  ].filter((grupo) => grupo.items.length > 0);
+  const torneosGrupos: TorneoGrupo[] = sortTorneosGrupos(
+    Array.from(gruposPorDisciplina, ([label, items]) => ({ label, items }))
+  );
 
   return {
     isLoading: isLoadingAll || isLoadingActual,

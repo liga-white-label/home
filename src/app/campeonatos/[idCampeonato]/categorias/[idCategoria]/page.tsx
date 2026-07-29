@@ -26,6 +26,8 @@ export default function Home() {
     ? zonaCategorias?.find((c) => c.id === idCategoria.toString())
     : campeonato?.categories?.find((c) => c.id === idCategoria.toString());
 
+  const hidePosiciones = isZonal && categoria?.showTable === false;
+
   if (isLoading || (isZonal && isLoadingZonaCategorias)) {
     return <LoadingScreen />;
   }
@@ -55,6 +57,7 @@ export default function Home() {
       title={`${categoria?.name}`}
       id={idCategoria.toString()}
       seasonInfo={seasonInfo}
+      hidePosiciones={hidePosiciones}
     />
   );
 }

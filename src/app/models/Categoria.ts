@@ -6,6 +6,7 @@ export interface Categoria {
   name: string;
   gender: string;
   enabled: boolean;
+  showTable?: boolean | null;
 }
 
 export interface CategoriaConEquipos extends Categoria {

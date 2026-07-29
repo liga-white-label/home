@@ -5,6 +5,7 @@ export interface Campeonato {
   name: string;
   year: string;
   type: CampeonatoTypeEnum;
+  discipline: string;
   enabled: boolean;
   current: boolean;
 }

@@ -1,35 +1,17 @@
 "use client";
 import { usePathname, useRouter } from "next/navigation";
-import { useState, useRef, useEffect } from "react";
+import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import MiniLoading from "./loading/MiniLoading";
-import { Categoria } from "@/app/models/Categoria";
-import { Campeonato, Liga, SeasonEnum } from "@/app/models/Campeonato";
-import { SEASON_LABEL } from "@/app/utils/seasonLabels";
+import { Campeonato } from "@/app/models/Campeonato";
 import { useActiveCampeonatos } from "@/app/hooks/useActiveCampeonatos";
+import { useClickOutside } from "@/app/hooks/useClickOutside";
 
 const ChevronDown = () => (
   <svg width="10" height="10" viewBox="0 0 10 10" fill="none" className="inline ml-1">
     <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
-
-function useDropdown() {
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
-
-  return { open, setOpen, ref };
-}
 
 const dropdownStyle: React.CSSProperties = {
   position: "absolute",
@@ -42,15 +24,6 @@ const dropdownStyle: React.CSSProperties = {
   border: "1px solid var(--color-border)",
   zIndex: 100,
   overflow: "hidden",
-};
-
-const sectionLabelStyle: React.CSSProperties = {
-  fontSize: 11,
-  fontWeight: 700,
-  letterSpacing: "0.12em",
-  color: "var(--color-text-secondary)",
-  textTransform: "uppercase",
-  padding: "12px 20px 6px",
 };
 
 const itemStyle: React.CSSProperties = {
@@ -67,22 +40,18 @@ const itemStyle: React.CSSProperties = {
   cursor: "pointer",
 };
 
+const INSTITUCIONAL_KEY = "institucional";
+const disciplinaKey = (label: string) => `disciplina:${label}`;
+
 export const LinkNavigator = () => {
   const path = usePathname();
   const router = useRouter();
 
-  const {
-    isLoading,
-    ligaActual,
-    categorias,
-    torneosActivos,
-    torneosGrupos,
-    seasonPair,
-  } = useActiveCampeonatos();
+  const { isLoading, torneosActivos, torneosGrupos } = useActiveCampeonatos();
 
-  const catDropdown = useDropdown();
-  const torneosDropdown = useDropdown();
-  const institucionalDropdown = useDropdown();
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const navRef = useRef<HTMLDivElement>(null);
+  useClickOutside(navRef, () => setOpenMenu(null));
 
   const institucionalItems = [
     { label: "Autoridades", href: "/institucional/autoridades" },
@@ -98,64 +67,14 @@ export const LinkNavigator = () => {
     );
   }
 
-  const masculinas = categorias.filter((c) => c.gender === "male");
-  const femeninas = categorias.filter((c) => c.gender === "female");
-
   const navLinkClass = (active: boolean) =>
     `text-base font-semibold transition-colors relative pb-0.5 ${active ? "text-[var(--color-text)]" : "text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
     }`;
 
   const rootId = path.match(/^\/campeonatos\/([^/]+)\/?$/)?.[1];
-  const isViewingTorneo =
-    !!rootId && torneosActivos.some((t) => t.id === rootId);
 
-  const categoriaMatch = path.match(
-    /^\/campeonatos\/([^/]+)\/categorias\/([^/]+)\/?$/
-  );
-  const activeCategoriaLigaId = categoriaMatch?.[1];
-  const activeCategoriaId = categoriaMatch?.[2];
-
-  const closeAndPush = (href: string) => {
-    catDropdown.setOpen(false);
-    router.push(href);
-  };
-
-  const renderCategoryButtons = (liga: Liga, cats: Categoria[]) =>
-    cats.map((c) => {
-      const active =
-        liga.id === activeCategoriaLigaId && c.id === activeCategoriaId;
-      return (
-        <button
-          key={c.id}
-          style={{
-            ...itemStyle,
-            borderLeftColor: active ? "var(--color-primary)" : "transparent",
-            backgroundColor: active ? "var(--color-surface-hover)" : "transparent",
-            fontWeight: active ? 700 : itemStyle.fontWeight,
-          }}
-          onMouseEnter={(e) => {
-            if (!active) e.currentTarget.style.backgroundColor = "var(--color-surface-hover)";
-          }}
-          onMouseLeave={(e) => {
-            if (!active) e.currentTarget.style.backgroundColor = "transparent";
-          }}
-          onClick={() => closeAndPush(`/campeonatos/${liga.id}/categorias/${c.id}`)}
-        >
-          {c.name}
-        </button>
-      );
-    });
-
-  const renderLigaGroup = (liga: Liga) => {
-    const masc = liga.categories.filter((c) => c.gender === "male");
-    const fem = liga.categories.filter((c) => c.gender === "female");
-    return (
-      <>
-        {masc.length > 0 && renderCategoryButtons(liga, masc)}
-        {fem.length > 0 && renderCategoryButtons(liga, fem)}
-      </>
-    );
-  };
+  const toggleMenu = (key: string) =>
+    setOpenMenu((current) => (current === key ? null : key));
 
   const renderTorneoButton = (t: Campeonato) => {
     const active = t.id === rootId;
@@ -175,7 +94,7 @@ export const LinkNavigator = () => {
           if (!active) e.currentTarget.style.backgroundColor = "transparent";
         }}
         onClick={() => {
-          torneosDropdown.setOpen(false);
+          setOpenMenu(null);
           router.push(`/campeonatos/${t.id}`);
         }}
       >
@@ -185,135 +104,53 @@ export const LinkNavigator = () => {
   };
 
   return (
-    <div className="hidden lg:flex gap-8 items-center">
-      {/* Categorías dropdown */}
-      {(categorias.length > 0 || seasonPair.isPartOfSeason) && (
-        <div className="relative" ref={catDropdown.ref}>
-          <button
-            onClick={() => {
-              catDropdown.setOpen((v) => !v);
-              torneosDropdown.setOpen(false);
-              institucionalDropdown.setOpen(false);
-            }}
-            className={navLinkClass(path.includes("categorias"))}
-          >
-            Categorías <ChevronDown />
-            {path.includes("categorias") && (
-              <span
-                className="absolute bottom-0 left-0 w-full h-0.5 rounded-full"
-                style={{ backgroundColor: "rgba(var(--color-gradient),1)" }}
-              />
-            )}
-          </button>
+    <div className="hidden lg:flex gap-8 items-center" ref={navRef}>
+      {/* Un dropdown por disciplina, mostrando los campeonatos de esa disciplina */}
+      {torneosGrupos.map((grupo) => {
+        const key = disciplinaKey(grupo.label);
+        const isOpen = openMenu === key;
+        const isActive = grupo.items.some((t) => t.id === rootId);
+        return (
+          <div className="relative" key={key}>
+            <button
+              onClick={() => toggleMenu(key)}
+              className={navLinkClass(isActive)}
+            >
+              {grupo.label} <ChevronDown />
+              {isActive && (
+                <span
+                  className="absolute bottom-0 left-0 w-full h-0.5 rounded-full"
+                  style={{ backgroundColor: "rgba(var(--color-gradient),1)" }}
+                />
+              )}
+            </button>
 
-          <AnimatePresence>
-            {catDropdown.open && (
-              <motion.div
-                key="categorias-dropdown"
-                style={dropdownStyle}
-                initial={{ opacity: 0, y: -6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.15, ease: "easeOut" }}
-              >
-                {seasonPair.isPartOfSeason ? (
-                  <>
-                    {seasonPair.apertura && (
-                      <>
-                        <p style={sectionLabelStyle}>{SEASON_LABEL[SeasonEnum.APERTURA]}</p>
-                        {renderLigaGroup(seasonPair.apertura)}
-                      </>
-                    )}
-                    {seasonPair.clausura && (
-                      <>
-                        <div style={{ height: 1, backgroundColor: "var(--color-border)", margin: "4px 0" }} />
-                        <p style={sectionLabelStyle}>{SEASON_LABEL[SeasonEnum.CLAUSURA]}</p>
-                        {renderLigaGroup(seasonPair.clausura)}
-                      </>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    {masculinas.length > 0 && (
-                      <>
-                        <p style={sectionLabelStyle}>Masculino</p>
-                        {ligaActual && renderCategoryButtons(ligaActual, masculinas)}
-                      </>
-                    )}
-                    {femeninas.length > 0 && (
-                      <>
-                        {masculinas.length > 0 && (
-                          <div style={{ height: 1, backgroundColor: "var(--color-border)", margin: "4px 0" }} />
-                        )}
-                        <p style={sectionLabelStyle}>Femenino</p>
-                        {ligaActual && renderCategoryButtons(ligaActual, femeninas)}
-                      </>
-                    )}
-                  </>
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+            <AnimatePresence>
+              {isOpen && (
+                <motion.div
+                  key={`${key}-dropdown`}
+                  style={dropdownStyle}
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
+                >
+                  {grupo.items.map(renderTorneoButton)}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        );
+      })}
+
+      {torneosActivos.length === 0 && (
+        <span className={navLinkClass(false)}>No hay torneos</span>
       )}
 
-      {/* Torneos dropdown */}
-      <div className="relative" ref={torneosDropdown.ref}>
-        <button
-          onClick={() => {
-            torneosDropdown.setOpen((v) => !v);
-            catDropdown.setOpen(false);
-            institucionalDropdown.setOpen(false);
-          }}
-          className={navLinkClass(isViewingTorneo)}
-        >
-          Torneos <ChevronDown />
-          {isViewingTorneo && (
-            <span
-              className="absolute bottom-0 left-0 w-full h-0.5 rounded-full"
-              style={{ backgroundColor: "rgba(var(--color-gradient),1)" }}
-            />
-          )}
-        </button>
-
-        <AnimatePresence>
-          {torneosDropdown.open && (
-            <motion.div
-              key="torneos-dropdown"
-              style={dropdownStyle}
-              initial={{ opacity: 0, y: -6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.15, ease: "easeOut" }}
-            >
-              {torneosGrupos.length > 0 ? (
-                torneosGrupos.map((grupo, i) => (
-                  <div key={grupo.label ?? `otros-${i}`}>
-                    {i > 0 && (
-                      <div style={{ height: 1, backgroundColor: "var(--color-border)", margin: "4px 0" }} />
-                    )}
-                    {grupo.label && <p style={sectionLabelStyle}>{grupo.label}</p>}
-                    {grupo.items.map(renderTorneoButton)}
-                  </div>
-                ))
-              ) : (
-                <p style={{ ...itemStyle, color: "var(--color-text-secondary)", cursor: "default" }}>
-                  No hay torneos
-                </p>
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
       {/* Institucional dropdown */}
-      <div className="relative" ref={institucionalDropdown.ref}>
+      <div className="relative">
         <button
-          onClick={() => {
-            institucionalDropdown.setOpen((v) => !v);
-            catDropdown.setOpen(false);
-            torneosDropdown.setOpen(false);
-          }}
+          onClick={() => toggleMenu(INSTITUCIONAL_KEY)}
           className={navLinkClass(path.includes("institucional"))}
         >
           Institucional <ChevronDown />
@@ -326,7 +163,7 @@ export const LinkNavigator = () => {
         </button>
 
         <AnimatePresence>
-          {institucionalDropdown.open && (
+          {openMenu === INSTITUCIONAL_KEY && (
             <motion.div
               key="institucional-dropdown"
               style={dropdownStyle}
@@ -342,7 +179,7 @@ export const LinkNavigator = () => {
                   onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--color-surface-hover)")}
                   onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
                   onClick={() => {
-                    institucionalDropdown.setOpen(false);
+                    setOpenMenu(null);
                     router.push(item.href);
                   }}
                 >

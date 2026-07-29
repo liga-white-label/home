@@ -28,6 +28,7 @@ interface CategoriaPageBaseProps {
     aperturaId: string;
     clausuraId: string;
   } | null;
+  hidePosiciones?: boolean;
 }
 
 export enum TabsEnum {
@@ -47,6 +48,7 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
   id,
   title,
   seasonInfo = null,
+  hidePosiciones = false,
 }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -84,7 +86,8 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
     if (tabParam) {
       return parseInt(tabParam, 10);
     }
-    return fasesGrupos.length > 0 ? TabsEnum.GRUPOS_BASE : TabsEnum.POSICIONES;
+    if (fasesGrupos.length > 0) return TabsEnum.GRUPOS_BASE;
+    return hidePosiciones ? TabsEnum.FIXTURE : TabsEnum.POSICIONES;
   };
 
   const [selectedTab, setSelectedTab] = useState<number>(getInitialTab());
@@ -154,7 +157,7 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
           style={{ display: hasFases ? "flex" : "none" }}
           className="flex gap-6 px-6 md:px-10 max-w-full overflow-x-auto"
         >
-          {!!faseRegular && (
+          {!!faseRegular && !hidePosiciones && (
             <button
               onClick={() => handleChangeTab(TabsEnum.POSICIONES)}
               className={tabClass(selectedTab === TabsEnum.POSICIONES)}
@@ -263,7 +266,7 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
         exit={{ opacity: 0 }}
         transition={{ duration: 0.15, ease: "easeOut" }}
       >
-        {selectedTab === TabsEnum.POSICIONES && (
+        {selectedTab === TabsEnum.POSICIONES && !hidePosiciones && (
           <TablaDePosicionesWrapper faseId={faseRegular?.id || ""} />
         )}
         {selectedTab === TabsEnum.TABLA_GENERAL && !!seasonInfo && (
