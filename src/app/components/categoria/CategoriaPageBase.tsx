@@ -2,6 +2,7 @@
 
 import { FC, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import { FixturePage } from "./FixturePage";
 import { TablaDePosicionesWrapper } from "./TablasDePosicionesWrapper";
 import PlayoffsPage from "../playoffs/PlayoffsPage";
@@ -254,6 +255,14 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
       </div>
 
       <div className="h-full w-full min-h-lvh overflow-hidden p-4 md:p-10" style={{ backgroundColor: "var(--color-bg)" }}>
+      <AnimatePresence mode="wait">
+      <motion.div
+        key={selectedTab}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.15, ease: "easeOut" }}
+      >
         {selectedTab === TabsEnum.POSICIONES && (
           <TablaDePosicionesWrapper faseId={faseRegular?.id || ""} />
         )}
@@ -309,6 +318,8 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
             </p>
           </div>
         )}
+      </motion.div>
+      </AnimatePresence>
       </div>
     </main>
   );

@@ -2,9 +2,11 @@
 import { Drawer } from "@mui/material";
 import { useSidebar } from "@/app/context/SideBarContext";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import MiniLoading from "./loading/MiniLoading";
 import { useState } from "react";
-import { Liga, SeasonEnum } from "@/app/models/Campeonato";
+import { motion, AnimatePresence } from "framer-motion";
+import { Campeonato, Liga, SeasonEnum } from "@/app/models/Campeonato";
 import { Categoria } from "@/app/models/Categoria";
 import { SEASON_LABEL } from "@/app/utils/seasonLabels";
 import { useActiveCampeonatos } from "@/app/hooks/useActiveCampeonatos";
@@ -39,6 +41,7 @@ const INSTITUCIONAL_ITEMS = [
 
 export const CustomDrawer = () => {
   const { sidebarOpen, handleClose } = useSidebar();
+  const path = usePathname();
   const [catOpen, setCatOpen] = useState(false);
   const [institucionalOpen, setInstitucionalOpen] = useState(false);
   const [torneosOpen, setTorneosOpen] = useState(false);
@@ -47,24 +50,39 @@ export const CustomDrawer = () => {
     isLoading,
     ligaActual,
     categorias,
-    torneosActivos,
+    torneosGrupos,
     seasonPair,
   } = useActiveCampeonatos();
+
+  const rootId = path.match(/^\/campeonatos\/([^/]+)\/?$/)?.[1];
+  const categoriaMatch = path.match(
+    /^\/campeonatos\/([^/]+)\/categorias\/([^/]+)\/?$/
+  );
+  const activeCategoriaLigaId = categoriaMatch?.[1];
+  const activeCategoriaId = categoriaMatch?.[2];
 
   const masculinas = categorias.filter((c: Categoria) => c.gender === "male");
   const femeninas = categorias.filter((c: Categoria) => c.gender === "female");
 
   const renderCategoryLinks = (liga: Liga, cats: Categoria[]) =>
-    cats.map((cat) => (
-      <Link
-        key={cat.id}
-        href={`/campeonatos/${liga.id}/categorias/${cat.id}`}
-        onClick={handleClose}
-        className="block px-6 py-2.5 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface-hover)] transition-colors"
-      >
-        {cat.name}
-      </Link>
-    ));
+    cats.map((cat) => {
+      const active =
+        liga.id === activeCategoriaLigaId && cat.id === activeCategoriaId;
+      return (
+        <Link
+          key={cat.id}
+          href={`/campeonatos/${liga.id}/categorias/${cat.id}`}
+          onClick={handleClose}
+          className={`block px-6 py-2.5 text-sm border-l-2 transition-colors ${
+            active
+              ? "border-[var(--color-primary)] bg-[var(--color-surface-hover)] text-[var(--color-text)] font-semibold"
+              : "border-transparent text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface-hover)]"
+          }`}
+        >
+          {cat.name}
+        </Link>
+      );
+    });
 
   const renderLigaGroup = (liga: Liga) => {
     const masc = liga.categories.filter((c) => c.gender === "male");
@@ -74,6 +92,24 @@ export const CustomDrawer = () => {
         {masc.length > 0 && renderCategoryLinks(liga, masc)}
         {fem.length > 0 && renderCategoryLinks(liga, fem)}
       </>
+    );
+  };
+
+  const renderTorneoLink = (t: Campeonato) => {
+    const active = t.id === rootId;
+    return (
+      <Link
+        key={t.id}
+        href={`/campeonatos/${t.id}`}
+        onClick={handleClose}
+        className={`block px-6 py-2.5 text-sm border-l-2 transition-colors ${
+          active
+            ? "border-[var(--color-primary)] bg-[var(--color-surface-hover)] text-[var(--color-text)] font-semibold"
+            : "border-transparent text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface-hover)]"
+        }`}
+      >
+        {t.name}
+      </Link>
     );
   };
 
@@ -107,53 +143,64 @@ export const CustomDrawer = () => {
                 Categorías
                 <ChevronDown open={catOpen} />
               </button>
-              {catOpen && (
-                <div className="pb-2" style={{ backgroundColor: "var(--color-surface-2)" }}>
-                  {seasonPair.isPartOfSeason ? (
-                    <>
-                      {seasonPair.apertura && (
+              <AnimatePresence initial={false}>
+                {catOpen && (
+                  <motion.div
+                    key="categorias-content"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2, ease: "easeInOut" }}
+                    style={{ overflow: "hidden" }}
+                  >
+                    <div className="pb-2" style={{ backgroundColor: "var(--color-surface-2)" }}>
+                      {seasonPair.isPartOfSeason ? (
                         <>
-                          <p className="px-6 pt-3 pb-1 text-xs font-bold uppercase tracking-widest text-[var(--color-text-secondary)]">
-                            {SEASON_LABEL[SeasonEnum.APERTURA]}
-                          </p>
-                          {renderLigaGroup(seasonPair.apertura)}
+                          {seasonPair.apertura && (
+                            <>
+                              <p className="px-6 pt-3 pb-1 text-xs font-bold uppercase tracking-widest text-[var(--color-text-secondary)]">
+                                {SEASON_LABEL[SeasonEnum.APERTURA]}
+                              </p>
+                              {renderLigaGroup(seasonPair.apertura)}
+                            </>
+                          )}
+                          {seasonPair.clausura && (
+                            <>
+                              <div className="mx-6 my-2 h-px bg-[var(--color-border)]" />
+                              <p className="px-6 pt-1 pb-1 text-xs font-bold uppercase tracking-widest text-[var(--color-text-secondary)]">
+                                {SEASON_LABEL[SeasonEnum.CLAUSURA]}
+                              </p>
+                              {renderLigaGroup(seasonPair.clausura)}
+                            </>
+                          )}
                         </>
-                      )}
-                      {seasonPair.clausura && (
-                        <>
-                          <div className="mx-6 my-2 h-px bg-[var(--color-border)]" />
-                          <p className="px-6 pt-1 pb-1 text-xs font-bold uppercase tracking-widest text-[var(--color-text-secondary)]">
-                            {SEASON_LABEL[SeasonEnum.CLAUSURA]}
-                          </p>
-                          {renderLigaGroup(seasonPair.clausura)}
-                        </>
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      {masculinas.length > 0 && (
-                        <>
-                          <p className="px-6 pt-3 pb-1 text-xs font-bold uppercase tracking-widest text-[var(--color-text-secondary)]">
-                            Masculino
-                          </p>
-                          {ligaActual && renderCategoryLinks(ligaActual, masculinas)}
-                        </>
-                      )}
-                      {femeninas.length > 0 && (
+                      ) : (
                         <>
                           {masculinas.length > 0 && (
-                            <div className="mx-6 my-2 h-px bg-[var(--color-border)]" />
+                            <>
+                              <p className="px-6 pt-3 pb-1 text-xs font-bold uppercase tracking-widest text-[var(--color-text-secondary)]">
+                                Masculino
+                              </p>
+                              {ligaActual && renderCategoryLinks(ligaActual, masculinas)}
+                            </>
                           )}
-                          <p className="px-6 pt-1 pb-1 text-xs font-bold uppercase tracking-widest text-[var(--color-text-secondary)]">
-                            Femenino
-                          </p>
-                          {ligaActual && renderCategoryLinks(ligaActual, femeninas)}
+                          {femeninas.length > 0 && (
+                            <>
+                              {masculinas.length > 0 && (
+                                <div className="mx-6 my-2 h-px bg-[var(--color-border)]" />
+                              )}
+                              <p className="px-6 pt-1 pb-1 text-xs font-bold uppercase tracking-widest text-[var(--color-text-secondary)]">
+                                Femenino
+                              </p>
+                              {ligaActual && renderCategoryLinks(ligaActual, femeninas)}
+                            </>
+                          )}
                         </>
                       )}
-                    </>
-                  )}
-                </div>
-              )}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           )}
 
@@ -166,24 +213,36 @@ export const CustomDrawer = () => {
               Torneos
               <ChevronDown open={torneosOpen} />
             </button>
-            {torneosOpen && (
-              <div className="pb-2" style={{ backgroundColor: "var(--color-surface-2)" }}>
-                {torneosActivos.length > 0 ? (
-                  torneosActivos.map((t) => (
-                    <Link
-                      key={t.id}
-                      href={`/campeonatos/${t.id}`}
-                      onClick={handleClose}
-                      className="block px-6 py-2.5 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface-hover)] transition-colors"
-                    >
-                      {t.name}
-                    </Link>
-                  ))
-                ) : (
-                  <p className="px-6 py-3 text-sm text-[var(--color-text-secondary)]">No hay torneos</p>
-                )}
-              </div>
-            )}
+            <AnimatePresence initial={false}>
+              {torneosOpen && (
+                <motion.div
+                  key="torneos-content"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.2, ease: "easeInOut" }}
+                  style={{ overflow: "hidden" }}
+                >
+                  <div className="pb-2" style={{ backgroundColor: "var(--color-surface-2)" }}>
+                    {torneosGrupos.length > 0 ? (
+                      torneosGrupos.map((grupo, i) => (
+                        <div key={grupo.label ?? `otros-${i}`}>
+                          {i > 0 && <div className="mx-6 my-2 h-px bg-[var(--color-border)]" />}
+                          {grupo.label && (
+                            <p className="px-6 pt-3 pb-1 text-xs font-bold uppercase tracking-widest text-[var(--color-text-secondary)]">
+                              {grupo.label}
+                            </p>
+                          )}
+                          {grupo.items.map(renderTorneoLink)}
+                        </div>
+                      ))
+                    ) : (
+                      <p className="px-6 py-3 text-sm text-[var(--color-text-secondary)]">No hay torneos</p>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Institucional accordion */}
@@ -195,20 +254,31 @@ export const CustomDrawer = () => {
               Institucional
               <ChevronDown open={institucionalOpen} />
             </button>
-            {institucionalOpen && (
-              <div className="pb-2" style={{ backgroundColor: "var(--color-surface-2)" }}>
-                {INSTITUCIONAL_ITEMS.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={handleClose}
-                    className="block px-6 py-2.5 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface-hover)] transition-colors"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
-            )}
+            <AnimatePresence initial={false}>
+              {institucionalOpen && (
+                <motion.div
+                  key="institucional-content"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.2, ease: "easeInOut" }}
+                  style={{ overflow: "hidden" }}
+                >
+                  <div className="pb-2" style={{ backgroundColor: "var(--color-surface-2)" }}>
+                    {INSTITUCIONAL_ITEMS.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={handleClose}
+                        className="block px-6 py-2.5 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface-hover)] transition-colors"
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Documentos */}

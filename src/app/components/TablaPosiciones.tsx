@@ -122,14 +122,8 @@ export const TablaPosiciones: FC<TablaPosicionesProps> = ({
               return (
                 <tr
                   key={team.pos}
-                  className="transition-colors"
+                  className="transition-colors hover:bg-[var(--color-surface-hover)]"
                   style={{ borderBottom: "1px solid var(--color-border)" }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.backgroundColor = "var(--color-surface-hover)")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.backgroundColor = "transparent")
-                  }
                 >
                   {/* Position with colored left bar */}
                   <td className="py-3 pl-0 pr-2 w-10">

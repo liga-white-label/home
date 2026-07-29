@@ -17,12 +17,24 @@ interface CuadroPlayoffProps {
 
 const CuadroPlayoff: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
   if (!rondas || !Array.isArray(rondas) || rondas.length === 0) {
-    return <div>No hay rondas disponibles</div>;
+    return (
+      <div className="flex justify-center items-center h-full py-10">
+        <p className="text-xl text-center text-[var(--color-text-secondary)]">
+          No hay rondas disponibles.
+        </p>
+      </div>
+    );
   }
 
   const firstRound = rondas[0];
   if (!firstRound || !firstRound.matchesPlayoff) {
-    return <div>Formato de ronda inválido</div>;
+    return (
+      <div className="flex justify-center items-center h-full py-10">
+        <p className="text-xl text-center text-[var(--color-text-secondary)]">
+          Formato de ronda inválido.
+        </p>
+      </div>
+    );
   }
 
   const doubleMatch = firstRound.doubleMatch || false;

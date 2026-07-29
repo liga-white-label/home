@@ -2,11 +2,14 @@
 
 import { FC, useState, useEffect, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import { useAllFasesByCampeonato } from "@/repositories/CampeonatoRepository";
 import { FaseGruposWrapper } from "./FaseGruposWrapper";
 import FixtureCopaPage from "./FixtureCopaPage";
 import PlayoffsCopaPage from "../playoffs/PlayoffsCopaPage";
 import { EstadisticasCopaPage } from "./EstadisticasCopaPage";
+import LoadingScreen from "../loading/Loading";
+import ErrorPage from "../ErrorPage";
 import { tenantConfig } from "@/config/tenant";
 
 interface CopaPageBaseProps {
@@ -27,7 +30,7 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
   const initialTab = tabParam ? parseInt(tabParam, 10) : TabsEnum.GRUPOS;
   const [selectedTab, setSelectedTab] = useState<TabsEnum>(initialTab);
 
-  const { data: fases = [] } = useAllFasesByCampeonato(id);
+  const { data: fases = [], isLoading, isError } = useAllFasesByCampeonato(id);
 
   const faseGrupos = fases.find((f) => f.type === "group") || null;
   const fasesPlayoff = useMemo(
@@ -57,6 +60,9 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
       setSelectedTab(TabsEnum.FIXTURE);
     }
   }, [faseGrupos, fasesPlayoff, tabParam]);
+
+  if (isLoading) return <LoadingScreen />;
+  if (isError) return <ErrorPage />;
 
   const tabClass = (active: boolean) =>
     `cursor-pointer pb-3 text-sm font-medium whitespace-nowrap transition-colors ${active
@@ -122,6 +128,14 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
       </div>
 
       <div className="w-full p-4 md:p-10" style={{ backgroundColor: "var(--color-bg)" }}>
+      <AnimatePresence mode="wait">
+      <motion.div
+        key={selectedTab}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.15, ease: "easeOut" }}
+      >
         {selectedTab === TabsEnum.GRUPOS && (
           <FaseGruposWrapper faseId={faseGrupos?.id || ""} />
         )}
@@ -134,6 +148,15 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
         {selectedTab === TabsEnum.ESTADISTICAS && (
           <EstadisticasCopaPage cupId={id} />
         )}
+        {fases.length === 0 && (
+          <div className="flex justify-center items-center h-full">
+            <p className="text-xl text-center text-[var(--color-text-secondary)]">
+              Todavía no hay información disponible para esta copa.
+            </p>
+          </div>
+        )}
+      </motion.div>
+      </AnimatePresence>
       </div>
     </div>
   );

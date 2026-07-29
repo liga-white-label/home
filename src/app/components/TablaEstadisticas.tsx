@@ -47,9 +47,7 @@ export const TablaEstadisticas: FC<TablaEstadisticasProps> = ({ data, tipo }) =>
               <tr
                 key={index}
                 style={{ borderBottom: "1px solid var(--color-border)" }}
-                className="transition-colors"
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--color-surface-hover)")}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+                className="transition-colors hover:bg-[var(--color-surface-hover)]"
               >
                 <td className="py-3 pl-4 pr-2 text-[var(--color-text-secondary)] text-sm font-bold w-10">
                   {index + 1}

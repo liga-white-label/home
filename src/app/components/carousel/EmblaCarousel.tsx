@@ -62,14 +62,14 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
           })}
         </div>
         <button
-          className="absolute left-0 top-1/2 transform h-10 rounded-xl hover:bg-[var(--color-surface-hover)] mx-1 mt-10 bg-[var(--color-surface)] text-[var(--color-text)] p-2 group"
+          className="absolute left-0 top-1/2 transform h-10 rounded-xl hover:bg-[var(--color-surface-hover)] mx-1 mt-10 bg-[var(--color-surface)] text-[var(--color-text)] p-2 group disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-[var(--color-surface)]"
           onClick={onPrevButtonClick}
           disabled={prevBtnDisabled}
         >
           <ChevronLeft className="text-[var(--color-text-secondary)] group-hover:text-[var(--color-text)]" />
         </button>
         <button
-          className="absolute right-0 top-1/2 transform h-10 rounded-xl hover:bg-[var(--color-surface-hover)] mx-1 mt-10  bg-[var(--color-surface)] text-[var(--color-text)] p-2 group"
+          className="absolute right-0 top-1/2 transform h-10 rounded-xl hover:bg-[var(--color-surface-hover)] mx-1 mt-10  bg-[var(--color-surface)] text-[var(--color-text)] p-2 group disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-[var(--color-surface)]"
           onClick={onNextButtonClick}
           disabled={nextBtnDisabled}
         >
