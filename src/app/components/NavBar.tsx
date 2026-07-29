@@ -1,15 +1,16 @@
 "use client";
 import Image from "next/image";
 import { LinkNavigator } from "./LinkNavigator";
-import { Menu, LightMode, DarkMode } from "@mui/icons-material";
+import { Menu } from "@mui/icons-material";
 import Link from "next/link";
 import { useSidebar } from "../context/SideBarContext";
-import { useThemeMode } from "../context/ThemeModeContext";
 import { tenantConfig } from "@/config/tenant";
+
+const DOCUMENTOS_URL =
+  "https://drive.google.com/drive/folders/1S72DG7TJO6mNopEVqkk-lscnusQTbgRg";
 
 export const NavBar = () => {
   const { switchSidebar } = useSidebar();
-  const { mode, toggleMode } = useThemeMode();
   const { logoPath, logoWidth, logoHeight, name } = tenantConfig.brand;
 
   return (
@@ -48,17 +49,14 @@ export const NavBar = () => {
       <LinkNavigator />
 
       <div className="flex items-center gap-3">
-        <button
-          className="flex items-center justify-center h-9 w-9 rounded-full transition-colors text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface-hover)]"
-          onClick={toggleMode}
-          aria-label={mode === "light" ? "Cambiar a modo oscuro" : "Cambiar a modo claro"}
+        <a
+          href={DOCUMENTOS_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hidden lg:block text-base font-semibold text-[var(--color-text-secondary)] hover:text-[var(--color-text)] transition-colors"
         >
-          {mode === "light" ? (
-            <DarkMode className="h-5 w-5" />
-          ) : (
-            <LightMode className="h-5 w-5" />
-          )}
-        </button>
+          Documentos
+        </a>
 
         <button
           className="lg:hidden flex items-center text-[var(--color-text)]"

@@ -61,7 +61,7 @@ const NewsCarousel = () => {
               </div>
 
               {/* Title */}
-              <p className="text-[var(--color-text)] text-xs font-semibold leading-snug line-clamp-2 group-hover:text-gray-300 transition-colors">
+              <p className="text-[var(--color-text)] text-xs font-semibold leading-snug line-clamp-2 group-hover:text-[var(--color-text-secondary)] transition-colors">
                 {novedad.titulo}
               </p>
               <p className="text-[var(--color-text-secondary)] text-[10px] mt-1">

@@ -4,20 +4,19 @@ import { useMemo } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { tenantConfig } from "@/config/tenant";
-import { useThemeMode } from "@/app/context/ThemeModeContext";
 
 export default function MuiThemeProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { mode } = useThemeMode();
-
   const theme = useMemo(
     () =>
       createTheme({
         palette: {
-          mode,
+          // "dark" para que los componentes nativos de MUI (Typography, iconos,
+          // dividers) usen texto claro por defecto, acorde al fondo gris del tema.
+          mode: "dark",
           primary: {
             main: tenantConfig.brand.primaryColor,
           },
@@ -30,7 +29,7 @@ export default function MuiThemeProvider({
           },
         },
       }),
-    [mode]
+    []
   );
 
   return (

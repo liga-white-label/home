@@ -17,11 +17,11 @@
     left: 0;
     width: 100%;
     height: 100%;
-    border: 10px solid #7f7f7f; /* Borde exterior */
+    border: 10px solid var(--color-border); /* Borde exterior */
     border-top: 8px solid var(--color-primary);
     border-radius: 50%;
     animation: spin 2s linear infinite; /* Animación de giro */
-    background: #7f7f7f;
+    background: var(--color-border);
   }
   
   .imageContainer {

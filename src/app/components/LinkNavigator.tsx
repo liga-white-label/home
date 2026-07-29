@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import MiniLoading from "./loading/MiniLoading";
@@ -74,14 +73,19 @@ export const LinkNavigator = () => {
     isLoading,
     ligaActual,
     categorias,
-    copasActivas,
     torneosActivos,
     seasonPair,
   } = useActiveCampeonatos();
 
   const catDropdown = useDropdown();
-  const copaDropdown = useDropdown();
   const torneosDropdown = useDropdown();
+  const institucionalDropdown = useDropdown();
+
+  const institucionalItems = [
+    { label: "Autoridades", href: "/institucional/autoridades" },
+    { label: "Departamentos", href: "/institucional/departamentos" },
+    { label: "Reglamento y Estatuto", href: "/institucional/reglamento-y-estatuto" },
+  ];
 
   if (isLoading) {
     return (
@@ -98,11 +102,7 @@ export const LinkNavigator = () => {
     `text-base font-semibold transition-colors relative pb-0.5 ${active ? "text-[var(--color-text)]" : "text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
     }`;
 
-  // El link activo se compara por id real de la URL, no por substring. Como
-  // "Torneos" ahora lista TODOS los campeonatos habilitados (incluidas las
-  // copas), puede iluminarse junto con "Copas" para un mismo /campeonatos/{id}.
   const rootId = path.match(/^\/campeonatos\/([^/]+)\/?$/)?.[1];
-  const isViewingCopa = !!rootId && copasActivas.some((c) => c.id === rootId);
   const isViewingTorneo =
     !!rootId && torneosActivos.some((t) => t.id === rootId);
 
@@ -120,7 +120,7 @@ export const LinkNavigator = () => {
         onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
         onClick={() => closeAndPush(`/campeonatos/${liga.id}/categorias/${c.id}`)}
       >
-        {`Cat ${c.name} — ${c.gender === "male" ? "Masculina" : "Femenina"}`}
+        {c.name}
       </button>
     ));
 
@@ -137,25 +137,14 @@ export const LinkNavigator = () => {
 
   return (
     <div className="hidden lg:flex gap-8 items-center">
-      {/* Inicio */}
-      <Link href="/" className={navLinkClass(path === "/")}>
-        Inicio
-        {path === "/" && (
-          <span
-            className="absolute bottom-0 left-0 w-full h-0.5 rounded-full"
-            style={{ backgroundColor: "rgba(var(--color-gradient),1)" }}
-          />
-        )}
-      </Link>
-
       {/* Categorías dropdown */}
       {(categorias.length > 0 || seasonPair.isPartOfSeason) && (
         <div className="relative" ref={catDropdown.ref}>
           <button
             onClick={() => {
               catDropdown.setOpen((v) => !v);
-              copaDropdown.setOpen(false);
               torneosDropdown.setOpen(false);
+              institucionalDropdown.setOpen(false);
             }}
             className={navLinkClass(path.includes("categorias"))}
           >
@@ -216,7 +205,7 @@ export const LinkNavigator = () => {
           onClick={() => {
             torneosDropdown.setOpen((v) => !v);
             catDropdown.setOpen(false);
-            copaDropdown.setOpen(false);
+            institucionalDropdown.setOpen(false);
           }}
           className={navLinkClass(isViewingTorneo)}
         >
@@ -255,18 +244,18 @@ export const LinkNavigator = () => {
         )}
       </div>
 
-      {/* Copas dropdown */}
-      <div className="relative" ref={copaDropdown.ref}>
+      {/* Institucional dropdown */}
+      <div className="relative" ref={institucionalDropdown.ref}>
         <button
           onClick={() => {
-            copaDropdown.setOpen((v) => !v);
+            institucionalDropdown.setOpen((v) => !v);
             catDropdown.setOpen(false);
             torneosDropdown.setOpen(false);
           }}
-          className={navLinkClass(isViewingCopa)}
+          className={navLinkClass(path.includes("institucional"))}
         >
-          Copas <ChevronDown />
-          {isViewingCopa && (
+          Institucional <ChevronDown />
+          {path.includes("institucional") && (
             <span
               className="absolute bottom-0 left-0 w-full h-0.5 rounded-full"
               style={{ backgroundColor: "rgba(var(--color-gradient),1)" }}
@@ -274,42 +263,25 @@ export const LinkNavigator = () => {
           )}
         </button>
 
-        {copaDropdown.open && (
+        {institucionalDropdown.open && (
           <div style={dropdownStyle}>
-            {copasActivas.length > 0 ? (
-              copasActivas.map((c) => (
-                <button
-                  key={c.id}
-                  style={itemStyle}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--color-surface-hover)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
-                  onClick={() => {
-                    copaDropdown.setOpen(false);
-                    router.push(`/campeonatos/${c.id}`);
-                  }}
-                >
-                  {c.name}
-                </button>
-              ))
-            ) : (
-              <p style={{ ...itemStyle, color: "var(--color-text-secondary)", cursor: "default" }}>
-                No hay copas
-              </p>
-            )}
+            {institucionalItems.map((item) => (
+              <button
+                key={item.href}
+                style={itemStyle}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--color-surface-hover)")}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+                onClick={() => {
+                  institucionalDropdown.setOpen(false);
+                  router.push(item.href);
+                }}
+              >
+                {item.label}
+              </button>
+            ))}
           </div>
         )}
       </div>
-
-      {/* Novedades */}
-      <Link href="/novedades" className={navLinkClass(path.includes("novedades"))}>
-        Novedades
-        {path.includes("novedades") && (
-          <span
-            className="absolute bottom-0 left-0 w-full h-0.5 rounded-full"
-            style={{ backgroundColor: "rgba(var(--color-gradient),1)" }}
-          />
-        )}
-      </Link>
     </div>
   );
 };

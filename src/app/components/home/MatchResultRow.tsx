@@ -11,7 +11,7 @@ export const resolveLogoUrl = (url: string | null): string => {
 const TeamAvatar = ({ name, logo }: { name: string | null; logo: string | null }) => (
   <div
     className="w-8 h-8 rounded flex items-center justify-center flex-shrink-0 overflow-hidden p-1"
-    style={{ backgroundColor: "#FFFFFF" }}
+    style={{ backgroundColor: "var(--color-surface-hover)" }}
   >
     <Image
       src={resolveLogoUrl(logo)}

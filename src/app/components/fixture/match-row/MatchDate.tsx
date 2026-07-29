@@ -13,10 +13,10 @@ export const MatchDate: FC<MatchDateProps> = ({ date, isLessThanMd }) => {
   return (
     <TableCell sx={{ borderBottom: "none" }}>
       <Box display="flex" alignItems="center" gap={1} height="100%">
-        <CalendarMonth sx={{ color: "#6b7280", fontSize: 18 }} />
+        <CalendarMonth sx={{ color: "var(--color-text-secondary)", fontSize: 18 }} />
         <Box
           component="span"
-          sx={{ color: "#9ca3af", fontSize: "0.85rem", whiteSpace: "nowrap" }}
+          sx={{ color: "var(--color-text-secondary)", fontSize: "0.85rem", whiteSpace: "nowrap" }}
         >
           {!!date && moment(date).isValid()
             ? moment(date).format("DD/MM/YYYY")

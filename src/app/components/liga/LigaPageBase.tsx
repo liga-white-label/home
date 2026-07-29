@@ -40,10 +40,10 @@ export const LigaPageBase: FC<LigaPageBaseProps> = ({ id, title }) => {
     <Link
       key={catId}
       href={`/campeonatos/${id}/categorias/${catId}`}
-      className="px-4 py-2 rounded-full text-sm text-gray-300 hover:text-[var(--color-text)] transition-colors"
+      className="px-4 py-2 rounded-full text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] transition-colors"
       style={{ backgroundColor: "var(--color-surface-2)", border: "1px solid var(--color-border)" }}
     >
-      Cat {name}
+      {name}
     </Link>
   );
 

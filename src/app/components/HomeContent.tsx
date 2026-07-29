@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { WelcomeGifContainer } from "./WelcomeGifContainer";
 import EmblaCarousel from "./carousel/EmblaCarousel";
 import MiniLoading from "./loading/MiniLoading";
@@ -32,15 +33,15 @@ const HomeContent = () => {
 
   const SLIDES = tenantConfig.home.slides.length > 0
     ? tenantConfig.home.slides.map((slide) => ({
-        title: slide.title,
-        asset: slide.imagePath,
-        link: slide.link ?? getSlideLink(slide.categoryName, slide.gender),
-      }))
+      title: slide.title,
+      asset: slide.imagePath,
+      link: slide.link ?? getSlideLink(slide.categoryName, slide.gender),
+    }))
     : categorias.map((cat) => ({
-        title: `Cat ${cat.name} — ${cat.gender === "male" ? "Masculino" : "Femenino"}`,
-        asset: "",
-        link: `/campeonatos/${ligaActual?.id}/categorias/${cat.id}`,
-      }));
+      title: `${cat.name}`,
+      asset: "",
+      link: `/campeonatos/${ligaActual?.id}/categorias/${cat.id}`,
+    }));
 
   if (isLoading) {
     return (
@@ -57,24 +58,41 @@ const HomeContent = () => {
     <div className="flex flex-col w-full" style={{ backgroundColor: "var(--color-bg)" }}>
       {/* Hero masthead */}
       <div
-        className="w-full pt-16 pb-6 px-6 md:px-10"
-        style={{
-          background:
-            "radial-gradient(ellipse at 80% 0%, rgba(var(--color-gradient),0.35) 0%, transparent 60%), var(--color-bg)",
-        }}
+        className="relative w-full min-h-[300px] md:min-h-[500px] flex flex-col justify-end pt-16 pb-6 px-6 md:px-10 overflow-hidden"
+        style={{ backgroundColor: "var(--color-bg)" }}
       >
-        <p
-          className="text-xs font-semibold uppercase tracking-widest mb-2"
-          style={{ color: "var(--color-text)" }}
-        >
-          {tenantConfig.home.seasonLabel ?? "Temporada"}
-        </p>
-        <h1 className="text-[var(--color-text)] text-3xl md:text-5xl font-extrabold uppercase tracking-tight leading-none mb-3">
-          {tenantConfig.brand.name}
-        </h1>
-        <p className="text-[var(--color-text-secondary)] text-sm md:text-base">
-          {tenantConfig.brand.subtitle}
-        </p>
+        {tenantConfig.home.heroBannerPath && (
+          <Image
+            src={tenantConfig.home.heroBannerPath}
+            alt=""
+            fill
+            priority
+            className="object-cover"
+          />
+        )}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: tenantConfig.home.heroBannerPath
+              ? "linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.75) 100%)"
+              : "radial-gradient(ellipse at 80% 0%, rgba(var(--color-gradient),0.35) 0%, transparent 60%)",
+          }}
+        />
+
+        <div className="relative">
+          <p
+            className="text-xs font-semibold uppercase tracking-widest mb-2"
+            style={{ color: "var(--color-text)" }}
+          >
+            {tenantConfig.home.seasonLabel ?? "Temporada"}
+          </p>
+          <h1 className="text-[var(--color-text)] text-3xl md:text-5xl font-extrabold uppercase tracking-tight leading-none mb-3">
+            {tenantConfig.brand.name}
+          </h1>
+          <p className="text-[var(--color-text-secondary)] text-sm md:text-base">
+            {tenantConfig.brand.subtitle}
+          </p>
+        </div>
       </div>
 
       <NewsCarousel />

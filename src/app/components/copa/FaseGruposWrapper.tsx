@@ -32,7 +32,7 @@ export const FaseGruposWrapper: FC<FaseGruposWrapperProps> = ({
   return faseData?.map((grupo, index) => (
     <>
       <Box key={index}>
-        <Box className="flex w-full py-2 bg-gray-200 items-center justify-center">
+        <Box className="flex w-full py-2 items-center justify-center" style={{ backgroundColor: "var(--color-surface)" }}>
           <Typography variant="h6" fontWeight={"bold"}>{`${
             fromCategoria ? "" : "Grupo"
           } ${grupo.name}`}</Typography>
