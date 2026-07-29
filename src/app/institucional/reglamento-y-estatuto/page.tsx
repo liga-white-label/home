@@ -1,7 +1,7 @@
 const REGLAMENTO_ESTATUTO_LDS_URL =
-  "https://drive.google.com/file/d/16iKSkp5bmBxVvZejLZWi_ecQteEQIhds/view";
+  "https://drive.google.com/file/d/1FmGj5t2q9SkyLNdttcQZAZR4EJCF7Mfh/view?usp=sharing";
 const REGLAMENTO_TRANSGRESIONES_PENAS_URL =
-  "https://drive.google.com/file/d/1fUvTB0_yjija7g4A4TpRi7H4MgpDZKfP/view?usp=drive_link";
+  "https://drive.google.com/file/d/1Kllnb8hi6JxQc1rRWXxSNTvvPhiWy73X/view?usp=sharing";
 
 const DOCUMENTOS = [
   { nombre: "Reglamento y Estatuto LDS", href: REGLAMENTO_ESTATUTO_LDS_URL },
