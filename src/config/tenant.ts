@@ -25,6 +25,8 @@ export const tenantConfig = {
   home: {
     heroVideoPath:
       process.env.NEXT_PUBLIC_HERO_VIDEO_PATH ?? null,
+    heroBannerPath:
+      process.env.NEXT_PUBLIC_HERO_BANNER_PATH ?? null,
     categoryBannerPath:
       process.env.NEXT_PUBLIC_CATEGORY_BANNER_PATH ??
       "/assets/category_banner.jpg",

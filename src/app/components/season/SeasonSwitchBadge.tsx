@@ -15,8 +15,8 @@ export const SeasonSwitchBadge: FC<SeasonSwitchBadgeProps> = ({
   linkedId,
 }) => (
   <div className="flex items-center gap-3 text-sm mt-2">
-    <span className="text-gray-400">
-      Temporada: <span className="text-white font-medium">{SEASON_LABEL[current]}</span>
+    <span className="text-[var(--color-text-secondary)]">
+      Temporada: <span className="text-[var(--color-text)] font-medium">{SEASON_LABEL[current]}</span>
     </span>
     <Link
       href={`/campeonatos/${linkedId}`}

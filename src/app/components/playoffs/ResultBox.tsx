@@ -28,7 +28,7 @@ export const ResultBox: React.FC<ResultBoxProps> = ({
         src={!!team ? team?.logoUrl : LOGO_DEFAULT_TEAM}
         style={{ height: logo_size, width: logo_size }}
         className={
-          !!team ? "bg-gray-200 object-contain" : "bg-black object-contain"
+          !!team ? "bg-[var(--color-surface-hover)] object-contain" : "bg-[var(--color-bg)] object-contain"
         }
         alt={""}
         width={logo_size}
@@ -86,7 +86,7 @@ export const InvertedResultBox: React.FC<ResultBoxProps> = ({
       src={!!team ? team?.logoUrl : LOGO_DEFAULT_TEAM}
       style={{ height: logo_size, width: logo_size }}
       className={
-        !!team ? "bg-gray-200 object-contain" : "bg-black object-contain"
+        !!team ? "bg-[var(--color-surface-hover)] object-contain" : "bg-[var(--color-bg)] object-contain"
       }
       alt={""}
       width={logo_size}

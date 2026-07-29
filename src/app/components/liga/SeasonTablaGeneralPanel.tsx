@@ -58,7 +58,7 @@ export const SeasonTablaGeneralPanel: FC<SeasonTablaGeneralPanelProps> = ({
                 : { backgroundColor: "var(--color-surface-2)", color: "var(--color-text-secondary)", border: "1px solid var(--color-border)" }
             }
           >
-            Cat {cat.name}
+            {cat.name}
           </button>
         ))}
       </div>

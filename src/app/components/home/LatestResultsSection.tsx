@@ -18,7 +18,7 @@ const LatestResultsSection = ({ liga, cups }: LatestResultsSectionProps) => {
   const categoryTabs: TabItem[] = (liga?.categories ?? []).map((cat) => ({
     kind: "category",
     id: cat.id,
-    label: `Cat ${cat.name} — ${cat.gender === "male" ? "Masculina" : "Femenina"}`,
+    label: `${cat.name}`,
     ligaId: liga!.id,
   }));
 

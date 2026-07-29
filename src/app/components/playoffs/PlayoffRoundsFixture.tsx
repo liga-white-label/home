@@ -90,7 +90,7 @@ const PlayoffRoundsFixture: React.FC<PlayoffRoundsFixtureProps> = ({
             height: "8px",
           },
           "&::-webkit-scrollbar-track": {
-            background: "#f1f1f1",
+            background: "var(--color-surface)",
             borderRadius: "4px",
           },
           "&::-webkit-scrollbar-thumb": {

@@ -34,10 +34,10 @@ export const ZonaPanel: FC<ZonaPanelProps> = ({ zoneId, torneoId }) => {
               <Link
                 key={cat.id}
                 href={`/campeonatos/${torneoId}/categorias/${cat.id}`}
-                className="px-4 py-2 rounded-full text-sm text-gray-300 hover:text-[var(--color-text)] transition-colors"
+                className="px-4 py-2 rounded-full text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] transition-colors"
                 style={{ backgroundColor: "var(--color-surface-2)", border: "1px solid var(--color-border)" }}
               >
-                Cat {cat.name}
+                {cat.name}
               </Link>
             ))}
           </div>

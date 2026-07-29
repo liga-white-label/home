@@ -107,14 +107,21 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
         </p>
         <Close onClick={handleCloseModal} className="cursor-pointer" />
       </DialogTitle>
-      <DialogTitle className="flex items-center justify-center gap-10 bg-slate-200">
+      <DialogTitle
+        className="flex items-center justify-center gap-10"
+        style={{
+          backgroundColor: "var(--color-surface)",
+          color: "var(--color-text)",
+          borderBottom: "1px solid var(--color-border)",
+        }}
+      >
         <Box className="flex gap-2 items-center">
           <CalendarMonth className="text-sm md:text-base" />
           <p className="sm:flex hidden text-sm md:text-base">
             {match.date
               ? capitalize(match.date.format("dddd")) +
-                " " +
-                match.date.format("LL")
+              " " +
+              match.date.format("LL")
               : "A definir"}
           </p>
           <p className="sm:hidden flex text-xs">
@@ -154,7 +161,10 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
                 <p className="text-white font-bold text-xl md:text-2xl">{`${match.homeTeamGoals} - ${match.awayTeamGoals}`}</p>
               </div>
             ) : (
-              <div className="w-10 bg-gray-500 px-2 py-1 rounded-md items-center flex justify-center">
+              <div
+                className="w-10 px-2 py-1 rounded-md items-center flex justify-center"
+                style={{ backgroundColor: "var(--color-surface-hover)" }}
+              >
                 <p className="text-white font-bold text-sm md:text-base">
                   {"-"}
                 </p>

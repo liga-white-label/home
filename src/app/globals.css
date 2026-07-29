@@ -6,25 +6,17 @@
   /* Overridden at runtime via layoutWrapper inline style */
   --color-primary: #A60000;
 
-  /* Theme tokens — user-toggleable, default is light (see ThemeModeContext).
-     data-theme is set on <html> from the user's stored preference. */
-  --color-bg: #0a0a0a;
-  --color-surface: #1a1a1a;
-  --color-surface-2: #111111;
-  --color-surface-hover: #2a2a2a;
-  --color-border: #2a2a2a;
+  /* Tema único — sin toggle claro/oscuro. El resto de las superficies se
+     derivan de --color-bg con color-mix() (en vez de hex fijos) para que
+     tarjetas, badges y filas siempre queden un escalón más claras que el
+     fondo, sin depender de que cada tenant acierte varios hex a mano. */
+  --color-bg: #1a1a1a;
+  --color-surface: color-mix(in srgb, var(--color-bg) 96%, white 4%);
+  --color-surface-2: color-mix(in srgb, var(--color-bg) 95%, white 5%);
+  --color-surface-hover: color-mix(in srgb, var(--color-bg) 90%, white 10%);
+  --color-border: color-mix(in srgb, var(--color-bg) 65%, white 35%);
   --color-text: #ffffff;
-  --color-text-secondary: #9ca3af;
-}
-
-:root[data-theme="light"] {
-  --color-bg: #ffffff;
-  --color-surface: #f5f6f8;
-  --color-surface-2: #eef0f3;
-  --color-surface-hover: #e7e9ed;
-  --color-border: #dde1e6;
-  --color-text: #111111;
-  --color-text-secondary: #6b7280;
+  --color-text-secondary: #d6d2cf;
 }
 
 html {

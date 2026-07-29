@@ -108,7 +108,7 @@ export default function NovedadDetailPage() {
             className="rounded-xl p-6 md:p-8"
             style={{ backgroundColor: "var(--color-surface)" }}
           >
-            <p className="text-gray-300 text-base leading-relaxed whitespace-pre-wrap">
+            <p className="text-[var(--color-text-secondary)] text-base leading-relaxed whitespace-pre-wrap">
               {novedad.descripcion}
             </p>
           </div>

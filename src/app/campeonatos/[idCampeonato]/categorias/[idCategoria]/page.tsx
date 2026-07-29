@@ -37,24 +37,22 @@ export default function Home() {
   const seasonInfo =
     campeonato?.season && campeonato?.linkedSeasonId
       ? {
-          current: campeonato.season,
-          linkedId: campeonato.linkedSeasonId,
-          aperturaId:
-            campeonato.season === SeasonEnum.APERTURA
-              ? idCampeonato.toString()
-              : campeonato.linkedSeasonId,
-          clausuraId:
-            campeonato.season === SeasonEnum.CLAUSURA
-              ? idCampeonato.toString()
-              : campeonato.linkedSeasonId,
-        }
+        current: campeonato.season,
+        linkedId: campeonato.linkedSeasonId,
+        aperturaId:
+          campeonato.season === SeasonEnum.APERTURA
+            ? idCampeonato.toString()
+            : campeonato.linkedSeasonId,
+        clausuraId:
+          campeonato.season === SeasonEnum.CLAUSURA
+            ? idCampeonato.toString()
+            : campeonato.linkedSeasonId,
+      }
       : null;
 
   return (
     <CategoriaPageBase
-      title={`Categoria ${categoria?.name} - ${
-        categoria?.gender === "male" ? "Masculina" : "Femenina"
-      }`}
+      title={`${categoria?.name}`}
       id={idCategoria.toString()}
       seasonInfo={seasonInfo}
     />

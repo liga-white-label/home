@@ -38,11 +38,11 @@ const ZONE_COLORS = {
   ascenso: { border: "#22c55e", text: "#22c55e" },
   playoff: { border: "#f59e0b", text: "#f59e0b" },
   descenso: { border: "#ef4444", text: "#ef4444" },
-  none: { border: "transparent", text: "#9ca3af" },
+  none: { border: "transparent", text: "var(--color-text-secondary)" },
 };
 
 const DG_COLOR = (dg: number) =>
-  dg > 0 ? "#22c55e" : dg < 0 ? "#ef4444" : "#9ca3af";
+  dg > 0 ? "#22c55e" : dg < 0 ? "#ef4444" : "var(--color-text-secondary)";
 
 const TH = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
   <th

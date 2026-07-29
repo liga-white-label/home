@@ -2,10 +2,16 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-[#0a0a0a] p-4">
-      <div className="bg-white p-8 rounded-lg shadow-lg text-center">
+    <div
+      className="flex flex-col items-center justify-center min-h-screen p-4"
+      style={{ backgroundColor: "var(--color-bg)" }}
+    >
+      <div
+        className="p-8 rounded-lg shadow-lg text-center"
+        style={{ backgroundColor: "var(--color-surface-hover)", color: "var(--color-text)" }}
+      >
         <h2 className="text-3xl font-bold mb-4">Página no encontrada</h2>
-        <p className="text-gray-600 mb-4">
+        <p className="mb-4" style={{ color: "var(--color-text-secondary)" }}>
           Lo sentimos, la página que estás buscando no existe.
         </p>
         <Link

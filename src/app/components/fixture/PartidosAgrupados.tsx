@@ -41,7 +41,7 @@ export const PartidosAgrupados: React.FC<PartidosAgrupadosProps> = ({
         msOverflowStyle: "-ms-autohiding-scrollbar",
         "&::-webkit-scrollbar": { height: "6px" },
         "&::-webkit-scrollbar-track": { background: "var(--color-surface)", borderRadius: "4px" },
-        "&::-webkit-scrollbar-thumb": { background: "#333", borderRadius: "4px" },
+        "&::-webkit-scrollbar-thumb": { background: "var(--color-border)", borderRadius: "4px" },
       }}
     >
       <Table

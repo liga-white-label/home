@@ -12,8 +12,8 @@ export const MatchField: FC<MatchFieldProps> = ({ field, isLessThanMd }) => {
 
   return (
     <Box display="flex" alignItems="center" gap="8px">
-      <StadiumOutlinedIcon sx={{ color: "#6b7280", fontSize: 18 }} />
-      <Box component="span" sx={{ color: "#9ca3af", fontSize: "0.85rem" }}>
+      <StadiumOutlinedIcon sx={{ color: "var(--color-text-secondary)", fontSize: 18 }} />
+      <Box component="span" sx={{ color: "var(--color-text-secondary)", fontSize: "0.85rem" }}>
         {field || "A definir"}
       </Box>
     </Box>

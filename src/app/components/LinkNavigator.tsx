@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -76,15 +75,20 @@ export const LinkNavigator = () => {
     isLoading,
     ligaActual,
     categorias,
-    copasActivas,
     torneosActivos,
     torneosGrupos,
     seasonPair,
   } = useActiveCampeonatos();
 
   const catDropdown = useDropdown();
-  const copaDropdown = useDropdown();
   const torneosDropdown = useDropdown();
+  const institucionalDropdown = useDropdown();
+
+  const institucionalItems = [
+    { label: "Autoridades", href: "/institucional/autoridades" },
+    { label: "Departamentos", href: "/institucional/departamentos" },
+    { label: "Reglamento y Estatuto", href: "/institucional/reglamento-y-estatuto" },
+  ];
 
   if (isLoading) {
     return (
@@ -101,11 +105,7 @@ export const LinkNavigator = () => {
     `text-base font-semibold transition-colors relative pb-0.5 ${active ? "text-[var(--color-text)]" : "text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
     }`;
 
-  // El link activo se compara por id real de la URL, no por substring. Como
-  // "Torneos" ahora lista TODOS los campeonatos habilitados (incluidas las
-  // copas), puede iluminarse junto con "Copas" para un mismo /campeonatos/{id}.
   const rootId = path.match(/^\/campeonatos\/([^/]+)\/?$/)?.[1];
-  const isViewingCopa = !!rootId && copasActivas.some((c) => c.id === rootId);
   const isViewingTorneo =
     !!rootId && torneosActivos.some((t) => t.id === rootId);
 
@@ -141,7 +141,7 @@ export const LinkNavigator = () => {
           }}
           onClick={() => closeAndPush(`/campeonatos/${liga.id}/categorias/${c.id}`)}
         >
-          {`Cat ${c.name} — ${c.gender === "male" ? "Masculina" : "Femenina"}`}
+          {c.name}
         </button>
       );
     });
@@ -154,33 +154,6 @@ export const LinkNavigator = () => {
         {masc.length > 0 && renderCategoryButtons(liga, masc)}
         {fem.length > 0 && renderCategoryButtons(liga, fem)}
       </>
-    );
-  };
-
-  const renderCopaButton = (c: Campeonato) => {
-    const active = c.id === rootId;
-    return (
-      <button
-        key={c.id}
-        style={{
-          ...itemStyle,
-          borderLeftColor: active ? "var(--color-primary)" : "transparent",
-          backgroundColor: active ? "var(--color-surface-hover)" : "transparent",
-          fontWeight: active ? 700 : itemStyle.fontWeight,
-        }}
-        onMouseEnter={(e) => {
-          if (!active) e.currentTarget.style.backgroundColor = "var(--color-surface-hover)";
-        }}
-        onMouseLeave={(e) => {
-          if (!active) e.currentTarget.style.backgroundColor = "transparent";
-        }}
-        onClick={() => {
-          copaDropdown.setOpen(false);
-          router.push(`/campeonatos/${c.id}`);
-        }}
-      >
-        {c.name}
-      </button>
     );
   };
 
@@ -213,25 +186,14 @@ export const LinkNavigator = () => {
 
   return (
     <div className="hidden lg:flex gap-8 items-center">
-      {/* Inicio */}
-      <Link href="/" className={navLinkClass(path === "/")}>
-        Inicio
-        {path === "/" && (
-          <span
-            className="absolute bottom-0 left-0 w-full h-0.5 rounded-full"
-            style={{ backgroundColor: "rgba(var(--color-gradient),1)" }}
-          />
-        )}
-      </Link>
-
       {/* Categorías dropdown */}
       {(categorias.length > 0 || seasonPair.isPartOfSeason) && (
         <div className="relative" ref={catDropdown.ref}>
           <button
             onClick={() => {
               catDropdown.setOpen((v) => !v);
-              copaDropdown.setOpen(false);
               torneosDropdown.setOpen(false);
+              institucionalDropdown.setOpen(false);
             }}
             className={navLinkClass(path.includes("categorias"))}
           >
@@ -301,7 +263,7 @@ export const LinkNavigator = () => {
           onClick={() => {
             torneosDropdown.setOpen((v) => !v);
             catDropdown.setOpen(false);
-            copaDropdown.setOpen(false);
+            institucionalDropdown.setOpen(false);
           }}
           className={navLinkClass(isViewingTorneo)}
         >
@@ -344,18 +306,18 @@ export const LinkNavigator = () => {
         </AnimatePresence>
       </div>
 
-      {/* Copas dropdown */}
-      <div className="relative" ref={copaDropdown.ref}>
+      {/* Institucional dropdown */}
+      <div className="relative" ref={institucionalDropdown.ref}>
         <button
           onClick={() => {
-            copaDropdown.setOpen((v) => !v);
+            institucionalDropdown.setOpen((v) => !v);
             catDropdown.setOpen(false);
             torneosDropdown.setOpen(false);
           }}
-          className={navLinkClass(isViewingCopa)}
+          className={navLinkClass(path.includes("institucional"))}
         >
-          Copas <ChevronDown />
-          {isViewingCopa && (
+          Institucional <ChevronDown />
+          {path.includes("institucional") && (
             <span
               className="absolute bottom-0 left-0 w-full h-0.5 rounded-full"
               style={{ backgroundColor: "rgba(var(--color-gradient),1)" }}
@@ -364,37 +326,33 @@ export const LinkNavigator = () => {
         </button>
 
         <AnimatePresence>
-          {copaDropdown.open && (
+          {institucionalDropdown.open && (
             <motion.div
-              key="copas-dropdown"
+              key="institucional-dropdown"
               style={dropdownStyle}
               initial={{ opacity: 0, y: -6 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.15, ease: "easeOut" }}
             >
-              {copasActivas.length > 0 ? (
-                copasActivas.map(renderCopaButton)
-              ) : (
-                <p style={{ ...itemStyle, color: "var(--color-text-secondary)", cursor: "default" }}>
-                  No hay copas
-                </p>
-              )}
+              {institucionalItems.map((item) => (
+                <button
+                  key={item.href}
+                  style={itemStyle}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--color-surface-hover)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+                  onClick={() => {
+                    institucionalDropdown.setOpen(false);
+                    router.push(item.href);
+                  }}
+                >
+                  {item.label}
+                </button>
+              ))}
             </motion.div>
           )}
         </AnimatePresence>
       </div>
-
-      {/* Novedades */}
-      <Link href="/novedades" className={navLinkClass(path.includes("novedades"))}>
-        Novedades
-        {path.includes("novedades") && (
-          <span
-            className="absolute bottom-0 left-0 w-full h-0.5 rounded-full"
-            style={{ backgroundColor: "rgba(var(--color-gradient),1)" }}
-          />
-        )}
-      </Link>
     </div>
   );
 };
