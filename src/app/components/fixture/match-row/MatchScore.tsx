@@ -18,10 +18,11 @@ export const MatchScore: FC<MatchScoreProps> = ({
 }) => {
   const theme = useTheme();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down("sm"));
+  const isLive = status === MatchStatus.JUGANDO;
 
   return (
     <Box
-      bgcolor={status === MatchStatus.JUGADO ? "var(--color-bg)" : "gray"}
+      bgcolor={status === MatchStatus.JUGADO || isLive ? "var(--color-bg)" : "gray"}
       px={isSmallDevice ? 1 : 2}
       py={isSmallDevice ? 0.5 : 1}
       borderRadius="4px"
@@ -32,6 +33,7 @@ export const MatchScore: FC<MatchScoreProps> = ({
       sx={{
         transition: "all 0.2s ease",
         position: "relative",
+        gap: isLive ? 1 : 0,
         "&:after": isSmallDevice
           ? {
               content: "''",
@@ -47,13 +49,28 @@ export const MatchScore: FC<MatchScoreProps> = ({
           : {},
       }}
     >
+      {isLive && (
+        <Box display="flex" alignItems="center" gap={0.5}>
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600" />
+          </span>
+          <Typography
+            variant="caption"
+            fontWeight="bold"
+            sx={{ color: "#ef4444", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.05em" }}
+          >
+            Vivo
+          </Typography>
+        </Box>
+      )}
       <Typography
         variant="body2"
         color="var(--color-text)"
         fontWeight="bold"
         textAlign="center"
       >
-        {status === MatchStatus.JUGADO
+        {status === MatchStatus.JUGADO || isLive
           ? `${homeTeamGoals ?? 0} - ${awayTeamGoals ?? 0}`
           : !!date && moment(date).isValid()
           ? moment(date).format("HH:mm")

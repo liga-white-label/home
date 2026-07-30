@@ -1,34 +1,29 @@
 const DEPARTAMENTOS = [
   {
-    nombre: "Futbol Menor",
-    integrantes: ["Pecini Gustavo", "Ridolfo Gustavo"],
-    contacto: "futbolmenor@ligadelsur.com.ar",
+    nombre: "Futbol Menor e Infantil",
+    integrantes: ["Julián Fernández", "Claudio Quillodran"],
   },
   {
     nombre: "Futsal",
-    integrantes: ["Barisone Sebastián", "Alejandro Aravena"],
-    contacto: "futsal@ligadelsur.com.ar",
+    integrantes: ["Alejandro Aravena", "Sergio Vallejos", "Matias Redivo"],
   },
   {
     nombre: "Futbol Femenino",
-    integrantes: ["Azpeitia Mercedes", "Gorocito Pedro"],
-    contacto: "futbolfemenino@ligadelsur.com.ar",
+    integrantes: ["Gustavo Seltenreich", "Gianfranco Cornachini"],
   },
   {
     nombre: "Colegio de Arbitros",
-    integrantes: ["Evangelista Daniel", "Omar Sale Sergio", "Manganaro Oscar"],
-    contacto: "arbitros@ligadelsur.com.ar",
+    integrantes: ["Gustavo Ridolfo", "Edgardo González", "Horacio Velázquez"],
   },
   {
     nombre: "Tribunal de Penas",
     integrantes: [
       "Gustavo Salazar",
-      "Eduardo Bancora",
-      "Alberto Gómez",
-      "Sergio Rial",
       "Jonatan Raijman",
+      "Alberto Gómez",
+      "Eduardo Dumrauf",
+      "Adolfo Montenegro",
     ],
-    contacto: "tribunal@ligadelsur.com.ar",
   },
 ];
 
@@ -76,21 +71,6 @@ export default function DepartamentosPage() {
                     {integrante}
                   </p>
                 ))}
-              </div>
-
-              <div>
-                <p
-                  className="text-sm font-bold mb-1"
-                  style={{ color: "var(--color-text)" }}
-                >
-                  Contacto
-                </p>
-                <p
-                  className="text-sm"
-                  style={{ color: "var(--color-text-secondary)" }}
-                >
-                  {depto.contacto}
-                </p>
               </div>
             </div>
           </div>

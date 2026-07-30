@@ -7,7 +7,7 @@ import { useSidebar } from "../context/SideBarContext";
 import { tenantConfig } from "@/config/tenant";
 
 const DOCUMENTOS_URL =
-  "https://drive.google.com/drive/folders/1S72DG7TJO6mNopEVqkk-lscnusQTbgRg";
+  "https://drive.google.com/drive/folders/1ZVW8BcneNEgpIa2Y44BpIjiL61qW9kQ0?usp=sharing";
 
 export const NavBar = () => {
   const { switchSidebar } = useSidebar();

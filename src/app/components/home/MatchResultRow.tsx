@@ -25,20 +25,17 @@ const TeamAvatar = ({ name, logo }: { name: string | null; logo: string | null }
 
 const ScoreBox = ({ match }: { match: SimplifiedMatch }) => {
   const isPlayed = match.status === MatchStatus.JUGADO;
-  const isLive = (match.status as string) === "live" || (match.status as string) === "EN_VIVO";
+  const isLive = match.status === MatchStatus.JUGANDO;
   const hasTime = !isPlayed && !isLive && match.date && moment(match.date).isValid();
 
   if (isLive) {
     return (
       <div
-        className="flex flex-col items-center justify-center px-3 py-1 rounded min-w-[64px]"
+        className="flex items-center justify-center px-3 py-1.5 rounded min-w-[64px]"
         style={{ backgroundColor: "var(--color-primary)" }}
       >
-        <span className="text-white font-bold text-sm leading-tight">
-          {match.homeTeamGoals ?? 0}-{match.awayTeamGoals ?? 0}
-        </span>
-        <span className="text-white/80 text-[10px] font-semibold uppercase tracking-wider">
-          En vivo
+        <span className="text-white font-bold text-sm">
+          {match.homeTeamGoals ?? 0} - {match.awayTeamGoals ?? 0}
         </span>
       </div>
     );
@@ -70,6 +67,18 @@ const ScoreBox = ({ match }: { match: SimplifiedMatch }) => {
   );
 };
 
+const LiveBadge = () => (
+  <div className="flex items-center gap-1.5 flex-shrink-0 pr-2">
+    <span className="relative flex h-2 w-2">
+      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
+      <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600" />
+    </span>
+    <span className="text-red-500 text-[10px] font-bold uppercase tracking-wider">
+      Vivo
+    </span>
+  </div>
+);
+
 const MatchResultRow = ({
   match,
   onClick,
@@ -78,6 +87,7 @@ const MatchResultRow = ({
   onClick?: () => void;
 }) => {
   const isPlayed = match.status === MatchStatus.JUGADO;
+  const isLive = match.status === MatchStatus.JUGANDO;
 
   return (
     <div
@@ -101,6 +111,8 @@ const MatchResultRow = ({
           : undefined
       }
     >
+      {isLive && <LiveBadge />}
+
       {/* Home team */}
       <div className="flex items-center gap-2 flex-1 justify-end min-w-0">
         <span

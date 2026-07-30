@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { httpClient } from "@/app/utils/httpClient";
 import { getPositionsMapper, TablePosition } from "@/app/models/FaseCampeonato";
-import { faseFinalMapper, PhaseSeasonFinalRaw } from "@/app/models/FaseFinal";
+import { faseFinalMapper, PhaseSeasonFinal } from "@/app/models/FaseFinal";
 
 interface AccumulatedTableParams {
   aperturaLeagueId: string;
@@ -62,7 +62,7 @@ export const useAccumulatedTableQuery = (params: AccumulatedTableParams) =>
   });
 
 export const useSeasonFinalQuery = (phaseId: string) =>
-  useQuery<PhaseSeasonFinalRaw>({
+  useQuery<PhaseSeasonFinal>({
     queryKey: repo.keys.seasonFinal(phaseId),
     queryFn: () => repo.getSeasonFinal(phaseId),
     staleTime: 5 * 60 * 1000,

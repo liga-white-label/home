@@ -63,16 +63,37 @@ export const getRoundLabel = (roundNumber: number): string => {
   }
 };
 
+const isRoundComplete = (round: RoundCup): boolean => {
+  if (round.matchesPlayoff.length === 0) return true;
+  return round.matchesPlayoff.every((m) => {
+    const homePlayed = m.homeMatch?.status === MatchStatus.JUGADO;
+    const awayPlayed =
+      !round.doubleMatch || !m.awayMatch || m.awayMatch.status === MatchStatus.JUGADO;
+    return homePlayed && awayPlayed;
+  });
+};
+
 /**
- * Returns the most advanced round (smallest roundNumber) that has
- * at least one played home match. Returns null if no round is active yet.
+ * Returns the round to show as "current": the earliest round (in tournament
+ * order, i.e. largest roundNumber first) that hasn't been fully played yet.
+ * If every round is complete, falls back to the most advanced round that has
+ * matches (the Final), so completed results keep showing. Returns null if no
+ * round has any data at all.
  */
 export const findMostAdvancedRound = (rounds: RoundCup[]): RoundCup | null => {
-  const active = rounds.filter((r) =>
-    r.matchesPlayoff.some((m) => m.homeMatch?.status === MatchStatus.JUGADO)
+  if (rounds.length === 0) return null;
+
+  const chronological = rounds.slice().sort((a, b) => b.roundNumber - a.roundNumber);
+
+  const nextToPlay = chronological.find((r) => !isRoundComplete(r));
+  if (nextToPlay) return nextToPlay;
+
+  return (
+    chronological
+      .slice()
+      .reverse()
+      .find((r) => r.matchesPlayoff.length > 0) ?? null
   );
-  if (active.length === 0) return null;
-  return active.sort((a, b) => a.roundNumber - b.roundNumber)[0];
 };
 
 /**

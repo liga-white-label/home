@@ -28,6 +28,7 @@ export enum MatchStatus {
   PENDIENTE = "Upcoming",
   JUGADO = "Played",
   SUSPENDIDO = "Suspended",
+  JUGANDO = "Playing",
 }
 
 export interface MatchToGenerate {

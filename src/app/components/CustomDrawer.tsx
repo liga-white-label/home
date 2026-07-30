@@ -29,7 +29,7 @@ const ChevronDown = ({ open }: { open: boolean }) => (
 );
 
 const DOCUMENTOS_URL =
-  "https://drive.google.com/drive/folders/1S72DG7TJO6mNopEVqkk-lscnusQTbgRg";
+  "https://drive.google.com/drive/folders/1ZVW8BcneNEgpIa2Y44BpIjiL61qW9kQ0?usp=sharing";
 
 const INSTITUCIONAL_ITEMS = [
   { label: "Autoridades", href: "/institucional/autoridades" },

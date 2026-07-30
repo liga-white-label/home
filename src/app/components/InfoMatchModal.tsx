@@ -97,7 +97,16 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
       }}
     >
       <DialogTitle className="flex justify-between items-center text-white" style={{ backgroundColor: "var(--color-primary)" }}>
-        <p className="text-xl md:text-2xl">
+        <p className="text-xl md:text-2xl flex items-center gap-2">
+          {match.status === MatchStatus.JUGANDO && (
+            <span className="flex items-center gap-1.5 text-xs md:text-sm font-bold uppercase tracking-wider text-red-500">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600" />
+              </span>
+              Vivo
+            </span>
+          )}
           Detalles del Partido{" "}
           <span className="text-xs md:text-sm">
             {match.status === MatchStatus.JUGADO
@@ -156,9 +165,9 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
           </Box>
 
           <Box className="flex-grow-0 flex-shrink-0 mx-auto ">
-            {match.status === MatchStatus.JUGADO ? (
+            {match.status === MatchStatus.JUGADO || match.status === MatchStatus.JUGANDO ? (
               <div className="w-18 px-2 py-1 rounded-md items-center flex justify-center" style={{ backgroundColor: "var(--color-primary)" }}>
-                <p className="text-white font-bold text-xl md:text-2xl">{`${match.homeTeamGoals} - ${match.awayTeamGoals}`}</p>
+                <p className="text-white font-bold text-xl md:text-2xl">{`${match.homeTeamGoals ?? 0} - ${match.awayTeamGoals ?? 0}`}</p>
               </div>
             ) : (
               <div
