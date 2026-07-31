@@ -7,6 +7,7 @@ import MiniLoading from "./loading/MiniLoading";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Campeonato } from "@/app/models/Campeonato";
+import { Categoria } from "@/app/models/Categoria";
 import { useActiveCampeonatos } from "@/app/hooks/useActiveCampeonatos";
 
 const ChevronDown = ({ open }: { open: boolean }) => (
@@ -43,12 +44,14 @@ export const CustomDrawer = () => {
   const [institucionalOpen, setInstitucionalOpen] = useState(false);
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
 
-  const { isLoading, torneosGrupos } = useActiveCampeonatos();
+  const { isLoading, torneosGrupos, ligaActual, categorias } = useActiveCampeonatos();
+  const categoriasMasculinas = categorias.filter((c) => c.gender === "male");
 
   const toggleGroup = (label: string) =>
     setOpenGroups((groups) => ({ ...groups, [label]: !groups[label] }));
 
   const rootId = path.match(/^\/campeonatos\/([^/]+)\/?$/)?.[1];
+  const activeCategoriaId = path.match(/^\/campeonatos\/[^/]+\/categorias\/([^/]+)/)?.[1];
 
   const renderTorneoLink = (t: Campeonato) => {
     const active = t.id === rootId;
@@ -64,6 +67,24 @@ export const CustomDrawer = () => {
         }`}
       >
         {t.name}
+      </Link>
+    );
+  };
+
+  const renderCategoriaLink = (cat: Categoria) => {
+    const active = cat.id === activeCategoriaId;
+    return (
+      <Link
+        key={cat.id}
+        href={`/campeonatos/${ligaActual!.id}/categorias/${cat.id}`}
+        onClick={handleClose}
+        className={`block px-6 py-2.5 text-sm border-l-2 transition-colors ${
+          active
+            ? "border-[var(--color-primary)] bg-[var(--color-surface-hover)] text-[var(--color-text)] font-semibold"
+            : "border-transparent text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface-hover)]"
+        }`}
+      >
+        {cat.name}
       </Link>
     );
   };
@@ -91,6 +112,10 @@ export const CustomDrawer = () => {
           {/* Un accordion por disciplina, mostrando los campeonatos de esa disciplina */}
           {torneosGrupos.map((grupo) => {
             const isOpen = !!openGroups[grupo.label];
+            const showCategorias =
+              !!ligaActual &&
+              grupo.items.some((t) => t.id === ligaActual.id) &&
+              categoriasMasculinas.length > 0;
             return (
               <div key={grupo.label} className="border-b border-[var(--color-border)]">
                 <button
@@ -111,7 +136,9 @@ export const CustomDrawer = () => {
                       style={{ overflow: "hidden" }}
                     >
                       <div className="pb-2" style={{ backgroundColor: "var(--color-surface-2)" }}>
-                        {grupo.items.map(renderTorneoLink)}
+                        {showCategorias
+                          ? categoriasMasculinas.map(renderCategoriaLink)
+                          : grupo.items.map(renderTorneoLink)}
                       </div>
                     </motion.div>
                   )}

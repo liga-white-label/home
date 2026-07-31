@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import MiniLoading from "./loading/MiniLoading";
 import { Campeonato } from "@/app/models/Campeonato";
+import { Categoria } from "@/app/models/Categoria";
 import { useActiveCampeonatos } from "@/app/hooks/useActiveCampeonatos";
 import { useClickOutside } from "@/app/hooks/useClickOutside";
 
@@ -47,7 +48,9 @@ export const LinkNavigator = () => {
   const path = usePathname();
   const router = useRouter();
 
-  const { isLoading, torneosActivos, torneosGrupos } = useActiveCampeonatos();
+  const { isLoading, torneosActivos, torneosGrupos, ligaActual, categorias } =
+    useActiveCampeonatos();
+  const categoriasMasculinas = categorias.filter((c) => c.gender === "male");
 
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const navRef = useRef<HTMLDivElement>(null);
@@ -72,6 +75,8 @@ export const LinkNavigator = () => {
     }`;
 
   const rootId = path.match(/^\/campeonatos\/([^/]+)\/?$/)?.[1];
+  const campeonatoIdInPath = path.match(/^\/campeonatos\/([^/]+)/)?.[1];
+  const activeCategoriaId = path.match(/^\/campeonatos\/[^/]+\/categorias\/([^/]+)/)?.[1];
 
   const toggleMenu = (key: string) =>
     setOpenMenu((current) => (current === key ? null : key));
@@ -103,13 +108,47 @@ export const LinkNavigator = () => {
     );
   };
 
+  const renderCategoriaButton = (cat: Categoria) => {
+    const active = cat.id === activeCategoriaId;
+    return (
+      <button
+        key={cat.id}
+        style={{
+          ...itemStyle,
+          borderLeftColor: active ? "var(--color-primary)" : "transparent",
+          backgroundColor: active ? "var(--color-surface-hover)" : "transparent",
+          fontWeight: active ? 700 : itemStyle.fontWeight,
+        }}
+        onMouseEnter={(e) => {
+          if (!active) e.currentTarget.style.backgroundColor = "var(--color-surface-hover)";
+        }}
+        onMouseLeave={(e) => {
+          if (!active) e.currentTarget.style.backgroundColor = "transparent";
+        }}
+        onClick={() => {
+          setOpenMenu(null);
+          router.push(`/campeonatos/${ligaActual!.id}/categorias/${cat.id}`);
+        }}
+      >
+        {cat.name}
+      </button>
+    );
+  };
+
   return (
     <div className="hidden lg:flex gap-8 items-center" ref={navRef}>
       {/* Un dropdown por disciplina, mostrando los campeonatos de esa disciplina */}
       {torneosGrupos.map((grupo) => {
         const key = disciplinaKey(grupo.label);
         const isOpen = openMenu === key;
-        const isActive = grupo.items.some((t) => t.id === rootId);
+        const isActive = grupo.items.some((t) => t.id === campeonatoIdInPath);
+        // Para la disciplina de la liga actual (la que tiene categorías cargadas),
+        // el dropdown muestra directamente las categorías en vez de Apertura/Clausura:
+        // es lo que la mayoría busca y ahorra un click.
+        const showCategorias =
+          !!ligaActual &&
+          grupo.items.some((t) => t.id === ligaActual.id) &&
+          categoriasMasculinas.length > 0;
         return (
           <div className="relative" key={key}>
             <button
@@ -135,7 +174,9 @@ export const LinkNavigator = () => {
                   exit={{ opacity: 0, y: -6 }}
                   transition={{ duration: 0.15, ease: "easeOut" }}
                 >
-                  {grupo.items.map(renderTorneoButton)}
+                  {showCategorias
+                    ? categoriasMasculinas.map(renderCategoriaButton)
+                    : grupo.items.map(renderTorneoButton)}
                 </motion.div>
               )}
             </AnimatePresence>
