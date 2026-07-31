@@ -2,7 +2,6 @@
 
 import { FC, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
 import { FixturePage } from "./FixturePage";
 import { TablaDePosicionesWrapper } from "./TablasDePosicionesWrapper";
 import PlayoffsPage from "../playoffs/PlayoffsPage";
@@ -122,6 +121,35 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
     selectedTab >= TabsEnum.GRUPOS_BASE &&
     selectedTab < TabsEnum.FIXTURE_ZONAS_BASE;
   const isFixtureZonasTab = selectedTab >= TabsEnum.FIXTURE_ZONAS_BASE;
+
+  const tabHasContent =
+    (selectedTab === TabsEnum.POSICIONES && !hidePosiciones) ||
+    (selectedTab === TabsEnum.TABLA_GENERAL && !!seasonInfo) ||
+    (selectedTab === TabsEnum.FIXTURE && !!faseRegular) ||
+    (isGruposTab && !!getSelectedFaseGrupos()) ||
+    (isFixtureZonasTab && !!getSelectedFaseGrupos()) ||
+    (selectedTab === TabsEnum.PLAYOFFS && !!fasePlayoff) ||
+    (selectedTab === TabsEnum.DESCENSO && !!faseDescenso) ||
+    (selectedTab === TabsEnum.FASE_FINAL && !!faseFinal) ||
+    selectedTab === TabsEnum.ESTADISTICAS;
+
+  // Si el tab pedido por la URL no tiene contenido para esta categoría
+  // (ej: ?tab=1 en una categoría sin fase "general", como Infantiles y
+  // Menores, que solo tiene fases de zona), redirige a un tab válido en
+  // lugar de dejar la sección en blanco.
+  useEffect(() => {
+    if (!fases) return;
+    if (!tabHasContent) {
+      const fallbackTab = fasesGrupos.length > 0
+        ? TabsEnum.GRUPOS_BASE
+        : faseRegular
+          ? (hidePosiciones ? TabsEnum.FIXTURE : TabsEnum.POSICIONES)
+          : TabsEnum.ESTADISTICAS;
+      setSelectedTab(fallbackTab);
+      router.replace(`?tab=${fallbackTab}`);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fases]);
 
   const tabClass = (active: boolean) =>
     `cursor-pointer pb-3 text-sm font-medium whitespace-nowrap transition-colors ${active
@@ -258,14 +286,7 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
       </div>
 
       <div className="h-full w-full min-h-lvh overflow-hidden p-4 md:p-10" style={{ backgroundColor: "var(--color-bg)" }}>
-      <AnimatePresence mode="wait">
-      <motion.div
-        key={selectedTab}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.15, ease: "easeOut" }}
-      >
+      <div key={selectedTab}>
         {selectedTab === TabsEnum.POSICIONES && !hidePosiciones && (
           <TablaDePosicionesWrapper faseId={faseRegular?.id || ""} />
         )}
@@ -314,15 +335,14 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
         {selectedTab === TabsEnum.ESTADISTICAS && (
           <EstadisticasPage categoryId={id} />
         )}
-        {!hasFases && (
+        {(!hasFases || !tabHasContent) && (
           <div className="flex justify-center items-center h-full">
             <p className="text-xl text-center text-[var(--color-text-secondary)]">
               Todavía no hay información disponible para esta categoría.
             </p>
           </div>
         )}
-      </motion.div>
-      </AnimatePresence>
+      </div>
       </div>
     </main>
   );
