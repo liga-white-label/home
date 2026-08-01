@@ -39,18 +39,11 @@ const DayHeader = ({ label }: { label: string }) => (
   </div>
 );
 
-const parseFieldOrder = (s: string): [number, number] => {
-  const m = s.match(/^(Cancha|Sint[eé]tico)\s+(\d+)$/i);
-  if (!m) return [2, 0];
-  return [m[1].toLowerCase() === "cancha" ? 0 : 1, parseInt(m[2])];
-};
-
 const CategoryLatestMatches = ({
   categoryId,
   ligaId,
 }: CategoryLatestMatchesProps) => {
   const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
-  const [selectedCancha, setSelectedCancha] = useState<string | null>(null);
 
   const { data: fases, isLoading: isLoadingFases } =
     useAllFasesByCategoryQuery(categoryId);
@@ -95,19 +88,6 @@ const CategoryLatestMatches = ({
       return moment(a.date).valueOf() - moment(b.date).valueOf();
     }
   );
-
-  const availableCanchas = useMemo(() => {
-    const fields = Array.from(new Set(sorted.map((m) => m.field).filter(Boolean) as string[]));
-    return fields.sort((a, b) => {
-      const [ta, na] = parseFieldOrder(a);
-      const [tb, nb] = parseFieldOrder(b);
-      return ta !== tb ? ta - tb : na - nb;
-    });
-  }, [sorted]);
-
-  const filteredMatches = selectedCancha
-    ? sorted.filter((m) => m.field === selectedCancha)
-    : sorted;
 
   if (isLoading) {
     return (
@@ -217,39 +197,6 @@ const CategoryLatestMatches = ({
 
   return (
     <>
-      {availableCanchas.length > 0 && (
-        <div className="flex gap-2 overflow-x-auto px-4 pt-3 pb-1 flex-wrap">
-          <button
-            onClick={() => setSelectedCancha(null)}
-            className="whitespace-nowrap px-3 py-1.5 rounded text-sm font-medium transition-colors flex-shrink-0"
-            style={{
-              backgroundColor: selectedCancha === null ? "var(--color-primary)" : "var(--color-surface)",
-              color: selectedCancha === null ? "white" : "var(--color-text-secondary)",
-              border: "1px solid",
-              borderColor: selectedCancha === null ? "var(--color-primary)" : "var(--color-border)",
-              fontWeight: selectedCancha === null ? 700 : 500,
-            }}
-          >
-            Todas
-          </button>
-          {availableCanchas.map((cancha) => (
-            <button
-              key={cancha}
-              onClick={() => setSelectedCancha(cancha)}
-              className="whitespace-nowrap px-3 py-1.5 rounded text-sm font-medium transition-colors flex-shrink-0"
-              style={{
-                backgroundColor: selectedCancha === cancha ? "var(--color-primary)" : "var(--color-surface)",
-                color: selectedCancha === cancha ? "white" : "var(--color-text-secondary)",
-                border: "1px solid",
-                borderColor: selectedCancha === cancha ? "var(--color-primary)" : "var(--color-border)",
-                fontWeight: selectedCancha === cancha ? 700 : 500,
-              }}
-            >
-              {cancha}
-            </button>
-          ))}
-        </div>
-      )}
       <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid var(--color-surface)" }}>
         <span className="text-xs font-semibold uppercase tracking-widest text-[var(--color-text-secondary)]">
           Fecha {currentDate}
@@ -261,12 +208,12 @@ const CategoryLatestMatches = ({
           Ver fixture completo →
         </Link>
       </div>
-      {filteredMatches.length === 0 ? (
+      {sorted.length === 0 ? (
         <p className="text-center text-[var(--color-text-secondary)] py-8 text-sm">
           No hay partidos para esta fecha.
         </p>
       ) : (
-        groupMatchesByDay(filteredMatches).map((group) => (
+        groupMatchesByDay(sorted).map((group) => (
           <div key={group.dayKey}>
             <DayHeader label={group.dayLabel} />
             {group.matches.map((match, i) => (
