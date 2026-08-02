@@ -5,6 +5,7 @@ import {
   useAllFasesByCategoryQuery,
   useCurrentDateQuery,
   useCurrentDateGroupQuery,
+  useGeneralMatchesDetailQuery,
   useLeagueMatchesQuery,
   useLeagueGroupMatchesQuery,
   useOneFasePlayoffQuery,
@@ -88,6 +89,15 @@ const CategoryLatestMatches = ({
       return moment(a.date).valueOf() - moment(b.date).valueOf();
     }
   );
+
+  const generalMatchDetailQueries = useGeneralMatchesDetailQuery(
+    sorted,
+    faseRegular?.id ?? ""
+  );
+  const sortedWithDetail: SimplifiedMatch[] = sorted.map((m, i) => ({
+    ...m,
+    matchDetail: generalMatchDetailQueries[i]?.data,
+  }));
 
   if (isLoading) {
     return (
@@ -208,12 +218,12 @@ const CategoryLatestMatches = ({
           Ver fixture completo →
         </Link>
       </div>
-      {sorted.length === 0 ? (
+      {sortedWithDetail.length === 0 ? (
         <p className="text-center text-[var(--color-text-secondary)] py-8 text-sm">
           No hay partidos para esta fecha.
         </p>
       ) : (
-        groupMatchesByDay(sorted).map((group) => (
+        groupMatchesByDay(sortedWithDetail).map((group) => (
           <div key={group.dayKey}>
             <DayHeader label={group.dayLabel} />
             {group.matches.map((match, i) => (

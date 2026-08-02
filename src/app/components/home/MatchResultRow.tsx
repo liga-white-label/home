@@ -32,10 +32,19 @@ const ScoreBox = ({ match }: { match: SimplifiedMatch }) => {
   if (isLive) {
     return (
       <div
-        className="flex items-center justify-center px-3 py-1.5 rounded min-w-[64px]"
+        className="flex flex-col items-center justify-center gap-0.5 px-3 py-1 rounded min-w-[64px]"
         style={{ backgroundColor: "var(--color-primary)" }}
       >
-        <span className="text-white font-bold text-sm">
+        <div className="flex items-center gap-1">
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
+            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white" />
+          </span>
+          <span className="text-white text-[9px] font-bold uppercase tracking-wider leading-none">
+            Vivo
+          </span>
+        </div>
+        <span className="text-white font-bold text-sm leading-none">
           {match.homeTeamGoals ?? 0} - {match.awayTeamGoals ?? 0}
         </span>
       </div>
@@ -112,18 +121,6 @@ const Goleadores = ({ match }: { match: SimplifiedMatch }) => {
   );
 };
 
-const LiveBadge = () => (
-  <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
-    <span className="relative flex h-2 w-2">
-      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
-      <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600" />
-    </span>
-    <span className="text-red-500 text-[10px] font-bold uppercase tracking-wider">
-      Vivo
-    </span>
-  </div>
-);
-
 const MatchResultRow = ({
   match,
   onClick,
@@ -132,7 +129,6 @@ const MatchResultRow = ({
   onClick?: () => void;
 }) => {
   const isPlayed = match.status === MatchStatus.JUGADO;
-  const isLive = match.status === MatchStatus.JUGANDO;
 
   return (
     <div
@@ -156,9 +152,7 @@ const MatchResultRow = ({
           : undefined
       }
     >
-      <div className="relative flex items-center justify-between gap-3 py-3 px-4">
-        {isLive && <LiveBadge />}
-
+      <div className="flex items-center justify-between gap-3 py-3 px-4">
         {/* Home team */}
         <div className="flex items-center gap-2 flex-1 justify-end min-w-0">
           <span

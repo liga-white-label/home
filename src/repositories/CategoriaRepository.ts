@@ -1,8 +1,8 @@
 import { Categoria } from "@/app/models/Categoria";
 import { GeneroEnum } from "@/app/utils/enums/GeneroEnum";
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { useQueries, useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { httpClient } from "@/app/utils/httpClient";
-import { partidoMapper, SimplifiedMatch } from "@/app/models/Match";
+import { MatchStatus, partidoMapper, SimplifiedMatch } from "@/app/models/Match";
 import { Team } from "@/app/models/Equipo";
 import {
   playoffFaseMapper,
@@ -205,6 +205,27 @@ export const useOnePartidoQuery = (
         faseId: faseId,
       }),
     enabled: enabled,
+  });
+
+// Fetches per-match detail (goal scorers included) for played matches coming
+// from getAllLeagueMatches, which only returns the summary shape.
+export const useGeneralMatchesDetailQuery = (
+  matches: SimplifiedMatch[],
+  faseId: string
+) =>
+  useQueries({
+    queries: matches.map((m) => ({
+      queryKey: repo.keys.partido(m.homeTeamId + m.awayTeamId + faseId),
+      queryFn: () =>
+        repo.getOnePartido({
+          homeTeamId: m.homeTeamId,
+          awayTeamId: m.awayTeamId,
+          faseId,
+        }),
+      enabled: !!faseId && m.status === MatchStatus.JUGADO,
+      staleTime: 5 * 60 * 1000,
+      refetchOnWindowFocus: false,
+    })),
   });
 
 export const useOneFasePlayoffQuery = ({
