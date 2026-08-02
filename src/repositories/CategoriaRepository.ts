@@ -207,25 +207,31 @@ export const useOnePartidoQuery = (
     enabled: enabled,
   });
 
-// Fetches per-match detail (goal scorers included) for played matches coming
-// from getAllLeagueMatches, which only returns the summary shape.
+// Fetches per-match detail (goal scorers included) for played/live matches
+// coming from getAllLeagueMatches, which only returns the summary shape.
 export const useGeneralMatchesDetailQuery = (
   matches: SimplifiedMatch[],
   faseId: string
 ) =>
   useQueries({
-    queries: matches.map((m) => ({
-      queryKey: repo.keys.partido(m.homeTeamId + m.awayTeamId + faseId),
-      queryFn: () =>
-        repo.getOnePartido({
-          homeTeamId: m.homeTeamId,
-          awayTeamId: m.awayTeamId,
-          faseId,
-        }),
-      enabled: !!faseId && m.status === MatchStatus.JUGADO,
-      staleTime: 5 * 60 * 1000,
-      refetchOnWindowFocus: false,
-    })),
+    queries: matches.map((m) => {
+      const isLive = m.status === MatchStatus.JUGANDO;
+      const isPlayed = m.status === MatchStatus.JUGADO;
+      const refetchInterval: number | false = isLive ? 30 * 1000 : false;
+      return {
+        queryKey: repo.keys.partido(m.homeTeamId + m.awayTeamId + faseId),
+        queryFn: () =>
+          repo.getOnePartido({
+            homeTeamId: m.homeTeamId,
+            awayTeamId: m.awayTeamId,
+            faseId,
+          }),
+        enabled: !!faseId && (isPlayed || isLive),
+        staleTime: isLive ? 30 * 1000 : 5 * 60 * 1000,
+        refetchInterval,
+        refetchOnWindowFocus: false,
+      };
+    }),
   });
 
 export const useOneFasePlayoffQuery = ({

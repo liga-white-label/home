@@ -96,7 +96,7 @@ const CategoryLatestMatches = ({
   );
   const sortedWithDetail: SimplifiedMatch[] = sorted.map((m, i) => ({
     ...m,
-    matchDetail: generalMatchDetailQueries[i]?.data,
+    matchDetail: generalMatchDetailQueries[i]?.data as Match | undefined,
   }));
 
   if (isLoading) {

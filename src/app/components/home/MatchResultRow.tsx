@@ -129,6 +129,7 @@ const MatchResultRow = ({
   onClick?: () => void;
 }) => {
   const isPlayed = match.status === MatchStatus.JUGADO;
+  const isLive = match.status === MatchStatus.JUGANDO;
 
   return (
     <div
@@ -183,7 +184,7 @@ const MatchResultRow = ({
         </div>
       </div>
 
-      {isPlayed && <Goleadores match={match} />}
+      {(isPlayed || isLive) && <Goleadores match={match} />}
     </div>
   );
 };
