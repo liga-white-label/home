@@ -3,6 +3,17 @@ import Image from "next/image";
 import { abbreviateTeamName } from "@/app/utils/stringUtils";
 import { NextTeamInfo } from "./NextTeamInfo";
 
+// Marca un bloque de filas (desde el primer o último puesto) con un color propio.
+// Permite que cada tabla defina sus propias zonas de ascenso/descenso en lugar
+// de depender de una única regla genérica: distintos torneos/zonas necesitan
+// distinta cantidad de cupos y colores.
+export interface ZoneMarker {
+  count: number;
+  from: "top" | "bottom";
+  color: string;
+  label: string;
+}
+
 interface TablaPosicionesProps {
   data: {
     pos: number;
@@ -23,6 +34,9 @@ interface TablaPosicionesProps {
   // recalcular en el cliente) — usado por tablas de zona/temporada.
   serverOrdered?: boolean;
   showPromotionZones?: boolean;
+  // Zonas a medida (ver ZoneMarker). Si se pasa, tiene prioridad sobre
+  // showPromotionZones/getZone para esta tabla en particular.
+  zones?: ZoneMarker[];
   showNextMatch?: boolean;
   title?: string;
 }
@@ -44,6 +58,22 @@ const ZONE_COLORS = {
 const DG_COLOR = (dg: number) =>
   dg > 0 ? "#22c55e" : dg < 0 ? "#ef4444" : "var(--color-text-secondary)";
 
+function resolveCustomZone(
+  pos: number,
+  total: number,
+  zones: ZoneMarker[]
+): { color: string; label: string } | null {
+  for (const zone of zones) {
+    if (zone.from === "top" && pos <= zone.count) {
+      return { color: zone.color, label: zone.label };
+    }
+    if (zone.from === "bottom" && pos > total - zone.count) {
+      return { color: zone.color, label: zone.label };
+    }
+  }
+  return null;
+}
+
 const TH = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
   <th
     className={`text-xs font-semibold tracking-wider py-3 px-2 md:px-3 text-[var(--color-text-secondary)] uppercase ${className}`}
@@ -57,6 +87,7 @@ export const TablaPosiciones: FC<TablaPosicionesProps> = ({
   ignoreLines,
   serverOrdered = false,
   showPromotionZones = true,
+  zones,
   showNextMatch = true,
   title = "Tabla de posiciones",
 }) => {
@@ -80,21 +111,35 @@ export const TablaPosiciones: FC<TablaPosicionesProps> = ({
         <span className="text-xs font-semibold tracking-widest text-[var(--color-text-secondary)] uppercase">
           {title}
         </span>
-        {showPromotionZones && (
+        {zones && zones.length > 0 ? (
           <div className="flex items-center gap-4 text-xs text-[var(--color-text-secondary)]">
-            <span className="flex items-center gap-1">
-              <span className="inline-block w-2 h-2 rounded-full bg-green-500" />
-              Ascenso
-            </span>
-            <span className="flex items-center gap-1">
-              <span className="inline-block w-2 h-2 rounded-full bg-amber-400" />
-              Playoff
-            </span>
-            <span className="flex items-center gap-1">
-              <span className="inline-block w-2 h-2 rounded-full bg-red-500" />
-              Descenso
-            </span>
+            {zones.map((zone) => (
+              <span key={zone.label} className="flex items-center gap-1">
+                <span
+                  className="inline-block w-2 h-2 rounded-full"
+                  style={{ backgroundColor: zone.color }}
+                />
+                {zone.label}
+              </span>
+            ))}
           </div>
+        ) : (
+          showPromotionZones && (
+            <div className="flex items-center gap-4 text-xs text-[var(--color-text-secondary)]">
+              <span className="flex items-center gap-1">
+                <span className="inline-block w-2 h-2 rounded-full bg-green-500" />
+                Ascenso
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="inline-block w-2 h-2 rounded-full bg-amber-400" />
+                Playoff
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="inline-block w-2 h-2 rounded-full bg-red-500" />
+                Descenso
+              </span>
+            </div>
+          )
         )}
       </div>
 
@@ -117,8 +162,14 @@ export const TablaPosiciones: FC<TablaPosicionesProps> = ({
           </thead>
           <tbody>
             {calculatedPositions.map((team) => {
-              const zone = showPromotionZones ? getZone(team.pos, total) : "none";
-              const zoneColor = ZONE_COLORS[zone];
+              const customZone =
+                zones && zones.length > 0
+                  ? resolveCustomZone(team.pos, total, zones)
+                  : null;
+              const zone = !zones && showPromotionZones ? getZone(team.pos, total) : "none";
+              const zoneColor = customZone
+                ? { border: customZone.color, text: customZone.color }
+                : ZONE_COLORS[zone];
               return (
                 <tr
                   key={team.pos}

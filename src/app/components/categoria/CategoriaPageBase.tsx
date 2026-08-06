@@ -28,6 +28,10 @@ interface CategoriaPageBaseProps {
     clausuraId: string;
   } | null;
   hidePosiciones?: boolean;
+  // Torneos con zonas (leaguewithzones): el ascenso/descenso se decide en la
+  // tabla general de la zona (ver ZonaPanel), no en la fase de grupos de cada
+  // categoría — ahí no deben pintarse colores.
+  isZonal?: boolean;
 }
 
 export enum TabsEnum {
@@ -48,6 +52,7 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
   title,
   seasonInfo = null,
   hidePosiciones = false,
+  isZonal = false,
 }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -288,7 +293,10 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
       <div className="h-full w-full min-h-lvh overflow-hidden p-4 md:p-10" style={{ backgroundColor: "var(--color-bg)" }}>
       <div key={selectedTab}>
         {selectedTab === TabsEnum.POSICIONES && !hidePosiciones && (
-          <TablaDePosicionesWrapper faseId={faseRegular?.id || ""} />
+          <TablaDePosicionesWrapper
+            faseId={faseRegular?.id || ""}
+            showPromotionZones={!isZonal}
+          />
         )}
         {selectedTab === TabsEnum.TABLA_GENERAL && !!seasonInfo && (
           isLoadingTablaGeneral ? (
@@ -312,6 +320,7 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
           <FaseGruposWrapper
             faseId={getSelectedFaseGrupos()?.id || ""}
             fromCategoria
+            showPromotionZones={!isZonal}
           />
         )}
         {isFixtureZonasTab && getSelectedFaseGrupos() && (

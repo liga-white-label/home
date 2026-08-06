@@ -8,6 +8,7 @@ import {
 } from "@/repositories/ZonaRepository";
 import { TablaPosiciones } from "../TablaPosiciones";
 import MiniLoading from "../loading/MiniLoading";
+import { ZONE_PROMOTION_RULES } from "@/config/zonePromotionRules";
 
 interface ZonaPanelProps {
   zoneId: string;
@@ -57,6 +58,7 @@ export const ZonaPanel: FC<ZonaPanelProps> = ({ zoneId, torneoId }) => {
           data={posiciones || []}
           serverOrdered
           showPromotionZones={false}
+          zones={ZONE_PROMOTION_RULES[zoneId]}
           showNextMatch={false}
           title="Tabla General"
         />

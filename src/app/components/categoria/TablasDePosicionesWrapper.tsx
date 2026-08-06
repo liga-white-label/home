@@ -5,9 +5,11 @@ import LoadingScreen from "../loading/Loading";
 import ErrorPage from "../ErrorPage";
 interface TablaDePosicionesWrapperProps {
   faseId: string;
+  showPromotionZones?: boolean;
 }
 export const TablaDePosicionesWrapper: FC<TablaDePosicionesWrapperProps> = ({
   faseId,
+  showPromotionZones = true,
 }) => {
   const { data, isLoading, isError } = useGetPositionsFaseRegular(faseId);
 
@@ -15,7 +17,7 @@ export const TablaDePosicionesWrapper: FC<TablaDePosicionesWrapperProps> = ({
   if (isError) return <ErrorPage />;
 
   if (!!data) {
-    return <TablaPosiciones data={data} />;
+    return <TablaPosiciones data={data} showPromotionZones={showPromotionZones} />;
   }
 
   return (

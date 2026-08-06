@@ -58,6 +58,7 @@ export default function Home() {
       id={idCategoria.toString()}
       seasonInfo={seasonInfo}
       hidePosiciones={hidePosiciones}
+      isZonal={isZonal}
     />
   );
 }

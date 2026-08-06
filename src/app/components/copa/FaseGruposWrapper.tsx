@@ -11,10 +11,12 @@ import ErrorPage from "../ErrorPage";
 interface FaseGruposWrapperProps {
   faseId: string;
   fromCategoria?: boolean;
+  showPromotionZones?: boolean;
 }
 export const FaseGruposWrapper: FC<FaseGruposWrapperProps> = ({
   faseId,
   fromCategoria,
+  showPromotionZones = true,
 }) => {
   // const { data, isLoading, isError } = useOneFaseCampeonatoQuery(
   //   faseId,
@@ -37,7 +39,7 @@ export const FaseGruposWrapper: FC<FaseGruposWrapperProps> = ({
             fromCategoria ? "" : "Grupo"
           } ${grupo.name}`}</Typography>
         </Box>
-        <TablaPosiciones data={grupo.positions} />
+        <TablaPosiciones data={grupo.positions} showPromotionZones={showPromotionZones} />
       </Box>
     </>
   ));
