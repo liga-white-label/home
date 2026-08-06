@@ -14,6 +14,14 @@ export const tenantConfig = {
       process.env.NEXT_PUBLIC_LOGO_PATH ?? "/assets/logo_2025.png",
     logoWidth: Number(process.env.NEXT_PUBLIC_LOGO_WIDTH ?? 200),
     logoHeight: Number(process.env.NEXT_PUBLIC_LOGO_HEIGHT ?? 100),
+    // Íconos usados al instalar el sitio como app (PWA). Deben ser PNG
+    // cuadrados de exactamente estos tamaños, con "safe zone" para maskable.
+    pwaIcon192Path:
+      process.env.NEXT_PUBLIC_PWA_ICON_192 ??
+      "/web-app-manifest-192x192.png",
+    pwaIcon512Path:
+      process.env.NEXT_PUBLIC_PWA_ICON_512 ??
+      "/web-app-manifest-512x512.png",
   },
   contact: {
     instagramHandle: process.env.NEXT_PUBLIC_INSTAGRAM_HANDLE ?? "ligacubb",
