@@ -45,6 +45,11 @@ export enum TabsEnum {
   // Los tabs dinámicos empezarán desde 100
   GRUPOS_BASE = 100,
   FIXTURE_ZONAS_BASE = 200,
+  // Cuando hay más de una fase "general", la primera sigue usando
+  // POSICIONES/FIXTURE (compatibilidad con links existentes) y el resto
+  // usa estos offsets.
+  POSICIONES_GENERAL_BASE = 300,
+  FIXTURE_GENERAL_BASE = 400,
 }
 
 export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
@@ -62,8 +67,37 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
 
   const hasFases = fases?.phases.length > 0;
 
-  const faseRegular =
-    fases?.phases.find((f: any) => f.type === "general") || null;
+  const fasesRegulares =
+    fases?.phases.filter((f: any) => f.type === "general") || [];
+
+  const faseRegular = fasesRegulares[0] || null;
+
+  const getPosicionesTabNumber = (index: number) =>
+    index === 0
+      ? TabsEnum.POSICIONES
+      : TabsEnum.POSICIONES_GENERAL_BASE + (index - 1);
+
+  const getFixtureTabNumber = (index: number) =>
+    index === 0 ? TabsEnum.FIXTURE : TabsEnum.FIXTURE_GENERAL_BASE + (index - 1);
+
+  const getRegularIndexFromPosicionesTab = (tab: number): number | null => {
+    if (tab === TabsEnum.POSICIONES) return 0;
+    if (
+      tab >= TabsEnum.POSICIONES_GENERAL_BASE &&
+      tab < TabsEnum.FIXTURE_GENERAL_BASE
+    ) {
+      return tab - TabsEnum.POSICIONES_GENERAL_BASE + 1;
+    }
+    return null;
+  };
+
+  const getRegularIndexFromFixtureTab = (tab: number): number | null => {
+    if (tab === TabsEnum.FIXTURE) return 0;
+    if (tab >= TabsEnum.FIXTURE_GENERAL_BASE) {
+      return tab - TabsEnum.FIXTURE_GENERAL_BASE + 1;
+    }
+    return null;
+  };
 
   const fasePlayoff =
     fases?.phases.find((f: any) => f.type === "playoff") || null;
@@ -95,6 +129,13 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
   };
 
   const [selectedTab, setSelectedTab] = useState<number>(getInitialTab());
+
+  const posicionesIndex = getRegularIndexFromPosicionesTab(selectedTab);
+  const fixtureIndex = getRegularIndexFromFixtureTab(selectedTab);
+  const selectedFaseRegularPosiciones =
+    posicionesIndex !== null ? fasesRegulares[posicionesIndex] || null : null;
+  const selectedFaseRegularFixture =
+    fixtureIndex !== null ? fasesRegulares[fixtureIndex] || null : null;
 
   useEffect(() => {
     if (tabParam) {
@@ -128,9 +169,9 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
   const isFixtureZonasTab = selectedTab >= TabsEnum.FIXTURE_ZONAS_BASE;
 
   const tabHasContent =
-    (selectedTab === TabsEnum.POSICIONES && !hidePosiciones) ||
+    (!!selectedFaseRegularPosiciones && !hidePosiciones) ||
     (selectedTab === TabsEnum.TABLA_GENERAL && !!seasonInfo) ||
-    (selectedTab === TabsEnum.FIXTURE && !!faseRegular) ||
+    !!selectedFaseRegularFixture ||
     (isGruposTab && !!getSelectedFaseGrupos()) ||
     (isFixtureZonasTab && !!getSelectedFaseGrupos()) ||
     (selectedTab === TabsEnum.PLAYOFFS && !!fasePlayoff) ||
@@ -190,15 +231,20 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
           style={{ display: hasFases ? "flex" : "none" }}
           className="flex gap-6 px-6 md:px-10 max-w-full overflow-x-auto"
         >
-          {!!faseRegular && !hidePosiciones && (
-            <button
-              onClick={() => handleChangeTab(TabsEnum.POSICIONES)}
-              className={tabClass(selectedTab === TabsEnum.POSICIONES)}
-              style={selectedTab === TabsEnum.POSICIONES ? { borderColor: "var(--color-primary)" } : {}}
-            >
-              Posiciones
-            </button>
-          )}
+          {!hidePosiciones &&
+            fasesRegulares.map((fase: any, index: number) => {
+              const tabNumber = getPosicionesTabNumber(index);
+              return (
+                <button
+                  key={`posiciones-${fase.id}`}
+                  onClick={() => handleChangeTab(tabNumber)}
+                  className={tabClass(selectedTab === tabNumber)}
+                  style={selectedTab === tabNumber ? { borderColor: "var(--color-primary)" } : {}}
+                >
+                  {fase.name ? `Posiciones ${fase.name}` : "Posiciones"}
+                </button>
+              );
+            })}
 
           {!!seasonInfo && (
             <button
@@ -240,15 +286,19 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
             </button>
           ))}
 
-          {!!faseRegular && (
-            <button
-              onClick={() => handleChangeTab(TabsEnum.FIXTURE)}
-              className={tabClass(selectedTab === TabsEnum.FIXTURE)}
-              style={selectedTab === TabsEnum.FIXTURE ? { borderColor: "var(--color-primary)" } : {}}
-            >
-              Fixture
-            </button>
-          )}
+          {fasesRegulares.map((fase: any, index: number) => {
+            const tabNumber = getFixtureTabNumber(index);
+            return (
+              <button
+                key={`fixture-${fase.id}`}
+                onClick={() => handleChangeTab(tabNumber)}
+                className={tabClass(selectedTab === tabNumber)}
+                style={selectedTab === tabNumber ? { borderColor: "var(--color-primary)" } : {}}
+              >
+                {fase.name ? `Fixture ${fase.name}` : "Fixture"}
+              </button>
+            );
+          })}
 
           {!!fasePlayoff && (
             <button
@@ -292,9 +342,9 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
 
       <div className="h-full w-full min-h-lvh overflow-hidden p-4 md:p-10" style={{ backgroundColor: "var(--color-bg)" }}>
       <div key={selectedTab}>
-        {selectedTab === TabsEnum.POSICIONES && !hidePosiciones && (
+        {!!selectedFaseRegularPosiciones && !hidePosiciones && (
           <TablaDePosicionesWrapper
-            faseId={faseRegular?.id || ""}
+            faseId={selectedFaseRegularPosiciones?.id || ""}
             showPromotionZones={!isZonal}
           />
         )}
@@ -313,8 +363,8 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
             />
           )
         )}
-        {selectedTab === TabsEnum.FIXTURE && !!faseRegular && (
-          <FixturePage faseId={faseRegular?.id || ""} />
+        {!!selectedFaseRegularFixture && (
+          <FixturePage faseId={selectedFaseRegularFixture?.id || ""} />
         )}
         {isGruposTab && getSelectedFaseGrupos() && (
           <FaseGruposWrapper
