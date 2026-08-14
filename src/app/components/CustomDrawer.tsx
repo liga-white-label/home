@@ -36,6 +36,11 @@ const INSTITUCIONAL_ITEMS = [
   { label: "Autoridades", href: "/institucional/autoridades" },
   { label: "Departamentos", href: "/institucional/departamentos" },
   { label: "Reglamento y Estatuto", href: "/institucional/reglamento-y-estatuto" },
+  {
+    label: "Boletines",
+    href: "https://drive.google.com/drive/folders/1hvEhLrPRxTow07kCjpUf6MG0BotCps-j?usp=sharing",
+    external: true,
+  },
 ];
 
 export const CustomDrawer = () => {
@@ -171,16 +176,29 @@ export const CustomDrawer = () => {
                   style={{ overflow: "hidden" }}
                 >
                   <div className="pb-2" style={{ backgroundColor: "var(--color-surface-2)" }}>
-                    {INSTITUCIONAL_ITEMS.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        onClick={handleClose}
-                        className="block px-6 py-2.5 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface-hover)] transition-colors"
-                      >
-                        {item.label}
-                      </Link>
-                    ))}
+                    {INSTITUCIONAL_ITEMS.map((item) =>
+                      item.external ? (
+                        <a
+                          key={item.href}
+                          href={item.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={handleClose}
+                          className="block px-6 py-2.5 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface-hover)] transition-colors"
+                        >
+                          {item.label}
+                        </a>
+                      ) : (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          onClick={handleClose}
+                          className="block px-6 py-2.5 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface-hover)] transition-colors"
+                        >
+                          {item.label}
+                        </Link>
+                      )
+                    )}
                   </div>
                 </motion.div>
               )}

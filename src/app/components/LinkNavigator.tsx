@@ -60,6 +60,11 @@ export const LinkNavigator = () => {
     { label: "Autoridades", href: "/institucional/autoridades" },
     { label: "Departamentos", href: "/institucional/departamentos" },
     { label: "Reglamento y Estatuto", href: "/institucional/reglamento-y-estatuto" },
+    {
+      label: "Boletines",
+      href: "https://drive.google.com/drive/folders/1hvEhLrPRxTow07kCjpUf6MG0BotCps-j?usp=sharing",
+      external: true,
+    },
   ];
 
   if (isLoading) {
@@ -221,7 +226,11 @@ export const LinkNavigator = () => {
                   onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
                   onClick={() => {
                     setOpenMenu(null);
-                    router.push(item.href);
+                    if (item.external) {
+                      window.open(item.href, "_blank", "noopener,noreferrer");
+                    } else {
+                      router.push(item.href);
+                    }
                   }}
                 >
                   {item.label}
