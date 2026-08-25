@@ -19,6 +19,7 @@ export const TeamInfo: FC<TeamInfoProps> = ({
       display="flex"
       alignItems="center"
       gap={1}
+      minWidth={0}
       flexDirection={isReverse ? "row" : "row-reverse"}
     >
       <Image
@@ -31,6 +32,7 @@ export const TeamInfo: FC<TeamInfoProps> = ({
         }
         height={20}
         width={30}
+        style={{ flexShrink: 0 }}
         alt={teamName || "Team Logo"}
       />
       <Box
@@ -40,6 +42,9 @@ export const TeamInfo: FC<TeamInfoProps> = ({
           fontSize: { xs: "0.8rem", sm: "0.95rem" },
           fontWeight: 500,
           whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          minWidth: 0,
         }}
       >
         {teamName || "A definir"}

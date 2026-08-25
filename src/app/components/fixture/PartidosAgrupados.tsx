@@ -22,19 +22,20 @@ export const PartidosAgrupados: React.FC<PartidosAgrupadosProps> = ({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (isSmallDevice) return;
     if (scrollContainerRef.current) {
       const scrollWidth = scrollContainerRef.current.scrollWidth;
       scrollContainerRef.current.scrollLeft =
         scrollWidth / 2 - scrollContainerRef.current.clientWidth / 2;
     }
-  }, [matches]);
+  }, [matches, isSmallDevice]);
 
   return (
     <Box
       ref={scrollContainerRef}
       sx={{
         width: "100%",
-        overflowX: "auto",
+        overflowX: isSmallDevice ? "hidden" : "auto",
         WebkitOverflowScrolling: "touch",
         borderRadius: "8px",
         backgroundColor: "var(--color-surface-2)",
@@ -46,9 +47,11 @@ export const PartidosAgrupados: React.FC<PartidosAgrupadosProps> = ({
     >
       <Table
         sx={{
-          minWidth: 600,
+          minWidth: isSmallDevice ? "auto" : 600,
+          width: "100%",
           margin: "0 auto",
           backgroundColor: "var(--color-surface-2)",
+          tableLayout: isSmallDevice ? "fixed" : "auto",
         }}
       >
         <TableBody>

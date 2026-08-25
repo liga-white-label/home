@@ -98,7 +98,7 @@ const FixtureContent: React.FC<FixtureContentProps> = ({
           <label className="text-xs font-semibold uppercase tracking-widest text-[var(--color-text-secondary)]">
             Fecha
           </label>
-          <div className="flex gap-2 items-center overflow-x-auto pb-1 -mx-1 px-1">
+          <div className="flex flex-wrap gap-2 items-center justify-center sm:justify-start">
             {fechas.map((item) => (
               <button
                 key={item}

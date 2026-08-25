@@ -39,7 +39,8 @@ export const PartidoRow: FC<PartidoRowProps> = ({
       <TableCell
         sx={{
           width: isSmallDevice ? "0%" : "15%",
-          padding: isSmallDevice ? "8px 4px" : undefined,
+          padding: isSmallDevice ? 0 : undefined,
+          display: isSmallDevice ? "none" : "table-cell",
           borderBottom: "1px solid var(--color-border)",
         }}
       >
@@ -47,7 +48,7 @@ export const PartidoRow: FC<PartidoRowProps> = ({
       </TableCell>
       <TableCell
         sx={{
-          width: isSmallDevice ? "28%" : "30%",
+          width: isSmallDevice ? "38%" : "30%",
           pr: isSmallDevice ? 1 : 3,
           padding: isSmallDevice ? "8px 4px" : undefined,
           textAlign: "right",
@@ -58,7 +59,7 @@ export const PartidoRow: FC<PartidoRowProps> = ({
       </TableCell>
       <TableCell
         sx={{
-          width: isSmallDevice ? "14%" : "10%",
+          width: isSmallDevice ? "24%" : "10%",
           px: 0,
           padding: isSmallDevice ? "8px 2px" : undefined,
           textAlign: "center",
@@ -93,7 +94,7 @@ export const PartidoRow: FC<PartidoRowProps> = ({
       </TableCell>
       <TableCell
         sx={{
-          width: isSmallDevice ? "28%" : "30%",
+          width: isSmallDevice ? "38%" : "30%",
           pl: isSmallDevice ? 1 : 3,
           padding: isSmallDevice ? "8px 4px" : undefined,
           textAlign: "left",

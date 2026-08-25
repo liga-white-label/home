@@ -103,7 +103,7 @@ const FixtureCopaPage: React.FC<FixtureCopaPageProps> = ({
         <label className="text-xs font-semibold uppercase tracking-widest text-[var(--color-text-secondary)]">
           Fecha
         </label>
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex gap-2 flex-wrap items-center justify-center sm:justify-start">
           {fechasDisponibles.map((date) => (
             <button
               key={date}
