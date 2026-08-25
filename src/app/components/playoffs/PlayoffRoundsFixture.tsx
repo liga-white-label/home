@@ -83,7 +83,7 @@ const PlayoffRoundsFixture: React.FC<PlayoffRoundsFixtureProps> = ({
       <Box
         sx={{
           width: "100%",
-          overflowX: "auto",
+          overflowX: isSmallDevice ? "hidden" : "auto",
           WebkitOverflowScrolling: "touch",
           msOverflowStyle: "-ms-autohiding-scrollbar",
           "&::-webkit-scrollbar": {
@@ -99,7 +99,12 @@ const PlayoffRoundsFixture: React.FC<PlayoffRoundsFixtureProps> = ({
           },
         }}
       >
-        <Table sx={{ minWidth: isSmallDevice ? 500 : "auto" }}>
+        <Table
+          sx={{
+            width: "100%",
+            tableLayout: isSmallDevice ? "fixed" : "auto",
+          }}
+        >
           <TableBody>
             <PartidoRow
               match={partidoIda}
