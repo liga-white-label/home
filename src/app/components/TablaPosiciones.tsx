@@ -42,11 +42,18 @@ interface TablaPosicionesProps {
 }
 
 function getZone(pos: number, total: number): "ascenso" | "playoff" | "descenso" | "none" {
-  if (pos <= 3) return "ascenso";
-  if (pos === 4) return "playoff";
-  if (total >= 6 && pos >= total - 1) return "descenso";
+  if (pos == 1) return "ascenso"
+  if (pos <= 4) return "playoff";
+  // if (total >= 6 && pos >= total - 1) return "descenso";
   return "none";
 }
+
+// Zonas para la Tabla General (acumulado Apertura + Clausura): último
+// puesto en descenso directo, anteúltimo en zona de promoción.
+export const TABLA_GENERAL_ZONES: ZoneMarker[] = [
+  { count: 1, from: "bottom", color: "#ef4444", label: "Descenso directo" },
+  { count: 2, from: "bottom", color: "#f97316", label: "Promoción" },
+];
 
 const ZONE_COLORS = {
   ascenso: { border: "#22c55e", text: "#22c55e" },
@@ -94,13 +101,13 @@ export const TablaPosiciones: FC<TablaPosicionesProps> = ({
   const calculatedPositions = serverOrdered
     ? data.map((team, index) => ({ ...team, pos: index + 1 }))
     : [...data]
-        .sort((a, b) => {
-          if (a.pts !== b.pts) return b.pts - a.pts;
-          if (a.dg !== b.dg) return b.dg - a.dg;
-          if (a.gf !== b.gf) return b.gf - a.gf;
-          return a.equipo?.localeCompare(b.equipo);
-        })
-        .map((team, index) => ({ ...team, pos: index + 1 }));
+      .sort((a, b) => {
+        if (a.pts !== b.pts) return b.pts - a.pts;
+        if (a.dg !== b.dg) return b.dg - a.dg;
+        if (a.gf !== b.gf) return b.gf - a.gf;
+        return a.equipo?.localeCompare(b.equipo);
+      })
+      .map((team, index) => ({ ...team, pos: index + 1 }));
 
   const total = calculatedPositions.length;
 

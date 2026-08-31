@@ -15,7 +15,7 @@ import { SeasonEnum } from "@/app/models/Campeonato";
 import { SeasonSwitchBadge } from "../season/SeasonSwitchBadge";
 import { FaseFinalDeEtapaPage } from "./FaseFinalDeEtapaPage";
 import { useAccumulatedTableQuery } from "@/repositories/SeasonRepository";
-import { TablaPosiciones } from "../TablaPosiciones";
+import { TablaPosiciones, TABLA_GENERAL_ZONES } from "../TablaPosiciones";
 import MiniLoading from "../loading/MiniLoading";
 
 interface CategoriaPageBaseProps {
@@ -357,9 +357,9 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
             <TablaPosiciones
               data={tablaGeneral || []}
               serverOrdered
-              showPromotionZones={false}
               showNextMatch={false}
               title="Tabla General"
+              zones={TABLA_GENERAL_ZONES}
             />
           )
         )}

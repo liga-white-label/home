@@ -3,7 +3,7 @@
 import { FC, useState } from "react";
 import { Liga } from "@/app/models/Campeonato";
 import { useAccumulatedTableQuery } from "@/repositories/SeasonRepository";
-import { TablaPosiciones } from "../TablaPosiciones";
+import { TablaPosiciones, TABLA_GENERAL_ZONES } from "../TablaPosiciones";
 import MiniLoading from "../loading/MiniLoading";
 
 interface SeasonTablaGeneralPanelProps {
@@ -70,9 +70,9 @@ export const SeasonTablaGeneralPanel: FC<SeasonTablaGeneralPanelProps> = ({
         <TablaPosiciones
           data={positions || []}
           serverOrdered
-          showPromotionZones={false}
           showNextMatch={false}
           title="Tabla General"
+          zones={TABLA_GENERAL_ZONES}
         />
       )}
     </div>
