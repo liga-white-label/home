@@ -21,6 +21,16 @@ export class SeasonRepository {
       clausuraLeagueId,
       categoryName,
     ],
+    accumulatedScorers: ({
+      aperturaLeagueId,
+      clausuraLeagueId,
+      categoryName,
+    }: AccumulatedTableParams) => [
+      "season-goleadores",
+      aperturaLeagueId,
+      clausuraLeagueId,
+      categoryName,
+    ],
     seasonFinal: (phaseId: string) => ["season-final", phaseId],
   };
 
@@ -37,6 +47,19 @@ export class SeasonRepository {
     return data.map(getPositionsMapper);
   };
 
+  getAccumulatedScorers = async ({
+    aperturaLeagueId,
+    clausuraLeagueId,
+    categoryName,
+  }: AccumulatedTableParams) => {
+    const { data } = await httpClient.get<any[]>(
+      `season/accumulated-scorers?aperturaLeagueId=${aperturaLeagueId}&clausuraLeagueId=${clausuraLeagueId}&categoryName=${encodeURIComponent(
+        categoryName
+      )}`
+    );
+    return data;
+  };
+
   getSeasonFinal = async (phaseId: string) => {
     const { data } = await httpClient.get<any>(
       `season/get-phase-season-final?phaseId=${phaseId}`
@@ -51,6 +74,20 @@ export const useAccumulatedTableQuery = (params: AccumulatedTableParams) =>
   useQuery<TablePosition[]>({
     queryKey: repo.keys.accumulatedTable(params),
     queryFn: () => repo.getAccumulatedTable(params),
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    retry: 1,
+    enabled:
+      !!params.aperturaLeagueId &&
+      !!params.clausuraLeagueId &&
+      !!params.categoryName,
+  });
+
+export const useAccumulatedScorersQuery = (params: AccumulatedTableParams) =>
+  useQuery<any[]>({
+    queryKey: repo.keys.accumulatedScorers(params),
+    queryFn: () => repo.getAccumulatedScorers(params),
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,

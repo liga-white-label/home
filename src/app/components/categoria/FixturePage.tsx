@@ -59,7 +59,8 @@ const FixtureContent: React.FC<FixtureContentProps> = ({
     currentMatchSelected.current?.homeTeam,
     currentMatchSelected.current?.awayTeam,
     currentMatchSelected.current?.phaseId || "",
-    !!currentMatchSelected.current
+    !!currentMatchSelected.current,
+    currentMatchSelected.current?.dateNumber
   );
   const [openMatchModal, setOpenMatchModal] = useState<boolean>(false);
 
@@ -68,6 +69,7 @@ const FixtureContent: React.FC<FixtureContentProps> = ({
       homeTeam: match.homeTeamId,
       awayTeam: match.awayTeamId,
       phaseId: faseId || "",
+      dateNumber: match.dateNumber,
     };
     setOpenMatchModal(true);
   };

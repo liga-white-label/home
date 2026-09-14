@@ -392,7 +392,18 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
           <FaseFinalDeEtapaPage faseId={faseFinal.id} />
         )}
         {selectedTab === TabsEnum.ESTADISTICAS && (
-          <EstadisticasPage categoryId={id} />
+          <EstadisticasPage
+            categoryId={id}
+            seasonInfo={
+              seasonInfo
+                ? {
+                    aperturaId: seasonInfo.aperturaId,
+                    clausuraId: seasonInfo.clausuraId,
+                  }
+                : null
+            }
+            categoryName={fases?.categoryName}
+          />
         )}
         {(!hasFases || !tabHasContent) && (
           <div className="flex justify-center items-center h-full">

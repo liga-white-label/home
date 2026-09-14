@@ -38,7 +38,7 @@ export class CategoriaRepository {
     one: (idCat: string) => ["categorias", idCat],
     fases: (idCat: string) => ["fases", idCat],
     oneFase: (idFase: string, fecha?: number) => ["fases", idFase + fecha],
-    partido: (idPartido: string) => [idPartido],
+    partido: (idPartido: string, dateNumber?: number) => [idPartido + dateNumber],
     lastTeams: (idFase: string) => ["lastTeams", idFase],
     goleadores: (idFase: string) => ["goleadores", idFase],
     amarillas: (idFase: string) => ["amarillas", idFase],
@@ -68,13 +68,15 @@ export class CategoriaRepository {
     homeTeamId,
     awayTeamId,
     faseId,
+    dateNumber,
   }: {
     homeTeamId: string;
     awayTeamId: string;
     faseId: string;
+    dateNumber: number;
   }) => {
     const { data } = await httpClient.get<any>(
-      `tournament/league/categories/phase-general/get-match?phaseId=${faseId}&homeTeamId=${homeTeamId}&awayTeamId=${awayTeamId}`
+      `tournament/league/categories/phase-general/get-match?phaseId=${faseId}&homeTeamId=${homeTeamId}&awayTeamId=${awayTeamId}&dateNumber=${dateNumber}`
     );
     return partidoMapper(data);
   };
@@ -194,17 +196,19 @@ export const useOnePartidoQuery = (
   localId: string,
   awayId: string,
   faseId: string,
-  enabled: boolean
+  enabled: boolean,
+  dateNumber?: number
 ) =>
   useQuery({
-    queryKey: repo.keys.partido(localId + awayId + faseId),
+    queryKey: repo.keys.partido(localId + awayId + faseId, dateNumber),
     queryFn: () =>
       repo.getOnePartido({
         homeTeamId: localId,
         awayTeamId: awayId,
         faseId: faseId,
+        dateNumber: dateNumber!,
       }),
-    enabled: enabled,
+    enabled: enabled && !!dateNumber,
   });
 
 // Fetches per-match detail (goal scorers included) for played/live matches
@@ -219,14 +223,18 @@ export const useGeneralMatchesDetailQuery = (
       const isPlayed = m.status === MatchStatus.JUGADO;
       const refetchInterval: number | false = isLive ? 30 * 1000 : false;
       return {
-        queryKey: repo.keys.partido(m.homeTeamId + m.awayTeamId + faseId),
+        queryKey: repo.keys.partido(
+          m.homeTeamId + m.awayTeamId + faseId,
+          m.dateNumber
+        ),
         queryFn: () =>
           repo.getOnePartido({
             homeTeamId: m.homeTeamId,
             awayTeamId: m.awayTeamId,
             faseId,
+            dateNumber: m.dateNumber,
           }),
-        enabled: !!faseId && (isPlayed || isLive),
+        enabled: !!faseId && !!m.dateNumber && (isPlayed || isLive),
         staleTime: isLive ? 30 * 1000 : 5 * 60 * 1000,
         refetchInterval,
         refetchOnWindowFocus: false,
