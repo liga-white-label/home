@@ -122,7 +122,7 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
             className={tabClass(selectedTab === TabsEnum.ESTADISTICAS)}
             style={selectedTab === TabsEnum.ESTADISTICAS ? { borderColor: "var(--color-primary)" } : {}}
           >
-            Estadísticas
+            Goleadores
           </button>
         </div>
       </div>

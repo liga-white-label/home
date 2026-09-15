@@ -335,7 +335,7 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
             className={tabClass(selectedTab === TabsEnum.ESTADISTICAS)}
             style={selectedTab === TabsEnum.ESTADISTICAS ? { borderColor: "var(--color-primary)" } : {}}
           >
-            Estadísticas
+            Goleadores
           </button>
         </div>
       </div>
