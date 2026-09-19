@@ -1,5 +1,4 @@
-import { MatchStatus, SimplifiedMatch } from "@/app/models/Match";
-import { Jugador } from "@/app/models/Jugador";
+import { GolJugador, MatchStatus, SimplifiedMatch } from "@/app/models/Match";
 import { LOGO_DEFAULT_TEAM } from "@/app/utils/constants";
 import Image from "next/image";
 import moment from "moment";
@@ -77,12 +76,20 @@ const ScoreBox = ({ match }: { match: SimplifiedMatch }) => {
   );
 };
 
-const groupGoals = (jugadores: Jugador[] = []) => {
-  const porJugador = new Map<string, { name: string; goles: number }>();
+const groupGoals = (jugadores: GolJugador[] = []) => {
+  const porJugador = new Map<string, { name: string; goles: number; minutos: string[] }>();
   jugadores.forEach((jugador) => {
     const actual = porJugador.get(jugador.id);
-    if (actual) actual.goles += 1;
-    else porJugador.set(jugador.id, { name: jugador.fullName, goles: 1 });
+    if (actual) {
+      actual.goles += 1;
+      if (jugador.minute) actual.minutos.push(jugador.minute);
+    } else {
+      porJugador.set(jugador.id, {
+        name: jugador.fullName,
+        goles: 1,
+        minutos: jugador.minute ? [jugador.minute] : [],
+      });
+    }
   });
   return Array.from(porJugador.values());
 };
@@ -102,7 +109,11 @@ const Goleadores = ({ match }: { match: SimplifiedMatch }) => {
             className="text-[var(--color-text-secondary)] text-[11px] leading-tight truncate max-w-full"
           >
             ⚽ {g.name}
-            {g.goles > 1 ? ` x${g.goles}` : ""}
+            {g.minutos.length === g.goles
+              ? ` ${g.minutos.map((m) => `${m}'`).join(", ")}`
+              : g.goles > 1
+                ? ` x${g.goles}`
+                : ""}
           </span>
         ))}
       </div>
@@ -113,7 +124,11 @@ const Goleadores = ({ match }: { match: SimplifiedMatch }) => {
             className="text-[var(--color-text-secondary)] text-[11px] leading-tight truncate max-w-full"
           >
             ⚽ {g.name}
-            {g.goles > 1 ? ` x${g.goles}` : ""}
+            {g.minutos.length === g.goles
+              ? ` ${g.minutos.map((m) => `${m}'`).join(", ")}`
+              : g.goles > 1
+                ? ` x${g.goles}`
+                : ""}
           </span>
         ))}
       </div>

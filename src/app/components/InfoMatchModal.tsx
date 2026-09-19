@@ -33,20 +33,31 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
   }
   moment.locale("es");
 
-  const golesLocal: Incidencia[] = match.homeTeamPlayerGoals.map(
-    (goleador) => ({
+  const minuteSortValue = (minute?: string | null): number => {
+    if (!minute) return Infinity;
+    if (minute.endsWith("+")) return parseInt(minute, 10) + 0.5;
+    return parseInt(minute, 10);
+  };
+
+  const sortByMinute = (goles: Incidencia[]): Incidencia[] =>
+    [...goles].sort((a, b) => minuteSortValue(a.minute) - minuteSortValue(b.minute));
+
+  const golesLocal: Incidencia[] = sortByMinute(
+    match.homeTeamPlayerGoals.map((goleador) => ({
       type: "gol",
       playerFullName: goleador.fullName,
       team: "home",
-    })
+      minute: goleador.minute,
+    }))
   );
 
-  const golesVisitante: Incidencia[] = match.awayTeamPlayerGoals.map(
-    (goleador) => ({
+  const golesVisitante: Incidencia[] = sortByMinute(
+    match.awayTeamPlayerGoals.map((goleador) => ({
       type: "gol",
       playerFullName: goleador.fullName,
       team: "away",
-    })
+      minute: goleador.minute,
+    }))
   );
 
   const amarillasLocal: Incidencia[] = match.homeTeamYellowCards.map(
@@ -86,6 +97,7 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
   ];
 
   const canchaLabel = match.field || "A definir";
+  const arbitroLabel = match.referee || "A definir";
 
   return (
     <Dialog
@@ -235,6 +247,11 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
           <Box className="flex items-center justify-between w-full">
             <p className="font-extrabold text-sm md:text-md">Cancha:</p>
             <p className="text-sm md:text-base">{canchaLabel}</p>
+          </Box>
+
+          <Box className="flex items-center justify-between w-full">
+            <p className="font-extrabold text-sm md:text-md">Árbitro:</p>
+            <p className="text-sm md:text-base">{arbitroLabel}</p>
           </Box>
 
           <Box

@@ -6,6 +6,7 @@ export interface Incidencia {
   type: "amarilla" | "expulsion" | "gol";
   playerFullName: string;
   team: "home" | "away";
+  minute?: string | null;
 }
 
 interface IncidenciaByTeamProps {
@@ -39,6 +40,7 @@ export const IncidenciaByTeam: FC<IncidenciaByTeamProps> = ({ incidencia }) => {
         />
       )}
       <p className="text-xs md:text-md line-clamp-1 overflow-hidden whitespace-nowrap">
+        {incidencia.type === "gol" && incidencia.minute ? `${incidencia.minute}' ` : ""}
         {isMobile ? simplifiedName : incidencia.playerFullName}
       </p>
     </div>

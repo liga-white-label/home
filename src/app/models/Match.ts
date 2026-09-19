@@ -2,10 +2,16 @@ import moment from "moment";
 import { Moment } from "moment";
 import { Team } from "./Equipo";
 import { Jugador } from "./Jugador";
+
+export interface GolJugador extends Jugador {
+  minute: string | null;
+}
+
 export interface Match {
   date: Moment | null;
   dateNumber: number;
   field: string | null;
+  referee: string | null;
   linemenTeam: Team | null;
   scorer: Team | null;
   comments: string | null;
@@ -13,8 +19,8 @@ export interface Match {
   awayTeam: Team | null;
   homeTeamGoals: number | null;
   awayTeamGoals: number | null;
-  homeTeamPlayerGoals: Jugador[];
-  awayTeamPlayerGoals: Jugador[];
+  homeTeamPlayerGoals: GolJugador[];
+  awayTeamPlayerGoals: GolJugador[];
   homeTeamYellowCards: Jugador[];
   awayTeamYellowCards: Jugador[];
   homeTeamRedCards: Jugador[];
