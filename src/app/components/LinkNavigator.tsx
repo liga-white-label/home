@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import MiniLoading from "./loading/MiniLoading";
 import { Campeonato } from "@/app/models/Campeonato";
 import { Categoria } from "@/app/models/Categoria";
-import { useActiveCampeonatos } from "@/app/hooks/useActiveCampeonatos";
+import { MenuEntry, useActiveCampeonatos } from "@/app/hooks/useActiveCampeonatos";
 import { useClickOutside } from "@/app/hooks/useClickOutside";
 
 const ChevronDown = () => (
@@ -48,9 +48,7 @@ export const LinkNavigator = () => {
   const path = usePathname();
   const router = useRouter();
 
-  const { isLoading, torneosActivos, torneosGrupos, ligaActual, categorias } =
-    useActiveCampeonatos();
-  const categoriasMasculinas = categorias.filter((c) => c.gender === "male");
+  const { isLoadingMenu, torneosActivos, menuGrupos } = useActiveCampeonatos();
 
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const navRef = useRef<HTMLDivElement>(null);
@@ -67,7 +65,7 @@ export const LinkNavigator = () => {
     },
   ];
 
-  if (isLoading) {
+  if (isLoadingMenu) {
     return (
       <div className="hidden md:block">
         <MiniLoading />
@@ -113,7 +111,7 @@ export const LinkNavigator = () => {
     );
   };
 
-  const renderCategoriaButton = (cat: Categoria) => {
+  const renderCategoriaButton = (cat: Categoria, torneoId: string) => {
     const active = cat.id === activeCategoriaId;
     return (
       <button
@@ -132,7 +130,7 @@ export const LinkNavigator = () => {
         }}
         onClick={() => {
           setOpenMenu(null);
-          router.push(`/campeonatos/${ligaActual!.id}/categorias/${cat.id}`);
+          router.push(`/campeonatos/${torneoId}/categorias/${cat.id}`);
         }}
       >
         {cat.name}
@@ -140,20 +138,20 @@ export const LinkNavigator = () => {
     );
   };
 
+  // Las ligas muestran directamente sus categorías; el resto, el torneo.
+  const renderEntry = ({ torneo, categorias }: MenuEntry) =>
+    categorias.length === 0
+      ? renderTorneoButton(torneo)
+      : categorias.map((cat) => renderCategoriaButton(cat, torneo.id));
+
   return (
     <div className="hidden lg:flex gap-8 items-center" ref={navRef}>
-      {/* Un dropdown por disciplina, mostrando los campeonatos de esa disciplina */}
-      {torneosGrupos.map((grupo) => {
+      {/* Un dropdown por disciplina. Las ligas muestran directamente sus
+          categorías (no el torneo): es lo que la mayoría busca y ahorra un click. */}
+      {menuGrupos.map((grupo) => {
         const key = disciplinaKey(grupo.label);
         const isOpen = openMenu === key;
-        const isActive = grupo.items.some((t) => t.id === campeonatoIdInPath);
-        // Para la disciplina de la liga actual (la que tiene categorías cargadas),
-        // el dropdown muestra directamente las categorías en vez de Apertura/Clausura:
-        // es lo que la mayoría busca y ahorra un click.
-        const showCategorias =
-          !!ligaActual &&
-          grupo.items.some((t) => t.id === ligaActual.id) &&
-          categoriasMasculinas.length > 0;
+        const isActive = grupo.entries.some((e) => e.torneo.id === campeonatoIdInPath);
         return (
           <div className="relative" key={key}>
             <button
@@ -179,9 +177,9 @@ export const LinkNavigator = () => {
                   exit={{ opacity: 0, y: -6 }}
                   transition={{ duration: 0.15, ease: "easeOut" }}
                 >
-                  {showCategorias
-                    ? categoriasMasculinas.map(renderCategoriaButton)
-                    : grupo.items.map(renderTorneoButton)}
+                  {grupo.entries.map((entry) =>
+                    renderEntry(entry)
+                  )}
                 </motion.div>
               )}
             </AnimatePresence>

@@ -17,6 +17,7 @@ import { FaseFinalDeEtapaPage } from "./FaseFinalDeEtapaPage";
 import { useAccumulatedTableQuery } from "@/repositories/SeasonRepository";
 import { TablaPosiciones, TABLA_GENERAL_ZONES } from "../TablaPosiciones";
 import MiniLoading from "../loading/MiniLoading";
+import { CATEGORY_PROMOTION_RULES } from "@/config/categoryPromotionRules";
 
 interface CategoriaPageBaseProps {
   id: string;
@@ -26,6 +27,8 @@ interface CategoriaPageBaseProps {
     linkedId: string;
     aperturaId: string;
     clausuraId: string;
+    // Misma categoría en la otra mitad de la temporada, si existe.
+    linkedHref?: string;
   } | null;
   hidePosiciones?: boolean;
   // Torneos con zonas (leaguewithzones): el ascenso/descenso se decide en la
@@ -220,7 +223,11 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
         </h1>
         {seasonInfo && (
           <div className="mt-3">
-            <SeasonSwitchBadge current={seasonInfo.current} linkedId={seasonInfo.linkedId} />
+            <SeasonSwitchBadge
+              current={seasonInfo.current}
+              linkedId={seasonInfo.linkedId}
+              href={seasonInfo.linkedHref}
+            />
           </div>
         )}
       </div>
@@ -346,6 +353,7 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
           <TablaDePosicionesWrapper
             faseId={selectedFaseRegularPosiciones?.id || ""}
             showPromotionZones={!isZonal}
+            zones={isZonal ? undefined : CATEGORY_PROMOTION_RULES[id]}
           />
         )}
         {selectedTab === TabsEnum.TABLA_GENERAL && !!seasonInfo && (

@@ -1,15 +1,17 @@
 import { FC } from "react";
-import { TablaPosiciones } from "../TablaPosiciones";
+import { TablaPosiciones, ZoneMarker } from "../TablaPosiciones";
 import { useGetPositionsFaseRegular } from "@/repositories/CategoriaRepository";
 import LoadingScreen from "../loading/Loading";
 import ErrorPage from "../ErrorPage";
 interface TablaDePosicionesWrapperProps {
   faseId: string;
   showPromotionZones?: boolean;
+  zones?: ZoneMarker[];
 }
 export const TablaDePosicionesWrapper: FC<TablaDePosicionesWrapperProps> = ({
   faseId,
   showPromotionZones = true,
+  zones,
 }) => {
   const { data, isLoading, isError } = useGetPositionsFaseRegular(faseId);
 
@@ -17,7 +19,11 @@ export const TablaDePosicionesWrapper: FC<TablaDePosicionesWrapperProps> = ({
   if (isError) return <ErrorPage />;
 
   if (!!data) {
-    return <TablaPosiciones data={data} showPromotionZones={showPromotionZones} />;
+    return <TablaPosiciones
+        data={data}
+        showPromotionZones={showPromotionZones}
+        zones={zones}
+      />;
   }
 
   return (

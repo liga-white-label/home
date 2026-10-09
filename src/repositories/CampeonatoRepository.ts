@@ -5,7 +5,7 @@ import {
   RoundCup,
 } from "@/app/models/FaseCampeonato";
 import { httpClient } from "@/app/utils/httpClient";
-import { useQuery } from "@tanstack/react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
 import { Copa } from "@/app/models/Campeonato";
 import { Liga } from "@/app/models/Campeonato";
 import { getCampeonatoMapper } from "@/app/models/Campeonato";
@@ -146,16 +146,22 @@ export const useAllCampeonatosQuery = () =>
     retry: 1,
   });
 
+const campeonatoQueryOptions = (id: string) => ({
+  queryKey: repo.keys.one(id),
+  queryFn: () => repo.get(id),
+  staleTime: 5 * 60 * 1000,
+  refetchOnWindowFocus: false,
+  refetchOnReconnect: false,
+  retry: 1,
+  enabled: id !== "",
+});
+
 export const useCampeonatoQuery = (id: string) =>
-  useQuery({
-    queryKey: repo.keys.one(id),
-    queryFn: () => repo.get(id),
-    staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    retry: 1,
-    enabled: id !== "",
-  });
+  useQuery(campeonatoQueryOptions(id));
+
+// Mismo query que useCampeonatoQuery (comparte cache), para varios ids a la vez.
+export const useCampeonatosQueries = (ids: string[]) =>
+  useQueries({ queries: ids.map(campeonatoQueryOptions) });
 
 export const useAllFasesByCampeonato = (id: string) =>
   useQuery({

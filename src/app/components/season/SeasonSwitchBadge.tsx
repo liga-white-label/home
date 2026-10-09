@@ -8,18 +8,21 @@ import { SEASON_LABEL, otherSeason } from "@/app/utils/seasonLabels";
 interface SeasonSwitchBadgeProps {
   current: SeasonEnum;
   linkedId: string;
+  // Destino del link; por defecto, la página del torneo vinculado.
+  href?: string;
 }
 
 export const SeasonSwitchBadge: FC<SeasonSwitchBadgeProps> = ({
   current,
   linkedId,
+  href,
 }) => (
   <div className="flex items-center gap-3 text-sm mt-2">
     <span className="text-[var(--color-text-secondary)]">
       Temporada: <span className="text-[var(--color-text)] font-medium">{SEASON_LABEL[current]}</span>
     </span>
     <Link
-      href={`/campeonatos/${linkedId}`}
+      href={href ?? `/campeonatos/${linkedId}`}
       className="font-medium hover:underline"
       style={{ color: "var(--color-primary)" }}
     >

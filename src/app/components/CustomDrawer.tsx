@@ -8,7 +8,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Campeonato } from "@/app/models/Campeonato";
 import { Categoria } from "@/app/models/Categoria";
-import { useActiveCampeonatos } from "@/app/hooks/useActiveCampeonatos";
+import { MenuEntry, useActiveCampeonatos } from "@/app/hooks/useActiveCampeonatos";
 
 const ChevronDown = ({ open }: { open: boolean }) => (
   <svg
@@ -49,8 +49,7 @@ export const CustomDrawer = () => {
   const [institucionalOpen, setInstitucionalOpen] = useState(false);
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
 
-  const { isLoading, torneosGrupos, ligaActual, categorias } = useActiveCampeonatos();
-  const categoriasMasculinas = categorias.filter((c) => c.gender === "male");
+  const { isLoadingMenu, menuGrupos } = useActiveCampeonatos();
 
   const toggleGroup = (label: string) =>
     setOpenGroups((groups) => ({ ...groups, [label]: !groups[label] }));
@@ -76,12 +75,12 @@ export const CustomDrawer = () => {
     );
   };
 
-  const renderCategoriaLink = (cat: Categoria) => {
+  const renderCategoriaLink = (cat: Categoria, torneoId: string) => {
     const active = cat.id === activeCategoriaId;
     return (
       <Link
         key={cat.id}
-        href={`/campeonatos/${ligaActual!.id}/categorias/${cat.id}`}
+        href={`/campeonatos/${torneoId}/categorias/${cat.id}`}
         onClick={handleClose}
         className={`block px-6 py-2.5 text-sm border-l-2 transition-colors ${
           active
@@ -93,6 +92,12 @@ export const CustomDrawer = () => {
       </Link>
     );
   };
+
+  // Las ligas muestran directamente sus categorías; el resto, el torneo.
+  const renderEntry = ({ torneo, categorias }: MenuEntry) =>
+    categorias.length === 0
+      ? renderTorneoLink(torneo)
+      : categorias.map((cat) => renderCategoriaLink(cat, torneo.id));
 
   return (
     <Drawer
@@ -108,19 +113,15 @@ export const CustomDrawer = () => {
         },
       }}
     >
-      {isLoading ? (
+      {isLoadingMenu ? (
         <div className="flex justify-center pt-10">
           <MiniLoading />
         </div>
       ) : (
         <nav className="flex flex-col">
           {/* Un accordion por disciplina, mostrando los campeonatos de esa disciplina */}
-          {torneosGrupos.map((grupo) => {
+          {menuGrupos.map((grupo) => {
             const isOpen = !!openGroups[grupo.label];
-            const showCategorias =
-              !!ligaActual &&
-              grupo.items.some((t) => t.id === ligaActual.id) &&
-              categoriasMasculinas.length > 0;
             return (
               <div key={grupo.label} className="border-b border-[var(--color-border)]">
                 <button
@@ -141,9 +142,9 @@ export const CustomDrawer = () => {
                       style={{ overflow: "hidden" }}
                     >
                       <div className="pb-2" style={{ backgroundColor: "var(--color-surface-2)" }}>
-                        {showCategorias
-                          ? categoriasMasculinas.map(renderCategoriaLink)
-                          : grupo.items.map(renderTorneoLink)}
+                        {grupo.entries.map((entry) =>
+                          renderEntry(entry)
+                        )}
                       </div>
                     </motion.div>
                   )}
@@ -152,7 +153,7 @@ export const CustomDrawer = () => {
             );
           })}
 
-          {torneosGrupos.length === 0 && (
+          {menuGrupos.length === 0 && (
             <p className="px-6 py-4 text-sm text-[var(--color-text-secondary)]">No hay torneos</p>
           )}
 

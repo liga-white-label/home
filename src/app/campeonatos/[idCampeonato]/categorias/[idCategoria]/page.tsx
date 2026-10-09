@@ -26,6 +26,19 @@ export default function Home() {
     ? zonaCategorias?.find((c) => c.id === idCategoria.toString())
     : campeonato?.categories?.find((c) => c.id === idCategoria.toString());
 
+  // Categoría equivalente (mismo nombre) en la otra mitad de la temporada,
+  // para que "Ir al Apertura/Clausura" no salga de la vista de categoría.
+  const { data: linkedData } = useCampeonatoQuery(
+    campeonato?.linkedSeasonId || ""
+  );
+  const normalizar = (name: string) =>
+    name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " ").trim().toLowerCase();
+  const categoriaVinculada = categoria
+    ? (linkedData as Liga | undefined)?.categories?.find(
+      (c) => normalizar(c.name) === normalizar(categoria.name)
+    )
+    : undefined;
+
   const hidePosiciones = isZonal && categoria?.showTable === false;
 
   if (isLoading || (isZonal && isLoadingZonaCategorias)) {
@@ -49,6 +62,9 @@ export default function Home() {
           campeonato.season === SeasonEnum.CLAUSURA
             ? idCampeonato.toString()
             : campeonato.linkedSeasonId,
+        linkedHref: categoriaVinculada
+          ? `/campeonatos/${campeonato.linkedSeasonId}/categorias/${categoriaVinculada.id}`
+          : undefined,
       }
       : null;
 

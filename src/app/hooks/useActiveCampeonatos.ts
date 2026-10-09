@@ -3,12 +3,14 @@ import {
   CampeonatoTypeEnum,
   Copa,
   Liga,
+  SeasonEnum,
   TorneoZonal,
 } from "@/app/models/Campeonato";
 import { Categoria } from "@/app/models/Categoria";
 import {
   useAllCampeonatosQuery,
   useCampeonatoQuery,
+  useCampeonatosQueries,
 } from "@/repositories/CampeonatoRepository";
 import { useSeasonPair, SeasonPairResult } from "./useSeasonPair";
 
@@ -53,8 +55,38 @@ const sortTorneosGrupos = (grupos: TorneoGrupo[]): TorneoGrupo[] =>
     })
     .map(({ grupo }) => grupo);
 
+// Una entrada del menú de una disciplina: las ligas se muestran por sus
+// categorías (llevan directo a la página de categoría); el resto de los
+// torneos (zonales, copas) o ligas sin categorías, como link al torneo.
+export interface MenuEntry {
+  torneo: Campeonato;
+  categorias: Categoria[];
+}
+
+export interface MenuGrupo {
+  label: string;
+  entries: MenuEntry[];
+}
+
+// Si las dos mitades de una temporada (Apertura/Clausura) están habilitadas,
+// el menú muestra una sola: la marcada `current` o, si no, el Clausura. Se
+// pasa a la otra desde el badge "Ir al Apertura/Clausura" de la categoría.
+const ocultarMitadDeTemporada = (
+  items: Campeonato[],
+  ligasPorId: Record<string, Liga | undefined>
+) =>
+  items.filter((t) => {
+    const liga = ligasPorId[t.id];
+    if (!liga?.season || !liga.linkedSeasonId) return true;
+    const linked = items.find((o) => o.id === liga.linkedSeasonId);
+    if (!linked) return true;
+    if (t.current !== linked.current) return t.current;
+    return liga.season === SeasonEnum.CLAUSURA;
+  });
+
 export interface UseActiveCampeonatosResult {
   isLoading: boolean;
+  isLoadingMenu: boolean;
   isError: boolean;
   allCampeonatos: Campeonato[] | undefined;
   ligaActual: Liga | undefined;
@@ -69,6 +101,8 @@ export interface UseActiveCampeonatosResult {
   // DISCIPLINA_ORDER (masculino, femenino, infantiles/menores, futsal,
   // senior); disciplinas sin match caen al final por orden de aparición.
   torneosGrupos: TorneoGrupo[];
+  // Igual que torneosGrupos, pero listo para el menú (NavBar/Drawer).
+  menuGrupos: MenuGrupo[];
   seasonPair: SeasonPairResult;
 }
 
@@ -127,8 +161,38 @@ export const useActiveCampeonatos = (): UseActiveCampeonatosResult => {
     Array.from(gruposPorDisciplina, ([label, items]) => ({ label, items }))
   );
 
+  // `tournament/all` trae las categorías sólo como ids: se pide cada liga
+  // activa para tener sus nombres.
+  const ligasActivas = torneosActivos.filter(
+    (t) => t.type === CampeonatoTypeEnum.REGULAR
+  );
+  const ligasQueries = useCampeonatosQueries(ligasActivas.map((t) => t.id));
+  const ligasPorId: Record<string, Liga | undefined> = {};
+  ligasActivas.forEach((t, i) => {
+    ligasPorId[t.id] = ligasQueries[i]?.data as Liga | undefined;
+  });
+  const isLoadingLigas = ligasQueries.some((q) => q.isLoading);
+
+  const menuGrupos: MenuGrupo[] = torneosGrupos.map((grupo) => ({
+    label: grupo.label,
+    entries: ocultarMitadDeTemporada(grupo.items, ligasPorId).map((torneo) => {
+      const liga = ligasPorId[torneo.id];
+      const categoriasLiga = liga?.categories || [];
+      return {
+        torneo,
+        // La liga actual puede mezclar géneros (ej. CUBB): en el menú se
+        // muestran sólo las masculinas, como hasta ahora.
+        categorias:
+          torneo.id === ligaActual?.id
+            ? categoriasLiga.filter((c) => c.gender === "male")
+            : categoriasLiga,
+      };
+    }),
+  }));
+
   return {
     isLoading: isLoadingAll || isLoadingActual,
+    isLoadingMenu: isLoadingAll || isLoadingLigas,
     isError,
     allCampeonatos,
     ligaActual,
@@ -140,6 +204,7 @@ export const useActiveCampeonatos = (): UseActiveCampeonatosResult => {
     zonalPrincipal,
     torneosActivos,
     torneosGrupos,
+    menuGrupos,
     seasonPair,
   };
 };

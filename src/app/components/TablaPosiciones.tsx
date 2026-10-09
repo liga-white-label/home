@@ -11,8 +11,16 @@ export interface ZoneMarker {
   count: number;
   from: "top" | "bottom";
   color: string;
+  // Si se define, la marca se pinta mitad `color` y mitad `secondaryColor`
+  // (ej. el 1° que juega una final extra y además el playoff).
+  secondaryColor?: string;
   label: string;
 }
+
+const zoneBackground = (color: string, secondaryColor?: string) =>
+  secondaryColor
+    ? `linear-gradient(to bottom, ${color} 50%, ${secondaryColor} 50%)`
+    : color;
 
 interface TablaPosicionesProps {
   data: {
@@ -69,14 +77,10 @@ function resolveCustomZone(
   pos: number,
   total: number,
   zones: ZoneMarker[]
-): { color: string; label: string } | null {
+): ZoneMarker | null {
   for (const zone of zones) {
-    if (zone.from === "top" && pos <= zone.count) {
-      return { color: zone.color, label: zone.label };
-    }
-    if (zone.from === "bottom" && pos > total - zone.count) {
-      return { color: zone.color, label: zone.label };
-    }
+    if (zone.from === "top" && pos <= zone.count) return zone;
+    if (zone.from === "bottom" && pos > total - zone.count) return zone;
   }
   return null;
 }
@@ -124,7 +128,9 @@ export const TablaPosiciones: FC<TablaPosicionesProps> = ({
               <span key={zone.label} className="flex items-center gap-1">
                 <span
                   className="inline-block w-2 h-2 rounded-full"
-                  style={{ backgroundColor: zone.color }}
+                  style={{
+                    background: zoneBackground(zone.color, zone.secondaryColor),
+                  }}
                 />
                 {zone.label}
               </span>
@@ -175,7 +181,10 @@ export const TablaPosiciones: FC<TablaPosicionesProps> = ({
                   : null;
               const zone = !zones && showPromotionZones ? getZone(team.pos, total) : "none";
               const zoneColor = customZone
-                ? { border: customZone.color, text: customZone.color }
+                ? {
+                  border: zoneBackground(customZone.color, customZone.secondaryColor),
+                  text: customZone.color,
+                }
                 : ZONE_COLORS[zone];
               return (
                 <tr
@@ -188,7 +197,7 @@ export const TablaPosiciones: FC<TablaPosicionesProps> = ({
                     <div className="flex items-center">
                       <div
                         className="w-1 self-stretch rounded-r mr-3"
-                        style={{ backgroundColor: zoneColor.border, minHeight: 40 }}
+                        style={{ background: zoneColor.border, minHeight: 40 }}
                       />
                       <span
                         className="font-bold text-sm"
