@@ -21,6 +21,7 @@ export const TablaDePosicionesWrapper: FC<TablaDePosicionesWrapperProps> = ({
   if (!!data) {
     return <TablaPosiciones
         data={data}
+        serverOrdered
         showPromotionZones={showPromotionZones}
         zones={zones}
       />;
