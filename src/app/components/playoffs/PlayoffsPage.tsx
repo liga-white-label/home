@@ -7,9 +7,10 @@ import PlayoffFixtureNavigator from "./PlayoffFixtureNavigator";
 
 interface CuadroPlayoffProps {
   faseId: string;
+  title?: string;
 }
 
-const PlayoffsPage: React.FC<CuadroPlayoffProps> = ({ faseId }) => {
+const PlayoffsPage: React.FC<CuadroPlayoffProps> = ({ faseId, title }) => {
   const {
     data: fase,
     isError,
@@ -34,6 +35,7 @@ const PlayoffsPage: React.FC<CuadroPlayoffProps> = ({ faseId }) => {
         rounds={fase || []}
         faseId={faseId}
         isLeague={true}
+        title={title}
       />
     </>
   );

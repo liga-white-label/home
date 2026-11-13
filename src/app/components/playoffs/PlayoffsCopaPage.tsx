@@ -8,9 +8,10 @@ import { Typography } from "@mui/material";
 
 interface CuadroPlayoffProps {
   faseId: string;
+  title?: string;
 }
 
-const PlayoffCopaPage: React.FC<CuadroPlayoffProps> = ({ faseId }) => {
+const PlayoffCopaPage: React.FC<CuadroPlayoffProps> = ({ faseId, title }) => {
   const {
     data: fase,
     isLoading,
@@ -39,6 +40,7 @@ const PlayoffCopaPage: React.FC<CuadroPlayoffProps> = ({ faseId }) => {
         rounds={fase || []}
         faseId={faseId}
         isLeague={false}
+        title={title}
       />
     </>
   );

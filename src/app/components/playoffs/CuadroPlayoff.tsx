@@ -37,6 +37,8 @@ const CuadroPlayoff: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
     );
   }
 
+  // En ida y vuelta los goles de la vuelta y los penales (que se cargan en la vuelta)
+  // vienen desde la óptica del local de la vuelta, que es el visitante de la serie.
   const doubleMatch = firstRound.doubleMatch || false;
   const finalMatch = firstRound.matchesPlayoff[0] || {
     homeMatch: {},
@@ -148,8 +150,8 @@ const CuadroPlayoff: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
                       ? match.awayMatch?.homeTeamGoals
                       : null
                   }
-                  resultHomePenales={match.homeTeamPenalties}
-                  resultAwayPenales={match.awayTeamPenalties}
+                  resultHomePenales={doubleMatch ? match.awayTeamPenalties : match.homeTeamPenalties}
+                  resultAwayPenales={doubleMatch ? match.homeTeamPenalties : match.awayTeamPenalties}
                   idaMatchStatus={match.homeMatch?.status}
                   vueltaMatchStatus={match.awayMatch?.status}
                 />
@@ -175,7 +177,7 @@ const CuadroPlayoff: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
                 }
                 resultHomeVuelta={
                   finalMatch.awayMatch?.status === MatchStatus.JUGADO
-                    ? finalMatch.awayMatch?.homeTeamGoals
+                    ? finalMatch.awayMatch?.awayTeamGoals
                     : null
                 }
                 resultAwayIda={
@@ -185,11 +187,11 @@ const CuadroPlayoff: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
                 }
                 resultAwayVuelta={
                   finalMatch.awayMatch?.status === MatchStatus.JUGADO
-                    ? finalMatch.awayMatch?.awayTeamGoals
+                    ? finalMatch.awayMatch?.homeTeamGoals
                     : null
                 }
-                penaltyResultHome={finalMatch.homeTeamPenalties}
-                penaltyResultAway={finalMatch.awayTeamPenalties}
+                penaltyResultHome={doubleMatch ? finalMatch.awayTeamPenalties : finalMatch.homeTeamPenalties}
+                penaltyResultAway={doubleMatch ? finalMatch.homeTeamPenalties : finalMatch.awayTeamPenalties}
                 idaMatchStatus={finalMatch.homeMatch?.status}
                 vueltaMatchStatus={finalMatch.awayMatch?.status}
               />
@@ -233,8 +235,8 @@ const CuadroPlayoff: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
                       ? match.awayMatch?.homeTeamGoals
                       : null
                   }
-                  resultHomePenales={match.homeTeamPenalties}
-                  resultAwayPenales={match.awayTeamPenalties}
+                  resultHomePenales={doubleMatch ? match.awayTeamPenalties : match.homeTeamPenalties}
+                  resultAwayPenales={doubleMatch ? match.homeTeamPenalties : match.awayTeamPenalties}
                   idaMatchStatus={match.homeMatch?.status}
                   vueltaMatchStatus={match.awayMatch?.status}
                 />

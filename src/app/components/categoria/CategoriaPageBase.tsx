@@ -53,6 +53,8 @@ export enum TabsEnum {
   // usa estos offsets.
   POSICIONES_GENERAL_BASE = 300,
   FIXTURE_GENERAL_BASE = 400,
+  // Fases de partido único (finales, partidos extras, descensos): un tab por fase
+  PARTIDO_UNICO_BASE = 500,
 }
 
 export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
@@ -96,7 +98,10 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
 
   const getRegularIndexFromFixtureTab = (tab: number): number | null => {
     if (tab === TabsEnum.FIXTURE) return 0;
-    if (tab >= TabsEnum.FIXTURE_GENERAL_BASE) {
+    if (
+      tab >= TabsEnum.FIXTURE_GENERAL_BASE &&
+      tab < TabsEnum.PARTIDO_UNICO_BASE
+    ) {
       return tab - TabsEnum.FIXTURE_GENERAL_BASE + 1;
     }
     return null;
@@ -122,6 +127,10 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
 
   const faseFinal =
     fases?.phases.find((f: any) => f.type === "seasonfinal") || null;
+
+  // El backend serializa el PhaseType en minúsculas ("singlematch")
+  const fasesPartidoUnico =
+    fases?.phases.filter((f: any) => f.type === "singlematch") || [];
 
   const getInitialTab = () => {
     if (tabParam) {
@@ -159,7 +168,10 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
       const index = selectedTab - TabsEnum.GRUPOS_BASE;
       return fasesGrupos[index];
     }
-    if (selectedTab >= TabsEnum.FIXTURE_ZONAS_BASE) {
+    if (
+      selectedTab >= TabsEnum.FIXTURE_ZONAS_BASE &&
+      selectedTab < TabsEnum.POSICIONES_GENERAL_BASE
+    ) {
       const index = selectedTab - TabsEnum.FIXTURE_ZONAS_BASE;
       return fasesGrupos[index];
     }
@@ -169,7 +181,13 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
   const isGruposTab =
     selectedTab >= TabsEnum.GRUPOS_BASE &&
     selectedTab < TabsEnum.FIXTURE_ZONAS_BASE;
-  const isFixtureZonasTab = selectedTab >= TabsEnum.FIXTURE_ZONAS_BASE;
+  const isFixtureZonasTab =
+    selectedTab >= TabsEnum.FIXTURE_ZONAS_BASE &&
+    selectedTab < TabsEnum.POSICIONES_GENERAL_BASE;
+  const selectedFasePartidoUnico =
+    selectedTab >= TabsEnum.PARTIDO_UNICO_BASE
+      ? fasesPartidoUnico[selectedTab - TabsEnum.PARTIDO_UNICO_BASE] || null
+      : null;
 
   const tabHasContent =
     (!!selectedFaseRegularPosiciones && !hidePosiciones) ||
@@ -180,6 +198,7 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
     (selectedTab === TabsEnum.PLAYOFFS && !!fasePlayoff) ||
     (selectedTab === TabsEnum.DESCENSO && !!faseDescenso) ||
     (selectedTab === TabsEnum.FASE_FINAL && !!faseFinal) ||
+    !!selectedFasePartidoUnico ||
     selectedTab === TabsEnum.ESTADISTICAS;
 
   // Si el tab pedido por la URL no tiene contenido para esta categoría
@@ -193,7 +212,9 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
         ? TabsEnum.GRUPOS_BASE
         : faseRegular
           ? (hidePosiciones ? TabsEnum.FIXTURE : TabsEnum.POSICIONES)
-          : TabsEnum.ESTADISTICAS;
+          : fasesPartidoUnico.length > 0
+            ? TabsEnum.PARTIDO_UNICO_BASE
+            : TabsEnum.ESTADISTICAS;
       setSelectedTab(fallbackTab);
       router.replace(`?tab=${fallbackTab}`);
     }
@@ -337,6 +358,20 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
             </button>
           )}
 
+          {fasesPartidoUnico.map((fase: any, index: number) => {
+            const tabNumber = TabsEnum.PARTIDO_UNICO_BASE + index;
+            return (
+              <button
+                key={`partido-unico-${fase.id}`}
+                onClick={() => handleChangeTab(tabNumber)}
+                className={tabClass(selectedTab === tabNumber)}
+                style={selectedTab === tabNumber ? { borderColor: "var(--color-primary)" } : {}}
+              >
+                {fase.label || fase.name || "Partido único"}
+              </button>
+            );
+          })}
+
           <button
             onClick={() => handleChangeTab(TabsEnum.ESTADISTICAS)}
             className={tabClass(selectedTab === TabsEnum.ESTADISTICAS)}
@@ -398,6 +433,12 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
         )}
         {selectedTab === TabsEnum.FASE_FINAL && !!faseFinal && (
           <FaseFinalDeEtapaPage faseId={faseFinal.id} />
+        )}
+        {!!selectedFasePartidoUnico && (
+          <PlayoffsPage
+            faseId={selectedFasePartidoUnico.id}
+            title={selectedFasePartidoUnico.label || selectedFasePartidoUnico.name}
+          />
         )}
         {selectedTab === TabsEnum.ESTADISTICAS && (
           <EstadisticasPage

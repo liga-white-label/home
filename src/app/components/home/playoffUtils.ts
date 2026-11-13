@@ -108,3 +108,37 @@ export const roundToSimplifiedMatches = (round: RoundCup): SimplifiedMatch[] =>
     }
     return matches;
   });
+
+// ─── Fases de partido único (finales, partidos extras, promociones/descensos) ───
+
+/** Días que un partido único jugado sigue en el inicio (igual que ACTUAL_DATE_HOLD_DAYS del backend). */
+export const SINGLE_MATCH_HOLD_DAYS = 3;
+/** Días hacia adelante en los que un partido único programado ya aparece en el inicio ("este finde"). */
+export const SINGLE_MATCH_LEAD_DAYS = 7;
+
+/** Todos los partidos (ida y vuelta si corresponde) de una fase de partido único. */
+export const singleMatchPhaseMatches = (rounds: RoundCup[]): SimplifiedMatch[] =>
+  rounds.flatMap(roundToSimplifiedMatches);
+
+/**
+ * Indica si una fase de partido único debe mostrarse en el inicio:
+ * - tiene algún partido con fecha desde hace SINGLE_MATCH_HOLD_DAYS días hasta dentro de
+ *   SINGLE_MATCH_LEAD_DAYS días (se juega esta fecha/finde o se jugó hace poco), o
+ * - todavía tiene partidos por jugar y no queda otra fase en curso (ej. terminó la fase regular
+ *   y solo falta la promoción), aunque no tenga fecha cargada.
+ */
+export const isSingleMatchPhaseCurrent = (
+  matches: SimplifiedMatch[],
+  noOtherPhaseInProgress: boolean,
+  now: Moment = moment()
+): boolean => {
+  if (matches.length === 0) return false;
+  const from = now.clone().startOf("day").subtract(SINGLE_MATCH_HOLD_DAYS, "days");
+  const to = now.clone().endOf("day").add(SINGLE_MATCH_LEAD_DAYS, "days");
+  const inWindow = matches.some((m) => {
+    const d = m.date ? moment(m.date) : null;
+    return !!d && d.isValid() && d.isBetween(from, to, undefined, "[]");
+  });
+  const hasPending = matches.some((m) => m.status !== MatchStatus.JUGADO);
+  return inWindow || (hasPending && noOtherPhaseInProgress);
+};

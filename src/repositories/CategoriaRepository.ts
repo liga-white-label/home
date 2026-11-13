@@ -242,6 +242,16 @@ export const useGeneralMatchesDetailQuery = (
     }),
   });
 
+// Varias fases tipo playoff a la vez (ej. todas las fases de partido único de una categoría).
+// Comparte cache con useOneFasePlayoffQuery.
+export const useFasesPlayoffQueries = (ids: string[]) =>
+  useQueries({
+    queries: ids.map((id) => ({
+      queryKey: repo.keys.oneFase(id),
+      queryFn: () => repo.getOneFasePlayoff(id),
+    })),
+  });
+
 export const useOneFasePlayoffQuery = ({
   id,
   enabled = true,

@@ -26,6 +26,8 @@ interface PlayoffFixtureNavigatorProps {
   rounds: RoundCup[];
   faseId: string;
   isLeague?: boolean;
+  // Fase de partido único: se muestra el label de la fase (ej. "Final", "Descenso") en vez de "Final"
+  title?: string;
 }
 
 const FASE_MINIMA = 32;
@@ -35,6 +37,7 @@ const PlayoffFixtureNavigator: React.FC<PlayoffFixtureNavigatorProps> = ({
   rounds,
   faseId,
   isLeague = false,
+  title,
 }) => {
   const [selectedPhase, setSelectedPhase] = useState<number>(
     rounds[rounds.length - 1].roundNumber
@@ -61,7 +64,7 @@ const PlayoffFixtureNavigator: React.FC<PlayoffFixtureNavigatorProps> = ({
           <Iconify icon={"ion:caret-back"} color={"white"} />
         </IconButton>
         <Typography className="font-bold text-white">
-          {getFaseLabel(selectedPhase)}
+          {title || getFaseLabel(selectedPhase)}
         </Typography>
         <IconButton
           disabled={selectedPhase === FASE_MAXIMA || rounds.length === 1}

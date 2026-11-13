@@ -5,6 +5,7 @@ import {
   useAllFasesByCampeonato,
   useOneFaseCampeonatoQuery,
   useOneFasePlayoffCopaQuery,
+  useFasesPlayoffCopaQueries,
 } from "@/repositories/CampeonatoRepository";
 import moment from "moment";
 import {
@@ -23,7 +24,13 @@ import {
   getRoundLabel,
   roundToSimplifiedMatches,
   groupMatchesByDay,
+  isSingleMatchPhaseCurrent,
+  singleMatchPhaseMatches,
 } from "./playoffUtils";
+import SingleMatchLatestBlock from "./SingleMatchLatestBlock";
+
+// Mismo offset que TabsEnum.PARTIDO_UNICO_BASE en CopaPageBase
+const PARTIDO_UNICO_TAB_BASE = 500;
 
 interface CupLatestMatchesProps {
   cupId: string;
@@ -59,7 +66,13 @@ const CupLatestMatches = ({ cupId }: CupLatestMatchesProps) => {
   const { data: playoffRounds = [], isLoading: isLoadingPlayoff } =
     useOneFasePlayoffCopaQuery({ id: playoffPhase?.id ?? "", enabled: !!playoffPhase?.id });
 
-  const isLoading = isLoadingFases || isLoadingGrupos || isLoadingPlayoff;
+  // Fases de partido único (finales, partidos extras, desempates)
+  const fasesPartidoUnico = (fases as any[]).filter((f) => f.type === "singlematch");
+  const singleMatchQueries = useFasesPlayoffCopaQueries(fasesPartidoUnico.map((f) => f.id));
+
+  const isLoading =
+    isLoadingFases || isLoadingGrupos || isLoadingPlayoff ||
+    singleMatchQueries.some((q) => q.isLoading);
 
   const activeRound = findMostAdvancedRound(playoffRounds);
 
@@ -120,6 +133,44 @@ const CupLatestMatches = ({ cupId }: CupLatestMatchesProps) => {
     );
   }
 
+  // No queda otra fase en curso: no hay playoff y la fase de grupos terminó (o no existe).
+  const mainIsIdle =
+    !activeRound &&
+    (!groupPhase || allMatches.every((m) => m.status === MatchStatus.JUGADO));
+
+  // Partidos únicos que se juegan esta fecha/finde (o se jugaron hace poco), o que quedan
+  // pendientes cuando ya no hay otra fase en curso.
+  const singleMatchBlocks = fasesPartidoUnico
+    .map((fase, index) => ({
+      fase,
+      index,
+      matches: singleMatchPhaseMatches(singleMatchQueries[index]?.data ?? []),
+    }))
+    .filter(({ matches }) => isSingleMatchPhaseCurrent(matches, mainIsIdle))
+    .map(({ fase, index, matches }) => (
+      <SingleMatchLatestBlock
+        key={fase.id}
+        title={fase.label || fase.name || "Partido único"}
+        href={`/campeonatos/${cupId}?tab=${PARTIDO_UNICO_TAB_BASE + index}`}
+        matches={matches}
+        onSelectMatch={setSelectedMatch}
+      />
+    ));
+
+  // Terminaron las otras fases y solo quedan partidos únicos: se muestran solo esos
+  if (mainIsIdle && singleMatchBlocks.length > 0) {
+    return (
+      <>
+        {singleMatchBlocks}
+        <InfoMatchModal
+          openMatchModal={selectedMatch !== null}
+          handleCloseModal={() => setSelectedMatch(null)}
+          match={selectedMatch}
+        />
+      </>
+    );
+  }
+
   if (activeRound) {
     const playoffMatches = roundToSimplifiedMatches(activeRound);
     const played = playoffMatches.filter((m) => m.status === MatchStatus.JUGADO);
@@ -128,6 +179,7 @@ const CupLatestMatches = ({ cupId }: CupLatestMatchesProps) => {
 
     return (
       <>
+        {singleMatchBlocks}
         <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid var(--color-surface)" }}>
           <span className="text-xs font-semibold uppercase tracking-widest text-[var(--color-text-secondary)]">
             Playoffs — {getRoundLabel(activeRound.roundNumber)}
@@ -170,6 +222,7 @@ const CupLatestMatches = ({ cupId }: CupLatestMatchesProps) => {
 
   return (
     <>
+      {singleMatchBlocks}
       {availableCanchas.length > 0 && (
         <div className="flex gap-2 overflow-x-auto px-4 pt-3 pb-1 flex-wrap">
           <button

@@ -59,6 +59,10 @@ export const calculateRightPosition = (
 };
 
 export const getFinalPosition = (leftRoundsLength: number) => {
+  // Solo la final (fase de partido único o playoff de un solo cruce): centrada
+  if (leftRoundsLength === 0) {
+    return { left: "50%", top: "75px", transform: "translateX(-50%)" };
+  }
   const leftOffset = getFinalLeftOffset(leftRoundsLength);
   if (leftRoundsLength === 1) {
     return { left: `${leftOffset}px`, top: "225px" }; // Fixed vertical position for semifinals case

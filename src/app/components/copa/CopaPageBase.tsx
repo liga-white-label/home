@@ -21,6 +21,8 @@ export enum TabsEnum {
   FIXTURE = 1,
   PLAYOFFS = 2,
   ESTADISTICAS = 3,
+  // Fases de partido único (finales, partidos extras, descensos): un tab por fase
+  PARTIDO_UNICO_BASE = 500,
 }
 
 export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
@@ -28,7 +30,7 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
   const router = useRouter();
   const tabParam = searchParams.get("tab");
   const initialTab = tabParam ? parseInt(tabParam, 10) : TabsEnum.GRUPOS;
-  const [selectedTab, setSelectedTab] = useState<TabsEnum>(initialTab);
+  const [selectedTab, setSelectedTab] = useState<number>(initialTab);
 
   const { data: fases = [], isLoading, isError } = useAllFasesByCampeonato(id);
 
@@ -37,6 +39,15 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
     () => fases.filter((f) => f.type === "playoff") || [],
     [fases]
   );
+  // El backend serializa el PhaseType en minúsculas ("singlematch")
+  const fasesPartidoUnico = useMemo(
+    () => fases.filter((f) => f.type === "singlematch"),
+    [fases]
+  );
+  const selectedFasePartidoUnico =
+    selectedTab >= TabsEnum.PARTIDO_UNICO_BASE
+      ? fasesPartidoUnico[selectedTab - TabsEnum.PARTIDO_UNICO_BASE] || null
+      : null;
 
   useEffect(() => {
     if (tabParam) {
@@ -44,7 +55,7 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
     }
   }, [tabParam]);
 
-  const handleChangeTab = (newValue: TabsEnum) => {
+  const handleChangeTab = (newValue: number) => {
     setSelectedTab(newValue);
     router.push(`?tab=${newValue}`, undefined);
   };
@@ -56,10 +67,12 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
       setSelectedTab(TabsEnum.GRUPOS);
     } else if (fasesPlayoff.length > 0) {
       setSelectedTab(TabsEnum.PLAYOFFS);
+    } else if (fasesPartidoUnico.length > 0) {
+      setSelectedTab(TabsEnum.PARTIDO_UNICO_BASE);
     } else {
       setSelectedTab(TabsEnum.FIXTURE);
     }
-  }, [faseGrupos, fasesPlayoff, tabParam]);
+  }, [faseGrupos, fasesPlayoff, fasesPartidoUnico, tabParam]);
 
   if (isLoading) return <LoadingScreen />;
   if (isError) return <ErrorPage />;
@@ -117,6 +130,19 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
               Playoffs
             </button>
           )}
+          {fasesPartidoUnico.map((fase, index) => {
+            const tabNumber = TabsEnum.PARTIDO_UNICO_BASE + index;
+            return (
+              <button
+                key={`partido-unico-${fase.id}`}
+                onClick={() => handleChangeTab(tabNumber)}
+                className={tabClass(selectedTab === tabNumber)}
+                style={selectedTab === tabNumber ? { borderColor: "var(--color-primary)" } : {}}
+              >
+                {fase.label || fase.name || "Partido único"}
+              </button>
+            );
+          })}
           <button
             onClick={() => handleChangeTab(TabsEnum.ESTADISTICAS)}
             className={tabClass(selectedTab === TabsEnum.ESTADISTICAS)}
@@ -144,6 +170,12 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
         )}
         {selectedTab === TabsEnum.PLAYOFFS && (
           <PlayoffsCopaPage faseId={fasesPlayoff[0]?.id || ""} />
+        )}
+        {!!selectedFasePartidoUnico && (
+          <PlayoffsCopaPage
+            faseId={selectedFasePartidoUnico.id}
+            title={selectedFasePartidoUnico.label || selectedFasePartidoUnico.name}
+          />
         )}
         {selectedTab === TabsEnum.ESTADISTICAS && (
           <EstadisticasCopaPage cupId={id} />

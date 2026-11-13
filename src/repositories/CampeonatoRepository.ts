@@ -12,10 +12,13 @@ import { getCampeonatoMapper } from "@/app/models/Campeonato";
 import { playoffFaseMapper } from "@/app/models/FaseCampeonato";
 import { partidoMapper } from "@/app/models/Match";
 
-type FaseCopaType = "group" | "playoff";
+type FaseCopaType = "group" | "playoff" | "singlematch";
 interface FaseCopa {
   type: FaseCopaType;
   id: string;
+  name?: string;
+  // Solo fases de partido único: texto a mostrar (ej. "Final", "Partido extra")
+  label?: string | null;
 }
 export class CampeonatoRepository {
   keys = {
@@ -224,6 +227,18 @@ export const useOnePartidoCopaPlayoffQuery = (
         matchPlayoffId: roundId,
       }),
     enabled: enabled,
+  });
+
+// Varias fases tipo playoff a la vez (ej. todas las fases de partido único de una copa).
+// Comparte cache con useOneFasePlayoffCopaQuery.
+export const useFasesPlayoffCopaQueries = (ids: string[]) =>
+  useQueries({
+    queries: ids.map((id) => ({
+      queryKey: repo.keys.oneFase(id),
+      queryFn: () => repo.getOneFasePlayoff(id),
+      staleTime: 5 * 60 * 1000,
+      refetchOnWindowFocus: false,
+    })),
   });
 
 export const useOneFasePlayoffCopaQuery = ({
