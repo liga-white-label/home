@@ -13,10 +13,7 @@ export interface DayGroup {
   matches: SimplifiedMatch[];
 }
 
-/**
- * Groups matches by calendar day, sorted chronologically.
- * Matches without a date are collected under a single trailing group.
- */
+/** Groups matches by day; matches without a date go last. */
 export const groupMatchesByDay = (matches: SimplifiedMatch[]): DayGroup[] => {
   const map = new Map<string, DayGroup>();
 
@@ -73,20 +70,53 @@ const isRoundComplete = (round: RoundCup): boolean => {
   });
 };
 
+// Same as the backend's ACTUAL_DATE_HOLD_DAYS and NEXT_DATE_LEAD_DAYS
+export const PLAYOFF_ROUND_HOLD_DAYS = 3;
+export const PLAYOFF_NEXT_ROUND_LEAD_DAYS = 1;
+
+const roundMatchDates = (round: RoundCup): Moment[] =>
+  roundToSimplifiedMatches(round)
+    .map((m) => (m.date ? moment(m.date) : null))
+    .filter((d): d is Moment => !!d && d.isValid());
+
 /**
- * Returns the round to show as "current": the earliest round (in tournament
- * order, i.e. largest roundNumber first) that hasn't been fully played yet.
- * If every round is complete, falls back to the most advanced round that has
- * matches (the Final), so completed results keep showing. Returns null if no
- * round has any data at all.
+ * Current round: the first unfinished one. The last finished round keeps showing
+ * for a few days, unless the next one starts sooner.
  */
-export const findMostAdvancedRound = (rounds: RoundCup[]): RoundCup | null => {
+export const findMostAdvancedRound = (
+  rounds: RoundCup[],
+  now: Moment = moment()
+): RoundCup | null => {
   if (rounds.length === 0) return null;
 
   const chronological = rounds.slice().sort((a, b) => b.roundNumber - a.roundNumber);
 
-  const nextToPlay = chronological.find((r) => !isRoundComplete(r));
-  if (nextToPlay) return nextToPlay;
+  const nextIndex = chronological.findIndex((r) => !isRoundComplete(r));
+  if (nextIndex !== -1) {
+    const nextToPlay = chronological[nextIndex];
+    const lastCompleted = chronological
+      .slice(0, nextIndex)
+      .reverse()
+      .find((r) => r.matchesPlayoff.length > 0);
+
+    if (lastCompleted) {
+      const lastDates = roundMatchDates(lastCompleted);
+      if (lastDates.length > 0) {
+        let holdUntil = moment.max(lastDates).clone().startOf("day").add(PLAYOFF_ROUND_HOLD_DAYS, "days");
+        const nextDates = roundMatchDates(nextToPlay);
+        if (nextDates.length > 0) {
+          const lastHoldDayBeforeNext = moment
+            .min(nextDates)
+            .clone()
+            .startOf("day")
+            .subtract(PLAYOFF_NEXT_ROUND_LEAD_DAYS + 1, "days");
+          if (lastHoldDayBeforeNext.isBefore(holdUntil)) holdUntil = lastHoldDayBeforeNext;
+        }
+        if (!now.clone().startOf("day").isAfter(holdUntil)) return lastCompleted;
+      }
+    }
+    return nextToPlay;
+  }
 
   return (
     chronological
@@ -96,10 +126,6 @@ export const findMostAdvancedRound = (rounds: RoundCup[]): RoundCup | null => {
   );
 };
 
-/**
- * Converts all matches in a round to SimplifiedMatch[].
- * Includes both legs (homeMatch + awayMatch) for double-match rounds.
- */
 export const roundToSimplifiedMatches = (round: RoundCup): SimplifiedMatch[] =>
   round.matchesPlayoff.flatMap((m) => {
     const matches: SimplifiedMatch[] = [convertToSimplifiedMatch(m.homeMatch)];
@@ -109,24 +135,14 @@ export const roundToSimplifiedMatches = (round: RoundCup): SimplifiedMatch[] =>
     return matches;
   });
 
-// ─── Fases de partido único (finales, partidos extras, promociones/descensos) ───
-
-/** Días que un partido único jugado sigue en el inicio (igual que ACTUAL_DATE_HOLD_DAYS del backend). */
+// Single match phases
 export const SINGLE_MATCH_HOLD_DAYS = 3;
-/** Días hacia adelante en los que un partido único programado ya aparece en el inicio ("este finde"). */
 export const SINGLE_MATCH_LEAD_DAYS = 7;
 
-/** Todos los partidos (ida y vuelta si corresponde) de una fase de partido único. */
 export const singleMatchPhaseMatches = (rounds: RoundCup[]): SimplifiedMatch[] =>
   rounds.flatMap(roundToSimplifiedMatches);
 
-/**
- * Indica si una fase de partido único debe mostrarse en el inicio:
- * - tiene algún partido con fecha desde hace SINGLE_MATCH_HOLD_DAYS días hasta dentro de
- *   SINGLE_MATCH_LEAD_DAYS días (se juega esta fecha/finde o se jugó hace poco), o
- * - todavía tiene partidos por jugar y no queda otra fase en curso (ej. terminó la fase regular
- *   y solo falta la promoción), aunque no tenga fecha cargada.
- */
+/** Shown if it has a match close to today, or pending matches when no other phase is in progress. */
 export const isSingleMatchPhaseCurrent = (
   matches: SimplifiedMatch[],
   noOtherPhaseInProgress: boolean,
