@@ -13,7 +13,7 @@ import React from "react";
 import { abbreviateTeamName } from "../utils/stringUtils";
 import { Incidencia, IncidenciaByTeam } from "./InferenciaByTeam";
 import Image from "next/image";
-import { Match, MatchStatus } from "../models/Match";
+import { Match, MatchStatus, hasPenalties } from "../models/Match";
 import moment from "moment";
 import "moment/locale/es";
 
@@ -178,9 +178,16 @@ const InfoMatchModal: React.FC<InfoMatchModalProps> = ({
 
           <Box className="flex-grow-0 flex-shrink-0 mx-auto ">
             {match.status === MatchStatus.JUGADO || match.status === MatchStatus.JUGANDO ? (
-              <div className="w-18 px-2 py-1 rounded-md items-center flex justify-center" style={{ backgroundColor: "var(--color-primary)" }}>
-                <p className="text-white font-bold text-xl md:text-2xl">{`${match.homeTeamGoals ?? 0} - ${match.awayTeamGoals ?? 0}`}</p>
-              </div>
+              <>
+                <div className="w-18 px-2 py-1 rounded-md items-center flex justify-center" style={{ backgroundColor: "var(--color-primary)" }}>
+                  <p className="text-white font-bold text-xl md:text-2xl">{`${match.homeTeamGoals ?? 0} - ${match.awayTeamGoals ?? 0}`}</p>
+                </div>
+                {hasPenalties(match) && (
+                  <p className="text-center text-xs md:text-sm text-[var(--color-text-secondary)] mt-1 whitespace-nowrap">
+                    Penales: {match.homeTeamPenalties} - {match.awayTeamPenalties}
+                  </p>
+                )}
+              </>
             ) : (
               <div
                 className="w-10 px-2 py-1 rounded-md items-center flex justify-center"

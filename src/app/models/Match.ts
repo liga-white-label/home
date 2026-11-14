@@ -74,9 +74,18 @@ export const partidoMapper = (x: any): Match => ({
   awayTeamYellowCards: x?.awayTeamYellowCards || [],
   homeTeamRedCards: x?.homeTeamRedCards || [],
   awayTeamRedCards: x?.awayTeamRedCards || [],
-  homeTeamPenalties: x?.homeTeamPenalties || null,
-  awayTeamPenalties: x?.awayTeamPenalties || null,
+  homeTeamPenalties: x?.homeTeamPenalties ?? null,
+  awayTeamPenalties: x?.awayTeamPenalties ?? null,
 });
+
+export const hasPenalties = (
+  match: Pick<Match, "status" | "homeTeamPenalties" | "awayTeamPenalties"> | null | undefined
+): boolean =>
+  !!match &&
+  match.status === MatchStatus.JUGADO &&
+  match.homeTeamPenalties != null &&
+  match.awayTeamPenalties != null &&
+  (match.homeTeamPenalties > 0 || match.awayTeamPenalties > 0);
 
 export interface SimplifiedMatch {
   homeTeamId: string;
@@ -91,6 +100,8 @@ export interface SimplifiedMatch {
   date: Moment | null;
   dateNumber: number;
   field: string | null;
+  homeTeamPenalties: number | null;
+  awayTeamPenalties: number | null;
   matchDetail?: Match;
 }
 
@@ -107,5 +118,7 @@ export const convertToSimplifiedMatch = (match: Match): SimplifiedMatch => ({
   date: match?.date || null,
   dateNumber: match?.dateNumber || 0,
   field: match?.field || null,
+  homeTeamPenalties: match?.homeTeamPenalties ?? null,
+  awayTeamPenalties: match?.awayTeamPenalties ?? null,
   matchDetail: match,
 });

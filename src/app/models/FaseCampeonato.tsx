@@ -62,15 +62,24 @@ export const faseCopaMapperOnlyMatches = (
 });
 
 export const playoffFaseMapper = (data: any): RoundCup => {
-  const matchesPlayoff: RoundMatch[] = data.matchesPlayoff.map((x: any) => ({
-    id: x.id,
-    awayMatch: partidoMapper(x.awayMatch),
-    homeMatch: partidoMapper(x.homeMatch),
-    teamWinner: x.teamWinner,
-    nextMatchId: x.nextMatchId,
-    homeTeamPenalties: x.homeTeamPenalties,
-    awayTeamPenalties: x.awayTeamPenalties,
-  }));
+  const matchesPlayoff: RoundMatch[] = data.matchesPlayoff.map((x: any) => {
+    const homeMatch = partidoMapper(x.homeMatch);
+    const awayMatch = partidoMapper(x.awayMatch);
+    const decidingMatch = data.doubleMatch ? awayMatch : homeMatch;
+    if (decidingMatch.homeTeamPenalties == null && decidingMatch.awayTeamPenalties == null) {
+      decidingMatch.homeTeamPenalties = x.homeTeamPenalties ?? null;
+      decidingMatch.awayTeamPenalties = x.awayTeamPenalties ?? null;
+    }
+    return {
+      id: x.id,
+      awayMatch,
+      homeMatch,
+      teamWinner: x.teamWinner,
+      nextMatchId: x.nextMatchId,
+      homeTeamPenalties: x.homeTeamPenalties,
+      awayTeamPenalties: x.awayTeamPenalties,
+    };
+  });
 
   return {
     matchesPlayoff: matchesPlayoff,

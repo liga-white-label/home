@@ -1,4 +1,4 @@
-import { GolJugador, MatchStatus, SimplifiedMatch } from "@/app/models/Match";
+import { GolJugador, MatchStatus, SimplifiedMatch, hasPenalties } from "@/app/models/Match";
 import { LOGO_DEFAULT_TEAM } from "@/app/utils/constants";
 import Image from "next/image";
 import moment from "moment";
@@ -51,14 +51,20 @@ const ScoreBox = ({ match }: { match: SimplifiedMatch }) => {
   }
 
   if (isPlayed) {
+    const penales = hasPenalties(match);
     return (
       <div
-        className="flex items-center justify-center px-3 py-1.5 rounded min-w-[64px]"
+        className={`flex flex-col items-center justify-center px-3 rounded min-w-[64px] ${penales ? "py-1" : "py-1.5"}`}
         style={{ backgroundColor: "var(--color-surface-hover)" }}
       >
-        <span className="text-[var(--color-text)] font-bold text-sm">
+        <span className="text-[var(--color-text)] font-bold text-sm leading-tight">
           {match.homeTeamGoals ?? 0} - {match.awayTeamGoals ?? 0}
         </span>
+        {penales && (
+          <span className="text-[var(--color-text-secondary)] text-[10px] leading-tight whitespace-nowrap">
+            ({match.homeTeamPenalties} - {match.awayTeamPenalties} pen.)
+          </span>
+        )}
       </div>
     );
   }
