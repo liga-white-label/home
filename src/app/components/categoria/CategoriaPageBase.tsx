@@ -18,6 +18,7 @@ import { useAccumulatedTableQuery } from "@/repositories/SeasonRepository";
 import { TablaPosiciones, TABLA_GENERAL_ZONES } from "../TablaPosiciones";
 import MiniLoading from "../loading/MiniLoading";
 import { CATEGORY_PROMOTION_RULES } from "@/config/categoryPromotionRules";
+import { isFasePlayoff } from "@/app/models/FaseCampeonato";
 
 interface CategoriaPageBaseProps {
   id: string;
@@ -108,7 +109,7 @@ export const CategoriaPageBase: FC<CategoriaPageBaseProps> = ({
   };
 
   const fasePlayoff =
-    fases?.phases.find((f: any) => f.type === "playoff") || null;
+    fases?.phases.find(isFasePlayoff) || null;
 
   const fasesGrupos =
     fases?.phases.filter(

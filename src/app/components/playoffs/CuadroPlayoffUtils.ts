@@ -1,3 +1,5 @@
+import { RoundCup, RoundMatch } from "@/app/models/FaseCampeonato";
+import { Match } from "@/app/models/Match";
 const vertialSpacing = 110; // It's the spacing used to define the progressive vertical distance between each Teambox
 const horizontalSpacing = 180; // Spacing between rounds
 const initialOffset = 20; // Initial offset from the left
@@ -81,4 +83,35 @@ export const calculateScreenHeight = (leftRoundsLength: number) => {
   const matchHeight = 160;
 
   return initialRoundMatches * matchHeight + matchHeight / 2;
+};
+
+// Playoff con cruces libres: el backend solo manda las rondas definidas. El cuadro necesita
+// todas hasta la final, así que se completan con cruces vacíos. Un playoff normal queda igual.
+export const completarRondasCustom = (rondas: RoundCup[]): RoundCup[] => {
+  if (!Array.isArray(rondas) || rondas.length === 0 || !rondas.some((r) => r.custom)) {
+    return rondas;
+  }
+  const { doubleMatch } = rondas[0];
+  const completas = [...rondas];
+  for (let n = Math.min(...rondas.map((r) => r.roundNumber)) / 2; n >= 1; n /= 2) {
+    const roundNumber = n;
+    completas.push({
+      roundNumber,
+      doubleMatch,
+      custom: true,
+      matchesPlayoff: Array.from(
+        { length: roundNumber },
+        (_, i): RoundMatch => ({
+          id: `pendiente-${roundNumber}-${i}`,
+          homeMatch: {} as Match,
+          awayMatch: {} as Match,
+          teamWinner: null,
+          nextMatchId: "",
+          homeTeamPenalties: null,
+          awayTeamPenalties: null,
+        })
+      ),
+    });
+  }
+  return completas.sort((a, b) => a.roundNumber - b.roundNumber);
 };

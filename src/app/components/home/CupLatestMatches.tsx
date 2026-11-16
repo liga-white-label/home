@@ -14,7 +14,7 @@ import {
   MatchStatus,
   SimplifiedMatch,
 } from "@/app/models/Match";
-import { FaseGruposCopa } from "@/app/models/FaseCampeonato";
+import { FaseGruposCopa, isFasePlayoff } from "@/app/models/FaseCampeonato";
 import Link from "next/link";
 import MiniLoading from "../loading/MiniLoading";
 import MatchResultRow from "./MatchResultRow";
@@ -58,7 +58,7 @@ const CupLatestMatches = ({ cupId }: CupLatestMatchesProps) => {
     useAllFasesByCampeonato(cupId);
 
   const groupPhase = (fases as any[]).find((f) => f.type === "group") ?? null;
-  const playoffPhase = (fases as any[]).find((f) => f.type === "playoff") ?? null;
+  const playoffPhase = (fases as any[]).find(isFasePlayoff) ?? null;
 
   const { data: gruposData = [], isLoading: isLoadingGrupos } =
     useOneFaseCampeonatoQuery({ id: groupPhase?.id ?? "", enabled: !!groupPhase?.id });

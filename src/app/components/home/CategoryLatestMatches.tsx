@@ -27,6 +27,7 @@ import {
   singleMatchPhaseMatches,
 } from "./playoffUtils";
 import SingleMatchLatestBlock from "./SingleMatchLatestBlock";
+import { isFasePlayoff } from "@/app/models/FaseCampeonato";
 
 // Mismo offset que TabsEnum.PARTIDO_UNICO_BASE en CategoriaPageBase
 const PARTIDO_UNICO_TAB_BASE = 500;
@@ -60,7 +61,7 @@ const CategoryLatestMatches = ({
   const faseRegular =
     fases?.phases?.find((f: any) => f.type === "general") ?? null;
   const fasePlayoff =
-    fases?.phases?.find((f: any) => f.type === "playoff") ?? null;
+    fases?.phases?.find(isFasePlayoff) ?? null;
   const faseGrupo =
     fases?.phases?.find((f: any) => f.type === "group" || f.type === "intergroup") ?? null;
 

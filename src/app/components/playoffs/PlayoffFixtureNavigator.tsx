@@ -67,7 +67,12 @@ const PlayoffFixtureNavigator: React.FC<PlayoffFixtureNavigatorProps> = ({
           {title || getFaseLabel(selectedPhase)}
         </Typography>
         <IconButton
-          disabled={selectedPhase === FASE_MAXIMA || rounds.length === 1}
+          disabled={
+            selectedPhase === FASE_MAXIMA ||
+            rounds.length === 1 ||
+            // Cruces libres: la ronda siguiente todavía no está definida
+            (rounds.some((r) => r.custom) && !doesRoundExist(selectedPhase / 2))
+          }
           onClick={() => setSelectedPhase((prev) => prev - prev / 2)}
         >
           <Iconify icon={"ion:caret-forward"} color={"white"} />

@@ -5,6 +5,7 @@ import {
   calculateLeftPosition,
   calculateRightPosition,
   calculateScreenHeight,
+  completarRondasCustom,
   getFinalPosition,
 } from "./CuadroPlayoffUtils";
 import { RoundCup, RoundMatch } from "@/app/models/FaseCampeonato";
@@ -15,7 +16,8 @@ interface CuadroPlayoffProps {
   rondas: RoundCup[];
 }
 
-const CuadroPlayoff: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
+const CuadroPlayoff: React.FC<CuadroPlayoffProps> = ({ rondas: rondasApi }) => {
+  const rondas = completarRondasCustom(rondasApi);
   if (!rondas || !Array.isArray(rondas) || rondas.length === 0) {
     return (
       <div className="flex justify-center items-center h-full py-10">
@@ -247,7 +249,8 @@ const CuadroPlayoff: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
           <PlayoffArrows
             leftRounds={leftRounds}
             rightRounds={rightRounds}
-            finalMatchId={finalMatch?.id}
+            // Cruces libres: sin flechas, las rondas no están conectadas de forma fija
+            finalMatchId={firstRound.custom ? undefined : finalMatch?.id}
           />
         </div>
       </Box>

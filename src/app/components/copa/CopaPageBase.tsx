@@ -11,6 +11,7 @@ import { EstadisticasCopaPage } from "./EstadisticasCopaPage";
 import LoadingScreen from "../loading/Loading";
 import ErrorPage from "../ErrorPage";
 import { tenantConfig } from "@/config/tenant";
+import { isFasePlayoff } from "@/app/models/FaseCampeonato";
 
 interface CopaPageBaseProps {
   id: string;
@@ -36,7 +37,7 @@ export const CopaPageBase: FC<CopaPageBaseProps> = ({ id, title }) => {
 
   const faseGrupos = fases.find((f) => f.type === "group") || null;
   const fasesPlayoff = useMemo(
-    () => fases.filter((f) => f.type === "playoff") || [],
+    () => fases.filter(isFasePlayoff) || [],
     [fases]
   );
   // El backend serializa el PhaseType en minúsculas ("singlematch")

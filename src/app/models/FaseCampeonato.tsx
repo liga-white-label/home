@@ -5,6 +5,8 @@ export interface RoundCup {
   matchesPlayoff: RoundMatch[];
   roundNumber: number;
   doubleMatch: boolean;
+  // Playoff con cruces libres: solo vienen las rondas definidas y nextMatchId es null
+  custom: boolean;
 }
 
 export interface FaseGruposCopa {
@@ -85,6 +87,7 @@ export const playoffFaseMapper = (data: any): RoundCup => {
     matchesPlayoff: matchesPlayoff,
     roundNumber: data.roundNumber,
     doubleMatch: data.doubleMatch,
+    custom: !!data.custom,
   };
 };
 
@@ -135,3 +138,7 @@ export const AmarillasMapper = (a: any): RowEstadisticas => ({
   escudo: a.teamLogo,
   tarjetas: a.yellowCards,
 });
+
+// El backend serializa el PhaseType en minúsculas: "playoff" o "playoffcustom" (cruces libres)
+export const isFasePlayoff = (fase: { type: string }) =>
+  fase.type === "playoff" || fase.type === "playoffcustom";

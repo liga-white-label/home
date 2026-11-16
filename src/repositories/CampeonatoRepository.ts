@@ -12,7 +12,7 @@ import { getCampeonatoMapper } from "@/app/models/Campeonato";
 import { playoffFaseMapper } from "@/app/models/FaseCampeonato";
 import { partidoMapper } from "@/app/models/Match";
 
-type FaseCopaType = "group" | "playoff" | "singlematch";
+type FaseCopaType = "group" | "playoff" | "playoffcustom" | "singlematch";
 interface FaseCopa {
   type: FaseCopaType;
   id: string;
